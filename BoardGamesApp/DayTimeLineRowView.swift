@@ -1,0 +1,86 @@
+//
+//  DayTimeLineRowView.swift
+//  BoardGamesApp
+//
+//  Created by Aleksandra Plichta on 04/08/2025.
+//
+
+import UIKit
+
+class DayTimeLineRowView: UIView {
+    @IBOutlet var contentView: UIView!
+    @IBOutlet var dayLabel: UILabel!
+    @IBOutlet var dateLabel: UILabel!
+    @IBOutlet var timelineDotView: UIView!
+    @IBOutlet var collectionView: UICollectionView!
+    
+    
+    var eventsForThisDay = [GameEvent]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    
+    func configure(_ date: Date, and events: [GameEvent]) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E"
+        dayLabel.text =  dateFormatter.string(from: date)
+        
+        dateFormatter.dateFormat = "d MMM"
+        dateLabel.text = dateFormatter.string(from: date)
+        
+        contentView.backgroundColor = .systemGray6
+        collectionView.backgroundColor = .systemGray6
+        timelineDotView.backgroundColor = .systemGray6
+        
+        self.eventsForThisDay = events
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        commonInit()
+    }
+    
+    private func commonInit() {
+        guard let view = Bundle.main.loadNibNamed("DayTimeLineRowView", owner: self, options: nil)?.first as? UIView else {
+            print(" Could not load DayTimeLineRowView from nib")
+            return
+        }
+        contentView = view
+        addSubview(contentView)
+        contentView.frame = bounds
+        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "GameCardCell")
+        
+        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.scrollDirection = .horizontal
+        }
+        
+        
+    }
+
+}
+
+extension DayTimeLineRowView: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return eventsForThisDay.count
+    }
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GameCardCell", for: indexPath)
+        cell.backgroundColor = .systemBlue
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 110, height: 60)
+    }
+}

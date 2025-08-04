@@ -41,4 +41,5 @@ class GameCardView: UIView {
         locationLabel.text = event.location
         peopleLabel.text = "\(event.currentPlayersCount)/\(event.maxPlayersCount)"
     }
+    
 }
