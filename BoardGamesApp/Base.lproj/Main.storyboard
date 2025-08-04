@@ -42,7 +42,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x1h-49-3CD">
-                                <rect key="frame" x="48" y="147" width="41.333333333333343" height="20.333333333333343"/>
+                                <rect key="frame" x="48" y="155" width="41.333333333333343" height="20.333333333333343"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -60,7 +60,7 @@
                         <accessibility key="accessibilityConfiguration" identifier="pastCell"/>
                         <constraints>
                             <constraint firstItem="DEt-lI-CmS" firstAttribute="centerY" secondItem="WKX-GI-NHe" secondAttribute="centerY" id="0fl-8U-rWZ"/>
-                            <constraint firstItem="x1h-49-3CD" firstAttribute="top" secondItem="WKX-GI-NHe" secondAttribute="bottom" constant="16" id="8Tk-hr-UJA"/>
+                            <constraint firstItem="x1h-49-3CD" firstAttribute="top" secondItem="WKX-GI-NHe" secondAttribute="bottom" constant="24" id="8Tk-hr-UJA"/>
                             <constraint firstItem="WKX-GI-NHe" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="48" id="DNx-ER-kEr"/>
                             <constraint firstItem="x1h-49-3CD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="48" id="fdc-b3-cqM"/>
                             <constraint firstItem="DEt-lI-CmS" firstAttribute="leading" secondItem="WKX-GI-NHe" secondAttribute="trailing" constant="8" id="iR2-td-Dkj"/>
