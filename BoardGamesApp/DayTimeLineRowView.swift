@@ -23,8 +23,9 @@ class DayTimeLineRowView: UIView {
     
     func configure(_ date: Date, and events: [GameEvent]) {
         let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "pl_PL")
         dateFormatter.dateFormat = "E"
-        dayLabel.text =  dateFormatter.string(from: date)
+        dayLabel.text =  dateFormatter.string(from: date).capitalized.replacingOccurrences(of: ".", with: "")
         
         dateFormatter.dateFormat = "d MMM"
         dateLabel.text = dateFormatter.string(from: date)
