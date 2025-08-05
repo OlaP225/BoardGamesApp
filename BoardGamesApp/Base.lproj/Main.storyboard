@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y0O-1O-XXB">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Home View Controller-->
+        <!--Główna-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="HomeViewController" customModule="BoardGamesApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -29,20 +29,20 @@
                                 <buttonConfiguration key="configuration" style="plain" title="Szukaj wydarzeń"/>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="person.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="WKX-GI-NHe">
-                                <rect key="frame" x="48" y="56.666666666666664" width="75" height="73.666666666666657"/>
+                                <rect key="frame" x="48" y="64.666666666666657" width="75" height="73.666666666666686"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="75" id="TL4-X9-xMV"/>
                                     <constraint firstAttribute="height" constant="75" id="XLG-RD-bzp"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hej Ola!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DEt-lI-CmS">
-                                <rect key="frame" x="131" y="81.666666666666671" width="69.333333333333314" height="24"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <rect key="frame" x="139" y="88.666666666666671" width="74.666666666666686" height="26"/>
+                                <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x1h-49-3CD">
-                                <rect key="frame" x="48" y="155" width="41.333333333333343" height="20.333333333333343"/>
+                                <rect key="frame" x="48" y="163" width="41.333333333333343" height="20.333333333333343"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -54,6 +54,11 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="bell" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="iul-V9-op2">
+                                <rect key="frame" x="337" y="73.666666666666686" width="40" height="39"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" systemColor="systemGrayColor"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -63,10 +68,11 @@
                             <constraint firstItem="x1h-49-3CD" firstAttribute="top" secondItem="WKX-GI-NHe" secondAttribute="bottom" constant="24" id="8Tk-hr-UJA"/>
                             <constraint firstItem="WKX-GI-NHe" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="48" id="DNx-ER-kEr"/>
                             <constraint firstItem="x1h-49-3CD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="48" id="fdc-b3-cqM"/>
-                            <constraint firstItem="DEt-lI-CmS" firstAttribute="leading" secondItem="WKX-GI-NHe" secondAttribute="trailing" constant="8" id="iR2-td-Dkj"/>
-                            <constraint firstItem="WKX-GI-NHe" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="56" id="rnd-C2-pLf"/>
+                            <constraint firstItem="DEt-lI-CmS" firstAttribute="leading" secondItem="WKX-GI-NHe" secondAttribute="trailing" constant="16" id="iR2-td-Dkj"/>
+                            <constraint firstItem="WKX-GI-NHe" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="64" id="rnd-C2-pLf"/>
                         </constraints>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Główna" image="house" catalog="system" id="qnt-0P-a2X"/>
                     <connections>
                         <outlet property="addAviability" destination="MiP-bv-sSo" id="KC1-8U-RaJ"/>
                         <outlet property="greeting" destination="DEt-lI-CmS" id="uRw-OG-3k5"/>
@@ -77,13 +83,71 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="973.28244274809151" y="-2.1126760563380285"/>
+        </scene>
+        <!--Wydarzenia-->
+        <scene sceneID="H7h-em-1zu">
+            <objects>
+                <viewController id="cxE-Ww-dsJ" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="eTo-2g-BVE">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="a3c-Va-KeF"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Wydarzenia" image="calendar" catalog="system" id="Aql-kM-pjC"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MPU-2r-Rfk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1709" y="-2"/>
+        </scene>
+        <!--Dostępność-->
+        <scene sceneID="8AE-pu-4qX">
+            <objects>
+                <viewController id="lgE-Ve-sfk" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="SP6-Ey-qc3">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="ovq-UE-di1"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Dostępność" image="clock.badge.questionmark" catalog="system" id="YyC-av-LkZ"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kov-Kn-OPD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2419" y="-2"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="mtY-NH-et5">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="Y0O-1O-XXB" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="xrM-KN-cny">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="ExJ-L5-fkT"/>
+                        <segue destination="cxE-Ww-dsJ" kind="relationship" relationship="viewControllers" id="dyX-zA-81h"/>
+                        <segue destination="lgE-Ve-sfk" kind="relationship" relationship="viewControllers" id="Ux2-tY-urg"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nJT-jm-4Ja" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
             <point key="canvasLocation" x="46.564885496183201" y="-2.1126760563380285"/>
         </scene>
     </scenes>
     <resources>
+        <image name="bell" catalog="system" width="125" height="128"/>
+        <image name="calendar" catalog="system" width="128" height="107"/>
+        <image name="clock.badge.questionmark" catalog="system" width="128" height="114"/>
+        <image name="house" catalog="system" width="128" height="104"/>
         <image name="person.circle.fill" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGrayColor">
+            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
