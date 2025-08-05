@@ -35,7 +35,8 @@ class HomeViewController: UIViewController{
         upcomingTitle.text = "Nadchodzące spotkania"
         pastTitle.text = "Zakończone spotkania"
         upcomingTitle.text! += " 🗓️"
-        upcomingTitle.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        upcomingTitle.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        pastTitle.font = UIFont.systemFont(ofSize: 16, weight: .medium)
 
         groupEventsByDate()
         setupScrollViewAndStackView()

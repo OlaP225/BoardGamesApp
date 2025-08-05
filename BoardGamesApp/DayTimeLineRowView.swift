@@ -29,11 +29,7 @@ class DayTimeLineRowView: UIView {
         
         dateFormatter.dateFormat = "d MMM"
         dateLabel.text = dateFormatter.string(from: date)
-        
-        contentView.backgroundColor = .systemGray6
-        collectionView.backgroundColor = .systemGray6
-        timelineDotView.backgroundColor = .systemGray6
-        
+            
         self.eventsForThisDay = events
     }
     
@@ -64,7 +60,9 @@ class DayTimeLineRowView: UIView {
         
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .horizontal
+            layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         }
+        
         
         
     }
@@ -82,9 +80,5 @@ extension DayTimeLineRowView: UICollectionViewDataSource, UICollectionViewDelega
         let event = eventsForThisDay[indexPath.item]
         cell.gameCardView.configure(with: event)
         return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 110, height: 60)
     }
 }

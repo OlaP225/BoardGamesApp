@@ -23,47 +23,56 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C2N-Md-yP8">
-                    <rect key="frame" x="0.0" y="59" width="393" height="80"/>
+                    <rect key="frame" x="0.0" y="59" width="393" height="100"/>
                     <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="6Fm-PS-PQa" userLabel="Stack View - Left Side">
-                            <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Fm-PS-PQa" userLabel="Stack View - Left Side">
+                            <rect key="frame" x="0.0" y="0.0" width="80" height="100"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rU2-9s-P56">
-                                    <rect key="frame" x="19.333333333333332" y="0.0" width="41.333333333333343" height="54"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dr1-co-zKW">
-                                    <rect key="frame" x="19.333333333333332" y="57" width="41.333333333333343" height="23"/>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="byX-4Q-Ur4">
+                                    <rect key="frame" x="0.0" y="0.0" width="80" height="100"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rU2-9s-P56">
+                                            <rect key="frame" x="16" y="32" width="48" height="18.333333333333329"/>
+                                            <fontDescription key="fontDescription" name="Kailasa-Bold" family="Kailasa" pointSize="14"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dr1-co-zKW">
+                                            <rect key="frame" x="16" y="48" width="48" height="15.666666666666664"/>
+                                            <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="23" id="741-bG-GVv"/>
+                                        <constraint firstItem="rU2-9s-P56" firstAttribute="leading" secondItem="byX-4Q-Ur4" secondAttribute="leading" constant="16" id="1A7-qX-xZd"/>
+                                        <constraint firstItem="dr1-co-zKW" firstAttribute="top" secondItem="rU2-9s-P56" secondAttribute="top" constant="16" id="Fti-En-Vut"/>
+                                        <constraint firstAttribute="trailing" secondItem="rU2-9s-P56" secondAttribute="trailing" constant="16" id="OqY-MV-BQ5"/>
+                                        <constraint firstItem="rU2-9s-P56" firstAttribute="top" secondItem="byX-4Q-Ur4" secondAttribute="top" constant="32" id="Tga-H2-8FR"/>
+                                        <constraint firstAttribute="trailing" secondItem="dr1-co-zKW" secondAttribute="trailing" constant="16" id="V1i-m5-0Z7"/>
+                                        <constraint firstItem="dr1-co-zKW" firstAttribute="leading" secondItem="byX-4Q-Ur4" secondAttribute="leading" constant="16" id="c6E-fN-fo3"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
+                                </view>
                             </subviews>
                             <constraints>
                                 <constraint firstAttribute="width" constant="80" id="RGI-be-w9c"/>
-                                <constraint firstAttribute="height" constant="80" id="mJR-al-vqt"/>
-                                <constraint firstItem="dr1-co-zKW" firstAttribute="top" secondItem="rU2-9s-P56" secondAttribute="bottom" constant="5" id="rl4-mS-FQp"/>
-                                <constraint firstItem="rU2-9s-P56" firstAttribute="top" secondItem="6Fm-PS-PQa" secondAttribute="top" constant="30" id="s0V-Yg-dtx"/>
+                                <constraint firstAttribute="height" constant="100" id="mJR-al-vqt"/>
                             </constraints>
                         </stackView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sdo-AF-OgM" userLabel="View - Middle Line">
-                            <rect key="frame" x="80" y="0.0" width="5" height="80"/>
+                            <rect key="frame" x="80" y="0.0" width="5" height="100"/>
                             <color key="backgroundColor" systemColor="systemOrangeColor"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="80" id="5zD-6c-3B3"/>
+                                <constraint firstAttribute="height" constant="100" id="5zD-6c-3B3"/>
                                 <constraint firstAttribute="width" constant="5" id="Z2p-XO-JWb"/>
                             </constraints>
                         </view>
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="l9j-wA-IW5" userLabel="Collection View - Right Side">
-                            <rect key="frame" x="85" y="0.0" width="308" height="80"/>
+                            <rect key="frame" x="85" y="0.0" width="308" height="100"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="80" id="08z-ss-IDg"/>
+                                <constraint firstAttribute="height" constant="100" id="08z-ss-IDg"/>
                             </constraints>
                             <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Nyd-J9-OCX">
                                 <size key="itemSize" width="128" height="128"/>
