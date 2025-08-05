@@ -60,7 +60,7 @@ class DayTimeLineRowView: UIView {
         collectionView.dataSource = self
         collectionView.delegate = self
         
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "GameCardCell")
+        collectionView.register(GameCardCollectionViewCell.self, forCellWithReuseIdentifier: "GameCardCell")
         
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .horizontal
@@ -76,8 +76,11 @@ extension DayTimeLineRowView: UICollectionViewDataSource, UICollectionViewDelega
         return eventsForThisDay.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GameCardCell", for: indexPath)
-        cell.backgroundColor = .systemBlue
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GameCardCell", for: indexPath) as? GameCardCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        let event = eventsForThisDay[indexPath.item]
+        cell.gameCardView.configure(with: event)
         return cell
     }
     

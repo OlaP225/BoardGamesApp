@@ -7,14 +7,28 @@
 
 import UIKit
 
-class GameCardCollectionViewCell: UIView {
+class GameCardCollectionViewCell: UICollectionViewCell {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    let gameCardView = GameCardView()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupCard()
     }
-    */
+    required init?(coder: NSCoder) {
+        fatalError("init(coder) has not been implemented")
+    }
+    
+    private func setupCard() {
+        contentView.addSubview(gameCardView)
+        gameCardView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            gameCardView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            gameCardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            gameCardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            gameCardView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+        ])
+    }
 
 }
