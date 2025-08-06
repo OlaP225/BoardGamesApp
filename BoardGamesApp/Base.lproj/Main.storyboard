@@ -5,6 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="UIMenu" message="Requires Xcode 11 or later." minToolsVersion="11.0" requiredIntegratedClassName="UICommandDiff"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -104,18 +105,180 @@
         <!--Dostępność-->
         <scene sceneID="8AE-pu-4qX">
             <objects>
-                <viewController id="lgE-Ve-sfk" sceneMemberID="viewController">
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kov-Kn-OPD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewController id="lgE-Ve-sfk" customClass="AvailabilityViewController" customModule="BoardGamesApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SP6-Ey-qc3">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="QQm-Sn-Jmt">
+                                <rect key="frame" x="16" y="382.66666666666674" width="361" height="300"/>
+                                <color key="backgroundColor" red="1" green="0.973227438862591" blue="0.98344441180927344" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="300" id="NZe-6G-Fsx"/>
+                                </constraints>
+                            </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rdE-Fd-Ovp">
+                                <rect key="frame" x="16" y="83" width="361" height="275.66666666666669"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dzień" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iec-5r-A2l">
+                                        <rect key="frame" x="24" y="54" width="44" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CD1-Vj-3y2">
+                                        <rect key="frame" x="92" y="47" width="125" height="35"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Wybierz datę"/>
+                                        <connections>
+                                            <action selector="didTapChooseDateButton:" destination="lgE-Ve-sfk" eventType="touchUpInside" id="pid-YN-aTL"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Czas trwania" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="srj-az-BbZ">
+                                        <rect key="frame" x="24" y="91" width="98" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IqX-QW-Fdj">
+                                        <rect key="frame" x="147" y="84" width="44" height="35"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="od"/>
+                                        <connections>
+                                            <action selector="didTapDurationFromButton:" destination="lgE-Ve-sfk" eventType="touchUpInside" id="RRe-d9-qLF"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a2g-0c-zfR">
+                                        <rect key="frame" x="192" y="84" width="44" height="35"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="do"/>
+                                        <connections>
+                                            <action selector="didTapDurationToButton:" destination="lgE-Ve-sfk" eventType="touchUpInside" id="qzq-1g-eA5"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qUm-au-DEg">
+                                        <rect key="frame" x="254" y="91" width="42" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Powtarzaj co tydzień" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uam-ud-DSH">
+                                        <rect key="frame" x="24" y="128" width="158" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="CZN-zr-1pc">
+                                        <rect key="frame" x="206" y="123" width="51" height="31"/>
+                                        <connections>
+                                            <action selector="didChangedRepetitionSwitch:" destination="lgE-Ve-sfk" eventType="valueChanged" id="GrY-5P-9Xv"/>
+                                        </connections>
+                                    </switch>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mój limit w tygodniu:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xaR-6y-QQz">
+                                        <rect key="frame" x="24" y="165" width="157" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zcN-de-TYG">
+                                        <rect key="frame" x="72" y="216.66666666666669" width="217" height="35"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="tinted" title="Dodaj dostępność"/>
+                                        <connections>
+                                            <action selector="didTapAddAvailabilityButton:" destination="lgE-Ve-sfk" eventType="touchUpInside" id="FYz-pi-A4b"/>
+                                        </connections>
+                                    </button>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="baU-s6-qYg">
+                                        <rect key="frame" x="205" y="158.66666666666666" width="32" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pdj-pn-83j">
+                                        <rect key="frame" x="267" y="160" width="54" height="30"/>
+                                        <menu key="menu" title="wybierz" id="Lri-bV-CWp">
+                                            <children>
+                                                <command title="dni" menuElementState="on" id="FA8-wy-SJ3"/>
+                                                <command title="godzin" id="mD8-wX-uqn"/>
+                                            </children>
+                                        </menu>
+                                        <state key="normal" title="Button"/>
+                                        <connections>
+                                            <action selector="didTapGamesLimitButton:" destination="lgE-Ve-sfk" eventType="touchUpInside" id="mG6-oS-KHD"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ustaw dostępność" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qfg-BT-jzI">
+                                        <rect key="frame" x="24" y="17" width="153" height="22"/>
+                                        <fontDescription key="fontDescription" name="Kailasa-Bold" family="Kailasa" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.96446437479840552" green="0.97003302328177299" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstItem="zcN-de-TYG" firstAttribute="leading" secondItem="rdE-Fd-Ovp" secondAttribute="leading" constant="72" id="1YL-UX-TT4"/>
+                                    <constraint firstItem="CZN-zr-1pc" firstAttribute="leading" secondItem="Uam-ud-DSH" secondAttribute="trailing" constant="24" id="3U4-cH-w2u"/>
+                                    <constraint firstItem="pdj-pn-83j" firstAttribute="leading" secondItem="baU-s6-qYg" secondAttribute="trailing" constant="24" id="6Hq-oa-E0v"/>
+                                    <constraint firstItem="Iec-5r-A2l" firstAttribute="leading" secondItem="rdE-Fd-Ovp" secondAttribute="leading" constant="24" id="7WT-mH-NG4"/>
+                                    <constraint firstItem="xaR-6y-QQz" firstAttribute="top" secondItem="Uam-ud-DSH" secondAttribute="bottom" constant="16" id="AIF-xc-tHu"/>
+                                    <constraint firstItem="pdj-pn-83j" firstAttribute="centerY" secondItem="baU-s6-qYg" secondAttribute="centerY" id="B2z-Nm-xu8"/>
+                                    <constraint firstItem="qUm-au-DEg" firstAttribute="centerY" secondItem="a2g-0c-zfR" secondAttribute="centerY" id="BtS-nZ-yEJ"/>
+                                    <constraint firstItem="CD1-Vj-3y2" firstAttribute="leading" secondItem="Iec-5r-A2l" secondAttribute="trailing" constant="24" id="FMF-q1-Rhj"/>
+                                    <constraint firstAttribute="bottom" secondItem="zcN-de-TYG" secondAttribute="bottom" constant="24" id="GPI-jC-kme"/>
+                                    <constraint firstItem="CZN-zr-1pc" firstAttribute="centerY" secondItem="Uam-ud-DSH" secondAttribute="centerY" id="Gnd-GI-QjZ"/>
+                                    <constraint firstItem="CD1-Vj-3y2" firstAttribute="centerY" secondItem="Iec-5r-A2l" secondAttribute="centerY" id="I1b-n1-G30"/>
+                                    <constraint firstItem="srj-az-BbZ" firstAttribute="top" secondItem="Iec-5r-A2l" secondAttribute="bottom" constant="16" id="JBQ-1R-gFg"/>
+                                    <constraint firstItem="Qfg-BT-jzI" firstAttribute="leading" secondItem="rdE-Fd-Ovp" secondAttribute="leading" constant="25" id="Kar-Yu-TxM"/>
+                                    <constraint firstItem="Uam-ud-DSH" firstAttribute="leading" secondItem="rdE-Fd-Ovp" secondAttribute="leading" constant="24" id="L8S-XT-tsc"/>
+                                    <constraint firstItem="IqX-QW-Fdj" firstAttribute="leading" secondItem="srj-az-BbZ" secondAttribute="trailing" constant="24" id="NRX-1p-8T0"/>
+                                    <constraint firstItem="a2g-0c-zfR" firstAttribute="centerY" secondItem="IqX-QW-Fdj" secondAttribute="centerY" id="NoM-4X-rmo"/>
+                                    <constraint firstItem="Uam-ud-DSH" firstAttribute="top" secondItem="srj-az-BbZ" secondAttribute="bottom" constant="16" id="NrQ-b0-mfA"/>
+                                    <constraint firstItem="Qfg-BT-jzI" firstAttribute="top" secondItem="rdE-Fd-Ovp" secondAttribute="top" constant="16" id="NyG-SO-aQE"/>
+                                    <constraint firstItem="xaR-6y-QQz" firstAttribute="leading" secondItem="rdE-Fd-Ovp" secondAttribute="leading" constant="24" id="Uif-pt-gzC"/>
+                                    <constraint firstItem="baU-s6-qYg" firstAttribute="centerY" secondItem="xaR-6y-QQz" secondAttribute="centerY" id="Vqr-ZA-jbU"/>
+                                    <constraint firstItem="baU-s6-qYg" firstAttribute="leading" secondItem="xaR-6y-QQz" secondAttribute="trailing" constant="24" id="aZj-g6-YMJ"/>
+                                    <constraint firstItem="qUm-au-DEg" firstAttribute="leading" secondItem="a2g-0c-zfR" secondAttribute="trailing" constant="16" id="dHh-Lo-crO"/>
+                                    <constraint firstItem="IqX-QW-Fdj" firstAttribute="centerY" secondItem="srj-az-BbZ" secondAttribute="centerY" id="lfy-7v-Q9v"/>
+                                    <constraint firstItem="zcN-de-TYG" firstAttribute="top" secondItem="xaR-6y-QQz" secondAttribute="bottom" constant="30.666666666666686" id="opz-6f-wYr"/>
+                                    <constraint firstAttribute="trailing" secondItem="zcN-de-TYG" secondAttribute="trailing" constant="72" id="p3A-Wn-WX7"/>
+                                    <constraint firstItem="srj-az-BbZ" firstAttribute="leading" secondItem="rdE-Fd-Ovp" secondAttribute="leading" constant="24" id="w8g-ua-QYi"/>
+                                    <constraint firstItem="Iec-5r-A2l" firstAttribute="top" secondItem="Qfg-BT-jzI" secondAttribute="bottom" constant="16" id="whL-hz-eq9"/>
+                                    <constraint firstItem="a2g-0c-zfR" firstAttribute="leading" secondItem="IqX-QW-Fdj" secondAttribute="trailing" constant="4" id="x8t-QD-64L"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="ovq-UE-di1"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="ovq-UE-di1" firstAttribute="trailing" secondItem="rdE-Fd-Ovp" secondAttribute="trailing" constant="16" id="9my-G0-LBJ"/>
+                            <constraint firstItem="QQm-Sn-Jmt" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="16" id="ChG-du-xSi"/>
+                            <constraint firstItem="rdE-Fd-Ovp" firstAttribute="top" secondItem="ovq-UE-di1" secondAttribute="top" constant="24" id="RO4-xz-Pk3"/>
+                            <constraint firstItem="rdE-Fd-Ovp" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="16" id="gZR-pt-uS5"/>
+                            <constraint firstItem="QQm-Sn-Jmt" firstAttribute="top" secondItem="rdE-Fd-Ovp" secondAttribute="bottom" constant="24" id="jIa-VW-ZIH"/>
+                            <constraint firstItem="ovq-UE-di1" firstAttribute="trailing" secondItem="QQm-Sn-Jmt" secondAttribute="trailing" constant="16" id="tJW-J3-S4j"/>
+                            <constraint firstItem="QQm-Sn-Jmt" firstAttribute="top" secondItem="rdE-Fd-Ovp" secondAttribute="bottom" constant="24" id="zHf-eC-1ag"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Dostępność" image="clock.badge.questionmark" catalog="system" id="YyC-av-LkZ"/>
+                    <connections>
+                        <outlet property="addAvailabilityButton" destination="zcN-de-TYG" id="7nb-Ti-VZK"/>
+                        <outlet property="addAvailabilityContainer" destination="rdE-Fd-Ovp" id="4Hd-TY-lcn"/>
+                        <outlet property="addAvailabilityTitle" destination="Qfg-BT-jzI" id="Sw1-z8-vDd"/>
+                        <outlet property="chooseDateButton" destination="CD1-Vj-3y2" id="k1e-QH-pMG"/>
+                        <outlet property="dateLabel" destination="Iec-5r-A2l" id="Kyl-Zb-5W1"/>
+                        <outlet property="durationFromButton" destination="IqX-QW-Fdj" id="WT8-mP-qnN"/>
+                        <outlet property="durationLabel" destination="srj-az-BbZ" id="Yfw-cc-9n9"/>
+                        <outlet property="durationSummaryLabel" destination="qUm-au-DEg" id="HFt-iJ-0VA"/>
+                        <outlet property="durationToButton" destination="a2g-0c-zfR" id="b9q-So-8NG"/>
+                        <outlet property="gamesLimitButton" destination="pdj-pn-83j" id="utG-4q-9M0"/>
+                        <outlet property="gamesLimitLabel" destination="xaR-6y-QQz" id="ekd-ks-5VW"/>
+                        <outlet property="gamesLimitTextField" destination="baU-s6-qYg" id="Ji8-r5-H3t"/>
+                        <outlet property="repetitionLabel" destination="Uam-ud-DSH" id="qbJ-bJ-tn3"/>
+                        <outlet property="repetitionSwitch" destination="CZN-zr-1pc" id="UUO-NL-h1g"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Kov-Kn-OPD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2419" y="-2"/>
+            <point key="canvasLocation" x="2416.030534351145" y="-2.1126760563380285"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="mtY-NH-et5">
@@ -123,6 +286,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="Y0O-1O-XXB" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="xrM-KN-cny">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
