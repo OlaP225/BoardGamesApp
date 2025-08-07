@@ -105,7 +105,6 @@
         <!--Dostępność-->
         <scene sceneID="8AE-pu-4qX">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Kov-Kn-OPD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController id="lgE-Ve-sfk" customClass="AvailabilityViewController" customModule="BoardGamesApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SP6-Ey-qc3">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
@@ -267,8 +266,9 @@
                         <outlet property="chooseDateButton" destination="CD1-Vj-3y2" id="k1e-QH-pMG"/>
                         <outlet property="dateLabel" destination="Iec-5r-A2l" id="Kyl-Zb-5W1"/>
                         <outlet property="durationFromButton" destination="IqX-QW-Fdj" id="WT8-mP-qnN"/>
-                        <outlet property="durationLabel" destination="srj-az-BbZ" id="Yfw-cc-9n9"/>
+                        <outlet property="durationLabel" destination="qUm-au-DEg" id="SlY-Q7-g0a"/>
                         <outlet property="durationSummaryLabel" destination="qUm-au-DEg" id="HFt-iJ-0VA"/>
+                        <outlet property="durationTitleLabel" destination="srj-az-BbZ" id="fTT-4S-2Xm"/>
                         <outlet property="durationToButton" destination="a2g-0c-zfR" id="b9q-So-8NG"/>
                         <outlet property="gamesLimitButton" destination="pdj-pn-83j" id="utG-4q-9M0"/>
                         <outlet property="gamesLimitLabel" destination="xaR-6y-QQz" id="ekd-ks-5VW"/>
@@ -277,6 +277,7 @@
                         <outlet property="repetitionSwitch" destination="CZN-zr-1pc" id="UUO-NL-h1g"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kov-Kn-OPD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2416.030534351145" y="-2.1126760563380285"/>
         </scene>
