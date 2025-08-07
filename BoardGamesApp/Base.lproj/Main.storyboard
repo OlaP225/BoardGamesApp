@@ -102,7 +102,7 @@
             </objects>
             <point key="canvasLocation" x="1709" y="-2"/>
         </scene>
-        <!--Dostępność-->
+        <!--Twoja dostępność-->
         <scene sceneID="8AE-pu-4qX">
             <objects>
                 <viewController id="lgE-Ve-sfk" customClass="AvailabilityViewController" customModule="BoardGamesApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -140,16 +140,16 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IqX-QW-Fdj">
-                                        <rect key="frame" x="147" y="84" width="44" height="35"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IqX-QW-Fdj">
+                                        <rect key="frame" x="146" y="84" width="44" height="35"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="od"/>
                                         <connections>
                                             <action selector="didTapDurationFromButton:" destination="lgE-Ve-sfk" eventType="touchUpInside" id="RRe-d9-qLF"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a2g-0c-zfR">
-                                        <rect key="frame" x="192" y="84" width="44" height="35"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a2g-0c-zfR">
+                                        <rect key="frame" x="194" y="84" width="44" height="35"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="do"/>
                                         <connections>
@@ -227,6 +227,7 @@
                                     <constraint firstItem="CZN-zr-1pc" firstAttribute="centerY" secondItem="Uam-ud-DSH" secondAttribute="centerY" id="Gnd-GI-QjZ"/>
                                     <constraint firstItem="CD1-Vj-3y2" firstAttribute="centerY" secondItem="Iec-5r-A2l" secondAttribute="centerY" id="I1b-n1-G30"/>
                                     <constraint firstItem="srj-az-BbZ" firstAttribute="top" secondItem="Iec-5r-A2l" secondAttribute="bottom" constant="16" id="JBQ-1R-gFg"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="qUm-au-DEg" secondAttribute="trailing" constant="5" id="JhT-Ok-8oe"/>
                                     <constraint firstItem="Qfg-BT-jzI" firstAttribute="leading" secondItem="rdE-Fd-Ovp" secondAttribute="leading" constant="25" id="Kar-Yu-TxM"/>
                                     <constraint firstItem="Uam-ud-DSH" firstAttribute="leading" secondItem="rdE-Fd-Ovp" secondAttribute="leading" constant="24" id="L8S-XT-tsc"/>
                                     <constraint firstItem="IqX-QW-Fdj" firstAttribute="leading" secondItem="srj-az-BbZ" secondAttribute="trailing" constant="24" id="NRX-1p-8T0"/>
@@ -258,7 +259,7 @@
                             <constraint firstItem="QQm-Sn-Jmt" firstAttribute="top" secondItem="rdE-Fd-Ovp" secondAttribute="bottom" constant="24" id="zHf-eC-1ag"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Dostępność" image="clock.badge.questionmark" catalog="system" id="YyC-av-LkZ"/>
+                    <tabBarItem key="tabBarItem" title="Twoja dostępność" image="clock.badge.questionmark" catalog="system" id="YyC-av-LkZ"/>
                     <connections>
                         <outlet property="addAvailabilityButton" destination="zcN-de-TYG" id="7nb-Ti-VZK"/>
                         <outlet property="addAvailabilityContainer" destination="rdE-Fd-Ovp" id="4Hd-TY-lcn"/>

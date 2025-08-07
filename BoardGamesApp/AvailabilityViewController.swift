@@ -33,7 +33,9 @@ class AvailabilityViewController: UIViewController {
             return
         }
         guard endTime>startTime else {
-            durationLabel.text = "Niepoprawny czas"
+            durationLabel.text = "Niepoprawny czas!"
+            durationLabel.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+            durationLabel.textColor = .red
             return
         }
         
@@ -88,6 +90,11 @@ class AvailabilityViewController: UIViewController {
         timePicker.datePickerMode = .time
         timePicker.preferredDatePickerStyle = .wheels
         timePicker.minuteInterval = 5
+        let calendar = Calendar.current
+        let minTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: Date())
+        let maxTime = calendar.date(bySettingHour: 21, minute: 30, second: 0, of: Date())
+        timePicker.minimumDate = minTime
+        timePicker.maximumDate = maxTime
         
         let selectAction = UIAction { [weak self] action in
             guard let self = self, let timePicker = action.sender as? UIDatePicker else { return }
@@ -124,6 +131,11 @@ class AvailabilityViewController: UIViewController {
         timePicker.datePickerMode = .time
         timePicker.preferredDatePickerStyle = .wheels
         timePicker.minuteInterval = 5
+        let calendar = Calendar.current
+        let minTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: Date())
+        let maxTime = calendar.date(bySettingHour: 22, minute: 5, second: 0, of: Date())
+        timePicker.minimumDate = minTime
+        timePicker.maximumDate = maxTime
         
         let selectAction = UIAction { [weak self] action in
             guard let self = self, let timePicker = action.sender as? UIDatePicker else { return }
@@ -131,9 +143,8 @@ class AvailabilityViewController: UIViewController {
             dateFormatter.dateFormat = "HH:mm"
             let formattedTime = dateFormatter.string(from: timePicker.date)
             selectedDurationTo = timePicker.date
-            
+            updateDurationLabel()
             self.durationToButton.setTitle(formattedTime, for: .normal)
-            print(selectedDurationFrom!,selectedDurationTo!)
             timePickerController.dismiss(animated: true)
         }
         
