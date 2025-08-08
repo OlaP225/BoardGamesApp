@@ -110,13 +110,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="QQm-Sn-Jmt">
-                                <rect key="frame" x="16" y="382.66666666666674" width="361" height="300"/>
-                                <color key="backgroundColor" red="1" green="0.973227438862591" blue="0.98344441180927344" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="300" id="NZe-6G-Fsx"/>
-                                </constraints>
-                            </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rdE-Fd-Ovp">
                                 <rect key="frame" x="16" y="83" width="361" height="275.66666666666669"/>
                                 <subviews>
@@ -246,17 +239,18 @@
                                     <constraint firstItem="a2g-0c-zfR" firstAttribute="leading" secondItem="IqX-QW-Fdj" secondAttribute="trailing" constant="4" id="x8t-QD-64L"/>
                                 </constraints>
                             </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="GSp-Di-P54">
+                                <rect key="frame" x="16" y="378" width="361" height="269"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ovq-UE-di1"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="ovq-UE-di1" firstAttribute="trailing" secondItem="rdE-Fd-Ovp" secondAttribute="trailing" constant="16" id="9my-G0-LBJ"/>
-                            <constraint firstItem="QQm-Sn-Jmt" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="16" id="ChG-du-xSi"/>
                             <constraint firstItem="rdE-Fd-Ovp" firstAttribute="top" secondItem="ovq-UE-di1" secondAttribute="top" constant="24" id="RO4-xz-Pk3"/>
                             <constraint firstItem="rdE-Fd-Ovp" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="16" id="gZR-pt-uS5"/>
-                            <constraint firstItem="QQm-Sn-Jmt" firstAttribute="top" secondItem="rdE-Fd-Ovp" secondAttribute="bottom" constant="24" id="jIa-VW-ZIH"/>
-                            <constraint firstItem="ovq-UE-di1" firstAttribute="trailing" secondItem="QQm-Sn-Jmt" secondAttribute="trailing" constant="16" id="tJW-J3-S4j"/>
-                            <constraint firstItem="QQm-Sn-Jmt" firstAttribute="top" secondItem="rdE-Fd-Ovp" secondAttribute="bottom" constant="24" id="zHf-eC-1ag"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Twoja dostępność" image="clock.badge.questionmark" catalog="system" id="YyC-av-LkZ"/>
@@ -264,6 +258,7 @@
                         <outlet property="addAvailabilityButton" destination="zcN-de-TYG" id="7nb-Ti-VZK"/>
                         <outlet property="addAvailabilityContainer" destination="rdE-Fd-Ovp" id="4Hd-TY-lcn"/>
                         <outlet property="addAvailabilityTitle" destination="Qfg-BT-jzI" id="Sw1-z8-vDd"/>
+                        <outlet property="availabilitiesTable" destination="GSp-Di-P54" id="GaS-KE-ffb"/>
                         <outlet property="chooseDateButton" destination="CD1-Vj-3y2" id="k1e-QH-pMG"/>
                         <outlet property="dateLabel" destination="Iec-5r-A2l" id="Kyl-Zb-5W1"/>
                         <outlet property="durationFromButton" destination="IqX-QW-Fdj" id="WT8-mP-qnN"/>

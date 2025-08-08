@@ -1,5 +1,5 @@
 //
-//  AvaiabilityViewController.swift
+//  AvailabilityViewController.swift
 //  BoardGamesApp
 //
 //  Created by Aleksandra Plichta on 05/08/2025.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AvailabilityViewController: UIViewController {
+class AvailabilityViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet var addAvailabilityContainer: UIView!
     @IBOutlet var addAvailabilityTitle: UILabel!
     @IBOutlet var dateLabel: UILabel!
@@ -23,7 +23,11 @@ class AvailabilityViewController: UIViewController {
     @IBOutlet var gamesLimitTextField: UITextField!
     @IBOutlet var gamesLimitButton: UIButton!
     @IBOutlet var addAvailabilityButton: UIButton!
+    @IBOutlet var availabilitiesTable: UITableView!
     
+    var availabilities = [AvailabilitySlot]()
+    
+    var selectedDay: Date?
     var selectedDurationFrom: Date?
     var selectedDurationTo: Date?
     
@@ -63,6 +67,7 @@ class AvailabilityViewController: UIViewController {
             dateFormatter.dateFormat = "E, d MMM yyyy"
             let formatedString = dateFormatter.string(from: picker.date)
             self.chooseDateButton.setTitle(formatedString, for: .normal)
+            selectedDay = picker.date
             updateDurationLabel()
             datePickerViewController.dismiss(animated: true)
         }
@@ -173,11 +178,44 @@ class AvailabilityViewController: UIViewController {
     }
     
     @IBAction func didTapAddAvailabilityButton(_ sender: Any) {
+        
+        guard let date = selectedDay, let timeFrom = selectedDurationFrom, let timeTo = selectedDurationTo else {
+            print("Wypełnij wszystkie pola!!")
+            return
+        }
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm"
+        let formattedTimeFrom = timeFormatter.string(from: timeFrom)
+        let formattedTimeTo = timeFormatter.string(from: timeTo)
+        let time = "\(formattedTimeFrom):\(formattedTimeTo)"
+        
+        let newSlot = AvailabilitySlot(date: date, time: time)
+        availabilities.insert(newSlot, at: 0)
+        availabilitiesTable.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        availabilitiesTable.dataSource = self
+        availabilitiesTable.delegate = self
+        
+        let nib = UINib(nibName: "AvailabilityTableViewCell", bundle: nil)
+        availabilitiesTable.register(nib, forCellReuseIdentifier: AvailabilityTableViewCell.identifier)
 
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return availabilities.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: AvailabilityTableViewCell.identifier, for: indexPath) as? AvailabilityTableViewCell else {
+            fatalError("Could not dequeue cell with identifier: \(AvailabilityTableViewCell.identifier)")
+        }
+        let slot = availabilities[indexPath.row]
+        cell.configure(with: slot)
+        return cell
     }
 
 }
