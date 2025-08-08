@@ -3,56 +3,65 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="AvailabilityTableViewCell" customModule="BoardGamesApp" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="75" id="KGk-i7-Jjw" customClass="AvailabilityTableViewCell" customModule="BoardGamesApp" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dep-Be-jhd">
-                        <rect key="frame" x="24" y="12" width="42" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dep-Be-jhd">
+                        <rect key="frame" x="48" y="15.999999999999998" width="44.333333333333343" height="23.333333333333329"/>
+                        <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="18"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N1o-Kr-0MQ">
-                        <rect key="frame" x="90" y="12" width="42" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N1o-Kr-0MQ">
+                        <rect key="frame" x="50.333333333333343" y="40" width="40" height="21"/>
+                        <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="16"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i8M-C9-CpR">
-                        <rect key="frame" x="180" y="5" width="49.666666666666657" height="35"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Ap-jS-iUb">
+                        <rect key="frame" x="212.33333333333334" y="8" width="50.000000000000028" height="35"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain">
+                            <imageReference key="image" image="xmark.circle" catalog="system" symbolScale="large" variableValue="0.80000000000000004"/>
+                        </buttonConfiguration>
+                        <connections>
+                            <action selector="removeAvailability:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="xaU-hx-F9g"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i8M-C9-CpR">
+                        <rect key="frame" x="212.33333333333334" y="32" width="49.666666666666657" height="35"/>
                         <state key="normal" title="Button"/>
                         <buttonConfiguration key="configuration" style="plain" image="pencil.circle" catalog="system"/>
                         <connections>
                             <action selector="editAvailability:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="ZBD-6H-tj9"/>
                         </connections>
                     </button>
-                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Ap-jS-iUb">
-                        <rect key="frame" x="237.66666666666666" y="5" width="49.666666666666657" height="35"/>
-                        <state key="normal" title="Button"/>
-                        <buttonConfiguration key="configuration" style="plain" image="trash.circle" catalog="system"/>
-                        <connections>
-                            <action selector="removeAvailability:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="xaU-hx-F9g"/>
-                        </connections>
-                    </button>
+                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wIJ-C1-CSY">
+                        <rect key="frame" x="0.0" y="0.0" width="340" height="75"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" red="0.93370921493124592" green="0.98860164342249879" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    </view>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="3Ap-jS-iUb" firstAttribute="leading" secondItem="i8M-C9-CpR" secondAttribute="trailing" constant="8" id="G3C-lf-XHi"/>
-                    <constraint firstItem="Dep-Be-jhd" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="24" id="GFf-iT-PeD"/>
-                    <constraint firstItem="N1o-Kr-0MQ" firstAttribute="leading" secondItem="Dep-Be-jhd" secondAttribute="trailing" constant="24" id="IZE-GP-ezf"/>
-                    <constraint firstItem="i8M-C9-CpR" firstAttribute="leading" secondItem="N1o-Kr-0MQ" secondAttribute="trailing" constant="48" id="ZK2-Xl-99K"/>
-                    <constraint firstItem="3Ap-jS-iUb" firstAttribute="centerY" secondItem="i8M-C9-CpR" secondAttribute="centerY" id="hBk-FD-BKr"/>
-                    <constraint firstItem="i8M-C9-CpR" firstAttribute="centerY" secondItem="N1o-Kr-0MQ" secondAttribute="centerY" id="m5X-Lg-r3z"/>
-                    <constraint firstItem="N1o-Kr-0MQ" firstAttribute="centerY" secondItem="Dep-Be-jhd" secondAttribute="centerY" id="y39-mn-AmV"/>
+                    <constraint firstItem="Dep-Be-jhd" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="48" id="8Uq-MO-78Y"/>
+                    <constraint firstItem="3Ap-jS-iUb" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="IdZ-Cv-JcR"/>
+                    <constraint firstAttribute="bottom" secondItem="i8M-C9-CpR" secondAttribute="bottom" constant="8" id="M3S-60-FhR"/>
+                    <constraint firstItem="N1o-Kr-0MQ" firstAttribute="centerX" secondItem="Dep-Be-jhd" secondAttribute="centerX" id="Nx3-0n-Yd1"/>
+                    <constraint firstItem="N1o-Kr-0MQ" firstAttribute="top" secondItem="Dep-Be-jhd" secondAttribute="top" constant="24" id="fVg-gv-yMt"/>
+                    <constraint firstItem="Dep-Be-jhd" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="16" id="qAr-q3-8zO"/>
+                    <constraint firstItem="3Ap-jS-iUb" firstAttribute="leading" secondItem="Dep-Be-jhd" secondAttribute="trailing" constant="120" id="rnS-D6-bjw"/>
+                    <constraint firstItem="i8M-C9-CpR" firstAttribute="leading" secondItem="Dep-Be-jhd" secondAttribute="trailing" constant="120" id="w7y-jQ-3aK"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
@@ -62,11 +71,11 @@
                 <outlet property="removeButton" destination="3Ap-jS-iUb" id="Phm-CX-YVM"/>
                 <outlet property="timeLabel" destination="N1o-Kr-0MQ" id="ZLc-hf-lz4"/>
             </connections>
-            <point key="canvasLocation" x="84" y="21"/>
+            <point key="canvasLocation" x="83.969465648854964" y="9.5070422535211279"/>
         </tableViewCell>
     </objects>
     <resources>
         <image name="pencil.circle" catalog="system" width="128" height="123"/>
-        <image name="trash.circle" catalog="system" width="128" height="123"/>
+        <image name="xmark.circle" catalog="system" width="128" height="123"/>
     </resources>
 </document>

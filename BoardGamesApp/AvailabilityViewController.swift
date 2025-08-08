@@ -187,7 +187,7 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         timeFormatter.dateFormat = "HH:mm"
         let formattedTimeFrom = timeFormatter.string(from: timeFrom)
         let formattedTimeTo = timeFormatter.string(from: timeTo)
-        let time = "\(formattedTimeFrom):\(formattedTimeTo)"
+        let time = "\(formattedTimeFrom) - \(formattedTimeTo)"
         
         let newSlot = AvailabilitySlot(date: date, time: time)
         availabilities.insert(newSlot, at: 0)
@@ -216,6 +216,9 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         let slot = availabilities[indexPath.row]
         cell.configure(with: slot)
         return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
 
 }

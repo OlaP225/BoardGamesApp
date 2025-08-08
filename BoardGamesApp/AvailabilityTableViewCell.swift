@@ -22,9 +22,9 @@ class AvailabilityTableViewCell: UITableViewCell {
     func configure(with slot: AvailabilitySlot) {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "PL_pl")
-        dateFormatter.dateFormat = "E, d MMM"
+        dateFormatter.dateFormat = "EEEE, d MMM"
         
-        let formattedDate = dateFormatter.string(from: slot.date)
+        let formattedDate = dateFormatter.string(from: slot.date).capitalized
     
         dateLabel.text = formattedDate
         timeLabel.text = slot.time
