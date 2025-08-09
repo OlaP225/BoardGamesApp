@@ -12,6 +12,7 @@ class AvailabilityTableViewCell: UITableViewCell {
     @IBOutlet var timeLabel: UILabel!
     @IBOutlet var editButton: UIButton!
     @IBOutlet var removeButton: UIButton!
+    @IBOutlet var cellBackground: UIView!
     
     @IBAction func editAvailability(_ sender: UIButton) {
     }
@@ -33,7 +34,9 @@ class AvailabilityTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        cellBackground.layer.cornerRadius = 15
+        cellBackground.layer.borderColor = UIColor.systemGray5.cgColor
+        cellBackground.layer.borderWidth = 1
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

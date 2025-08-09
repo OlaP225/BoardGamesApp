@@ -17,6 +17,11 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wIJ-C1-CSY">
+                        <rect key="frame" x="0.0" y="0.0" width="340" height="75"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" red="0.93370921493124592" green="0.98860164342249879" blue="1" alpha="0.5" colorSpace="custom" customColorSpace="displayP3"/>
+                    </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dep-Be-jhd">
                         <rect key="frame" x="48" y="15.999999999999998" width="44.333333333333343" height="23.333333333333329"/>
                         <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="18"/>
@@ -47,11 +52,6 @@
                             <action selector="editAvailability:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="ZBD-6H-tj9"/>
                         </connections>
                     </button>
-                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wIJ-C1-CSY">
-                        <rect key="frame" x="0.0" y="0.0" width="340" height="75"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" red="0.93370921493124592" green="0.98860164342249879" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                    </view>
                 </subviews>
                 <constraints>
                     <constraint firstItem="Dep-Be-jhd" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="48" id="8Uq-MO-78Y"/>
@@ -66,6 +66,7 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="cellBackground" destination="wIJ-C1-CSY" id="dwT-7X-N3F"/>
                 <outlet property="dateLabel" destination="Dep-Be-jhd" id="rqC-ZY-wel"/>
                 <outlet property="editButton" destination="i8M-C9-CpR" id="wwQ-Qp-wG4"/>
                 <outlet property="removeButton" destination="3Ap-jS-iUb" id="Phm-CX-YVM"/>

@@ -24,6 +24,7 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet var gamesLimitButton: UIButton!
     @IBOutlet var addAvailabilityButton: UIButton!
     @IBOutlet var availabilitiesTable: UITableView!
+    @IBOutlet var yourAvailabilitiesTitle: UILabel!
     
     var availabilities = [AvailabilitySlot]()
     
@@ -200,6 +201,7 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         super.viewDidLoad()
         availabilitiesTable.dataSource = self
         availabilitiesTable.delegate = self
+        yourAvailabilitiesTitle.text = "Twoje dostępności"
         
         let nib = UINib(nibName: "AvailabilityTableViewCell", bundle: nil)
         availabilitiesTable.register(nib, forCellReuseIdentifier: AvailabilityTableViewCell.identifier)

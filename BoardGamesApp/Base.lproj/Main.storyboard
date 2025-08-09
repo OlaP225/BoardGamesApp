@@ -239,18 +239,29 @@
                                     <constraint firstItem="a2g-0c-zfR" firstAttribute="leading" secondItem="IqX-QW-Fdj" secondAttribute="trailing" constant="4" id="x8t-QD-64L"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="GSp-Di-P54">
-                                <rect key="frame" x="16" y="378" width="361" height="269"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="GSp-Di-P54">
+                                <rect key="frame" x="16" y="420.66666666666674" width="361" height="268.33333333333326"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bXX-Fo-Ce1">
+                                <rect key="frame" x="44" y="390.66666666666669" width="44.666666666666657" height="22"/>
+                                <fontDescription key="fontDescription" name="Kailasa-Bold" family="Kailasa" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ovq-UE-di1"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="bXX-Fo-Ce1" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="44" id="58O-8E-k2I"/>
                             <constraint firstItem="ovq-UE-di1" firstAttribute="trailing" secondItem="rdE-Fd-Ovp" secondAttribute="trailing" constant="16" id="9my-G0-LBJ"/>
+                            <constraint firstItem="GSp-Di-P54" firstAttribute="top" secondItem="bXX-Fo-Ce1" secondAttribute="bottom" constant="8" id="HMe-fK-igU"/>
+                            <constraint firstItem="GSp-Di-P54" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="16" id="RKb-lT-ezn"/>
                             <constraint firstItem="rdE-Fd-Ovp" firstAttribute="top" secondItem="ovq-UE-di1" secondAttribute="top" constant="24" id="RO4-xz-Pk3"/>
+                            <constraint firstItem="bXX-Fo-Ce1" firstAttribute="top" secondItem="rdE-Fd-Ovp" secondAttribute="bottom" constant="32" id="UAb-us-lBc"/>
+                            <constraint firstItem="ovq-UE-di1" firstAttribute="trailing" secondItem="GSp-Di-P54" secondAttribute="trailing" constant="16" id="c9t-aw-v6C"/>
                             <constraint firstItem="rdE-Fd-Ovp" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="16" id="gZR-pt-uS5"/>
+                            <constraint firstItem="ovq-UE-di1" firstAttribute="bottom" secondItem="GSp-Di-P54" secondAttribute="bottom" constant="80" id="uVW-AQ-g8g"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Twoja dostępność" image="clock.badge.questionmark" catalog="system" id="YyC-av-LkZ"/>
@@ -271,6 +282,7 @@
                         <outlet property="gamesLimitTextField" destination="baU-s6-qYg" id="Ji8-r5-H3t"/>
                         <outlet property="repetitionLabel" destination="Uam-ud-DSH" id="qbJ-bJ-tn3"/>
                         <outlet property="repetitionSwitch" destination="CZN-zr-1pc" id="UUO-NL-h1g"/>
+                        <outlet property="yourAvailabilitiesTitle" destination="bXX-Fo-Ce1" id="5Uf-HU-vaD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kov-Kn-OPD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
