@@ -32,6 +32,33 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
     var selectedDurationFrom: Date?
     var selectedDurationTo: Date?
     
+    private func updateEmptyState() {
+        if availabilities.isEmpty {
+            let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: availabilitiesTable.bounds.size.width, height: availabilitiesTable.bounds.size.height))
+            messageLabel.text = "Twoja lista dostępności jest pusta.\nDodaj swoje wolne terminy powyżej, aby nasz system mógł znaleźć dla Ciebie najlepsze gry."
+            messageLabel.textColor = .secondaryLabel
+            messageLabel.numberOfLines = 0
+            messageLabel.textAlignment = .center
+            messageLabel.font = UIFont.systemFont(ofSize: 15)
+            messageLabel.sizeToFit()
+            
+            availabilitiesTable.backgroundView = messageLabel
+            availabilitiesTable.backgroundView?.layer.cornerRadius = 15
+            availabilitiesTable.backgroundView?.layer.borderWidth = 1
+            availabilitiesTable.backgroundView?.layer.borderColor = UIColor.systemGray5.cgColor
+        } else {
+            availabilitiesTable.backgroundView = nil }
+    }
+    
+    private func removePastAvailabilities() {
+        let todayStart = Calendar.current.startOfDay(for: Date())
+        
+        availabilities.removeAll(){ slot in
+            return slot.date < todayStart
+        }
+        availabilitiesTable.reloadData()
+    }
+    
     private func updateDurationLabel() {
         guard let startTime = selectedDurationFrom, let endTime = selectedDurationTo else {
             durationLabel!.text = ""
@@ -59,6 +86,7 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .inline
+        datePicker.backgroundColor = .white
         datePicker.minimumDate = Date()
         
         let selectAction = UIAction { [weak self] action in
@@ -96,6 +124,7 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         timePicker.datePickerMode = .time
         timePicker.preferredDatePickerStyle = .wheels
         timePicker.minuteInterval = 5
+        timePicker.backgroundColor = .white
         let calendar = Calendar.current
         let minTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: Date())
         let maxTime = calendar.date(bySettingHour: 21, minute: 30, second: 0, of: Date())
@@ -137,6 +166,7 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         timePicker.datePickerMode = .time
         timePicker.preferredDatePickerStyle = .wheels
         timePicker.minuteInterval = 5
+        timePicker.backgroundColor = .white
         let calendar = Calendar.current
         let minTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: Date())
         let maxTime = calendar.date(bySettingHour: 22, minute: 5, second: 0, of: Date())
@@ -191,8 +221,16 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         let time = "\(formattedTimeFrom) - \(formattedTimeTo)"
         
         let newSlot = AvailabilitySlot(date: date, time: time)
-        availabilities.insert(newSlot, at: 0)
-        availabilitiesTable.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        
+        if !availabilities.contains(newSlot) {
+            availabilities.insert(newSlot, at: 0)
+            updateEmptyState()
+            availabilitiesTable.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        } else {
+            let ac = UIAlertController(title: "Podaj nową dostepność." , message: "Taka dostępność już istnieje!", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
+            present(ac, animated: true)
+        }
         
         
     }
@@ -207,6 +245,13 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         availabilitiesTable.register(nib, forCellReuseIdentifier: AvailabilityTableViewCell.identifier)
 
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        removePastAvailabilities()
+        updateEmptyState()
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return availabilities.count
     }
@@ -233,10 +278,9 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
             ac.addAction(UIAlertAction(title: "Tak", style: .destructive){ _ in
                 self.availabilities.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
-                
+                self.updateEmptyState()
             })
             self.present(ac, animated: true)
-            
         }
         
         return cell

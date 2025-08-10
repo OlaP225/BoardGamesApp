@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AvailabilitySlot {
+struct AvailabilitySlot: Equatable {
     let date: Date
     let time: String
 }
