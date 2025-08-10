@@ -14,9 +14,12 @@ class AvailabilityTableViewCell: UITableViewCell {
     @IBOutlet var removeButton: UIButton!
     @IBOutlet var cellBackground: UIView!
     
+    var deleteButtonTapped: (() -> Void)?
+    
     @IBAction func editAvailability(_ sender: UIButton) {
     }
     @IBAction func removeAvailability(_ sender: UIButton) {
+        deleteButtonTapped?()
     }
     static let identifier = "AvailabilityTableViewCell"
     

@@ -217,6 +217,28 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         }
         let slot = availabilities[indexPath.row]
         cell.configure(with: slot)
+        
+        cell.deleteButtonTapped = { [weak self] in
+            guard let self = self else { return }
+            
+            let rowToDelete = availabilities[indexPath.row]
+            let dateFormatter =  DateFormatter()
+            dateFormatter.locale = Locale(identifier: "PL_pl")
+            dateFormatter.dateFormat = "EEEE, d MMM"
+            let formattedDate = dateFormatter.string(from: rowToDelete.date)
+        
+            
+            let ac = UIAlertController(title: "Potwierdź usunięcie", message: "Czy na pewno chcesz usunąć dostępność \(formattedDate) o \(rowToDelete.time)?", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Nie", style: .cancel))
+            ac.addAction(UIAlertAction(title: "Tak", style: .destructive){ _ in
+                self.availabilities.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                
+            })
+            self.present(ac, animated: true)
+            
+        }
+        
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
