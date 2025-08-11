@@ -7,7 +7,13 @@
 
 import Foundation
 
-struct AvailabilitySlot: Equatable {
+struct AvailabilitySlot: Equatable, Comparable {
     let date: Date
     let time: String
+    
+    static func < (lhs: AvailabilitySlot, rhs: AvailabilitySlot) -> Bool {
+        return lhs.date < rhs.date
+    }
 }
+
+

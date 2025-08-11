@@ -17,11 +17,6 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet var durationFromButton: UIButton!
     @IBOutlet var durationToButton: UIButton!
     @IBOutlet var durationSummaryLabel: UILabel!
-    @IBOutlet var repetitionLabel: UILabel!
-    @IBOutlet var repetitionSwitch: UISwitch!
-    @IBOutlet var gamesLimitLabel: UILabel!
-    @IBOutlet var gamesLimitTextField: UITextField!
-    @IBOutlet var gamesLimitButton: UIButton!
     @IBOutlet var addAvailabilityButton: UIButton!
     @IBOutlet var availabilitiesTable: UITableView!
     @IBOutlet var yourAvailabilitiesTitle: UILabel!
@@ -45,7 +40,7 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
             availabilitiesTable.backgroundView = messageLabel
             availabilitiesTable.backgroundView?.layer.cornerRadius = 15
             availabilitiesTable.backgroundView?.layer.borderWidth = 1
-            availabilitiesTable.backgroundView?.layer.borderColor = UIColor.systemGray5.cgColor
+            availabilitiesTable.backgroundView?.layer.borderColor = UIColor.systemGray4.cgColor
         } else {
             availabilitiesTable.backgroundView = nil }
     }
@@ -93,7 +88,7 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
             guard let self = self, let picker = action.sender as? UIDatePicker else { return }
             let dateFormatter = DateFormatter()
             dateFormatter.locale = Locale(identifier: "pl_PL")
-            dateFormatter.dateFormat = "E, d MMM yyyy"
+            dateFormatter.dateFormat = "EEEE, d MMM yyyy"
             let formatedString = dateFormatter.string(from: picker.date)
             self.chooseDateButton.setTitle(formatedString, for: .normal)
             selectedDay = picker.date
@@ -202,12 +197,6 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         
     }
     
-    @IBAction func didChangedRepetitionSwitch(_ sender: UISwitch) {
-    }
-    
-    @IBAction func didTapGamesLimitButton(_ sender: Any) {
-    }
-    
     @IBAction func didTapAddAvailabilityButton(_ sender: Any) {
         
         guard let date = selectedDay, let timeFrom = selectedDurationFrom, let timeTo = selectedDurationTo else {
@@ -223,9 +212,13 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         let newSlot = AvailabilitySlot(date: date, time: time)
         
         if !availabilities.contains(newSlot) {
-            availabilities.insert(newSlot, at: 0)
+            availabilities.append(newSlot)
+            availabilities.sort()
+            if let newIndex = availabilities.firstIndex(of: newSlot) {
+                let indexPath = IndexPath(row: newIndex, section: 0)
+                availabilitiesTable.insertRows(at: [indexPath], with: .automatic)
+            }
             updateEmptyState()
-            availabilitiesTable.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
         } else {
             let ac = UIAlertController(title: "Podaj nową dostepność." , message: "Taka dostępność już istnieje!", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
@@ -240,6 +233,10 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         availabilitiesTable.dataSource = self
         availabilitiesTable.delegate = self
         yourAvailabilitiesTitle.text = "Twoje dostępności"
+        
+        addAvailabilityContainer.layer.cornerRadius = 15
+        addAvailabilityContainer.layer.borderWidth = 1
+        addAvailabilityContainer.layer.borderColor = UIColor.systemGray.cgColor
         
         let nib = UINib(nibName: "AvailabilityTableViewCell", bundle: nil)
         availabilitiesTable.register(nib, forCellReuseIdentifier: AvailabilityTableViewCell.identifier)
