@@ -16,18 +16,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MiP-bv-sSo">
-                                <rect key="frame" x="115" y="650" width="163" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Dodaj dostępność"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eod-uS-tfi">
-                                <rect key="frame" x="115" y="711" width="152" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Szukaj wydarzeń"/>
-                            </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="person.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="WKX-GI-NHe">
                                 <rect key="frame" x="48" y="64.666666666666657" width="75" height="73.666666666666686"/>
                                 <constraints>
@@ -74,10 +62,8 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Główna" image="house" catalog="system" id="qnt-0P-a2X"/>
                     <connections>
-                        <outlet property="addAviability" destination="MiP-bv-sSo" id="KC1-8U-RaJ"/>
                         <outlet property="greeting" destination="DEt-lI-CmS" id="uRw-OG-3k5"/>
                         <outlet property="pastTitle" destination="kC7-U6-VEI" id="WmD-fG-YtC"/>
-                        <outlet property="searchMeetings" destination="eod-uS-tfi" id="2cR-UQ-2pW"/>
                         <outlet property="upcomingTitle" destination="x1h-49-3CD" id="95T-La-fmd"/>
                     </connections>
                 </viewController>
