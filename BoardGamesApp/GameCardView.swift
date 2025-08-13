@@ -5,6 +5,11 @@
 //  Created by Aleksandra Plichta on 02/08/2025.
 //
 
+enum CardState {
+    case active
+    case past
+}
+
 import UIKit
 @IBDesignable
 class GameCardView: UIView {
@@ -42,11 +47,27 @@ class GameCardView: UIView {
         ])
     }
     
-    func configure(with event: GameEvent){
+    func configure(with event: GameEvent, state: CardState = .active){
         titleLabel.text = event.title
         timeLabel.text = event.time
         locationLabel.text = event.location
         peopleLabel.text = "\(event.currentPlayersCount)/\(event.maxPlayersCount)"
+        
+        switch state {
+        case .active:
+            titleLabel.textColor = .black
+            timeLabel.textColor = .black
+            locationLabel.textColor = .black
+            peopleLabel.textColor = .black
+            contentView.backgroundColor = UIColor(named: "ActiveCardBackground")
+            
+        case .past:
+            titleLabel.textColor = .black
+            timeLabel.textColor = .black
+            locationLabel.textColor = .black
+            peopleLabel.textColor = .black
+            contentView.backgroundColor = .secondarySystemBackground
+        }
     }
     
 }

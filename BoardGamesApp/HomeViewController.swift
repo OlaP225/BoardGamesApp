@@ -60,13 +60,13 @@ class HomeViewController: UIViewController{
     func setUpcomingEvents()  {
         let upcomingData = groupAndSort(events: upcomingEvents)
         setupScrollViewAndStackView()
-        displayTimeLine(for: upcomingData.sortedDays, with: upcomingData.groupedEvents, to: daysStackView)
+        displayTimeLine(for: upcomingData.sortedDays, with: upcomingData.groupedEvents, to: daysStackView, state: .active)
     }
     
     func setUpPastEvents() {
         let pastData = groupAndSort(events: pastEvents)
         setUpPastScrollViewAndStackView()
-        displayTimeLine(for: pastData.sortedDays, with: pastData.groupedEvents, to: stackViewPastDays)
+        displayTimeLine(for: pastData.sortedDays, with: pastData.groupedEvents, to: stackViewPastDays, state: .past)
         
     }
     
@@ -120,12 +120,12 @@ class HomeViewController: UIViewController{
         
     }
     
-    func displayTimeLine(for sortedDays: [Date], with groupedEvents: [Date: [GameEvent]],to stackView: UIStackView) {
+    func displayTimeLine(for sortedDays: [Date], with groupedEvents: [Date: [GameEvent]],to stackView: UIStackView, state: CardState) {
         for day in sortedDays {
             guard let eventsForDay = groupedEvents[day] else {continue}
             
             let dayRow = DayTimeLineRowView()
-            dayRow.configure(day, and: eventsForDay)
+            dayRow.configure(day, and: eventsForDay, cardState: state)
             stackView.addArrangedSubview(dayRow)
         }
     }

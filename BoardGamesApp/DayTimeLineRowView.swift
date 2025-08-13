@@ -14,6 +14,8 @@ class DayTimeLineRowView: UIView {
     @IBOutlet var timelineDotView: UIView!
     @IBOutlet var collectionView: UICollectionView!
     
+    var cardDisplayState: CardState = .active
+    
     
     var eventsForThisDay = [GameEvent]() {
         didSet {
@@ -21,7 +23,7 @@ class DayTimeLineRowView: UIView {
         }
     }
     
-    func configure(_ date: Date, and events: [GameEvent]) {
+    func configure(_ date: Date, and events: [GameEvent], cardState: CardState) {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "pl_PL")
         dateFormatter.dateFormat = "E"
@@ -31,6 +33,7 @@ class DayTimeLineRowView: UIView {
         dateLabel.text = dateFormatter.string(from: date)
             
         self.eventsForThisDay = events
+        self.cardDisplayState = cardState
     }
     
     override init(frame: CGRect) {
@@ -78,7 +81,7 @@ extension DayTimeLineRowView: UICollectionViewDataSource, UICollectionViewDelega
             return UICollectionViewCell()
         }
         let event = eventsForThisDay[indexPath.item]
-        cell.gameCardView.configure(with: event)
+        cell.gameCardView.configure(with: event, state: self.cardDisplayState)
         return cell
     }
 }
