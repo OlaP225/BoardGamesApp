@@ -11,12 +11,35 @@ class HomeViewController: UIViewController{
     @IBOutlet var greeting: UILabel!
     @IBOutlet var upcomingTitle: UILabel!
     @IBOutlet var pastTitle: UILabel!
+    @IBOutlet var profileImageButton: UIButton!
     
     let scrollView = UIScrollView()
     let daysStackView = UIStackView()
     let scrollViewPastEvents = UIScrollView()
     let stackViewPastDays = UIStackView()
     
+    @IBAction func didTapImageButton(_ sender: UIButton) {
+        let ac = UIAlertController(title: "Zdjęcie profilowe", message: "Wybierz opcję", preferredStyle: .actionSheet)
+        
+        if UIImagePickerController.isSourceTypeAvailable(.camera){
+            let cameraAction = UIAlertAction(title: "Zrób zdjęcie", style: .default){ [weak self] _ in
+                self?.presentImagePicker(sourceType: .camera)
+            }
+            ac.addAction(cameraAction)
+        }
+        
+        let libraryAction = UIAlertAction(title: "Wybierz zdjęcie z galerii", style: .default){ [weak self] _ in
+            self?.presentImagePicker(sourceType: .photoLibrary)
+        }
+        ac.addAction(libraryAction)
+        
+        let deleteAction = UIAlertAction(title: "Usuń zdjęcie", style: .default){ [weak self] _ in
+            self?.profileImageButton.setImage(UIImage(systemName: "person.circle"), for: .normal)
+        }
+        ac.addAction(deleteAction)
+        ac.addAction(UIAlertAction(title: "Anuluj", style: .cancel))
+        present(ac, animated: true)
+    }
     
     var upcomingEvents: [GameEvent] = [
         GameEvent(title: "Monopoly", currentPlayersCount: 3, maxPlayersCount: 4, time: "10:00 - 12:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 2))!),
@@ -42,7 +65,9 @@ class HomeViewController: UIViewController{
         upcomingTitle.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         pastTitle.font = UIFont.systemFont(ofSize: 16, weight: .medium)
 
-        
+        profileImageButton.layer.cornerRadius = profileImageButton.frame.size.width / 2
+        profileImageButton.clipsToBounds = true
+
         setUpcomingEvents()
         setUpPastEvents()
 

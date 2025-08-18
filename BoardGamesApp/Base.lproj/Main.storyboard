@@ -3,6 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,21 +17,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="person.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="WKX-GI-NHe">
-                                <rect key="frame" x="48" y="64.666666666666657" width="75" height="73.666666666666686"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="75" id="TL4-X9-xMV"/>
-                                    <constraint firstAttribute="height" constant="75" id="XLG-RD-bzp"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hej Ola!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DEt-lI-CmS">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Hej Ola!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DEt-lI-CmS">
                                 <rect key="frame" x="139" y="88.666666666666671" width="74.666666666666686" height="26"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x1h-49-3CD">
-                                <rect key="frame" x="48" y="163" width="41.333333333333343" height="20.333333333333343"/>
+                                <rect key="frame" x="48" y="203" width="41.333333333333343" height="20.333333333333343"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -47,23 +42,42 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" systemColor="systemGrayColor"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="828-Rw-Bui">
+                                <rect key="frame" x="183" y="251" width="30" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Snd-CO-fgB">
+                                <rect key="frame" x="48" y="64" width="75" height="75"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="75" id="lfg-J3-oz5"/>
+                                    <constraint firstAttribute="height" constant="75" id="vMi-tw-2Ky"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" buttonSize="large">
+                                    <imageReference key="image" image="person.circle" catalog="system" symbolScale="large"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="didTapImageButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fbY-xG-MKc"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <accessibility key="accessibilityConfiguration" identifier="pastCell"/>
                         <constraints>
-                            <constraint firstItem="DEt-lI-CmS" firstAttribute="centerY" secondItem="WKX-GI-NHe" secondAttribute="centerY" id="0fl-8U-rWZ"/>
-                            <constraint firstItem="x1h-49-3CD" firstAttribute="top" secondItem="WKX-GI-NHe" secondAttribute="bottom" constant="24" id="8Tk-hr-UJA"/>
-                            <constraint firstItem="WKX-GI-NHe" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="48" id="DNx-ER-kEr"/>
+                            <constraint firstItem="Snd-CO-fgB" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="64" id="9F9-Hb-Xcl"/>
                             <constraint firstItem="x1h-49-3CD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="48" id="fdc-b3-cqM"/>
-                            <constraint firstItem="DEt-lI-CmS" firstAttribute="leading" secondItem="WKX-GI-NHe" secondAttribute="trailing" constant="16" id="iR2-td-Dkj"/>
-                            <constraint firstItem="WKX-GI-NHe" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="64" id="rnd-C2-pLf"/>
+                            <constraint firstItem="Snd-CO-fgB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="48" id="gyd-lj-CG1"/>
+                            <constraint firstItem="x1h-49-3CD" firstAttribute="top" secondItem="Snd-CO-fgB" secondAttribute="bottom" constant="64" id="wRm-IZ-oIJ"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Główna" image="house" catalog="system" id="qnt-0P-a2X"/>
                     <connections>
                         <outlet property="greeting" destination="DEt-lI-CmS" id="uRw-OG-3k5"/>
                         <outlet property="pastTitle" destination="kC7-U6-VEI" id="WmD-fG-YtC"/>
+                        <outlet property="profileImageButton" destination="Snd-CO-fgB" id="U7Z-w5-wDs"/>
                         <outlet property="upcomingTitle" destination="x1h-49-3CD" id="95T-La-fmd"/>
                     </connections>
                 </viewController>
@@ -249,7 +263,7 @@
         <image name="calendar" catalog="system" width="128" height="107"/>
         <image name="clock.badge.questionmark" catalog="system" width="128" height="114"/>
         <image name="house" catalog="system" width="128" height="104"/>
-        <image name="person.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="person.circle" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
