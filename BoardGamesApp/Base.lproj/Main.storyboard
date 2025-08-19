@@ -88,14 +88,31 @@
         <!--Wydarzenia-->
         <scene sceneID="H7h-em-1zu">
             <objects>
-                <viewController id="cxE-Ww-dsJ" sceneMemberID="viewController">
+                <viewController id="cxE-Ww-dsJ" customClass="EventsCalendarViewController" customModule="BoardGamesApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="eTo-2g-BVE">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t6t-Ov-HWh">
+                                <rect key="frame" x="24" y="179" width="345" height="300"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="300" id="eIb-gf-KaR"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="a3c-Va-KeF"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="t6t-Ov-HWh" firstAttribute="leading" secondItem="a3c-Va-KeF" secondAttribute="leading" constant="24" id="M8m-1G-Hdx"/>
+                            <constraint firstItem="t6t-Ov-HWh" firstAttribute="top" secondItem="a3c-Va-KeF" secondAttribute="top" constant="120" id="q1z-Xo-F3C"/>
+                            <constraint firstItem="a3c-Va-KeF" firstAttribute="trailing" secondItem="t6t-Ov-HWh" secondAttribute="trailing" constant="24" id="wbW-3W-rQL"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Wydarzenia" image="calendar" catalog="system" id="Aql-kM-pjC"/>
+                    <connections>
+                        <outlet property="calendarContainerView" destination="t6t-Ov-HWh" id="8B6-KN-Krz"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MPU-2r-Rfk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
