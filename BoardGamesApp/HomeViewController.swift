@@ -18,6 +18,14 @@ class HomeViewController: UIViewController{
     let scrollViewPastEvents = UIScrollView()
     let stackViewPastDays = UIStackView()
     
+    private func presentImagePicker(sourceType: UIImagePickerController.SourceType) {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = sourceType
+        imagePickerController.allowsEditing = true
+        present(imagePickerController, animated: true)
+    }
+    
     @IBAction func didTapImageButton(_ sender: UIButton) {
         let ac = UIAlertController(title: "Zdjęcie profilowe", message: "Wybierz opcję", preferredStyle: .actionSheet)
         
@@ -33,7 +41,7 @@ class HomeViewController: UIViewController{
         }
         ac.addAction(libraryAction)
         
-        let deleteAction = UIAlertAction(title: "Usuń zdjęcie", style: .default){ [weak self] _ in
+        let deleteAction = UIAlertAction(title: "Usuń zdjęcie", style: .destructive){ [weak self] _ in
             self?.profileImageButton.setImage(UIImage(systemName: "person.circle"), for: .normal)
         }
         ac.addAction(deleteAction)
@@ -67,6 +75,7 @@ class HomeViewController: UIViewController{
 
         profileImageButton.layer.cornerRadius = profileImageButton.frame.size.width / 2
         profileImageButton.clipsToBounds = true
+        profileImageButton.imageView?.contentMode = .scaleAspectFit
 
         setUpcomingEvents()
         setUpPastEvents()
@@ -155,4 +164,19 @@ class HomeViewController: UIViewController{
         }
     }
 
+}
+
+extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let editedImage = info[.editedImage] as? UIImage {
+            self.profileImageButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
+        } else if let originalImage = info[.originalImage] as? UIImage {
+            self.profileImageButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
+        }
+        picker.dismiss(animated: true, completion: nil)
+    }
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
 }

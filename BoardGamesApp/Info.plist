@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Aplikacja potrzebuje dostępu do galerii zdjęć, abyś mógł/mogła wybrać zdjęcie profilowe.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Aplikacja potrzebuje dostępu do kamery, abyś mógł/mogła zrobić zdjęcie profilowe.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
