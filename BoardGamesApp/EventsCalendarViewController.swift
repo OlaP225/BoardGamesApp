@@ -49,7 +49,7 @@ class EventsCalendarViewController: UIViewController {
             return 350}
             sheet.detents = [smallDetent, .large()]
             sheet.prefersGrabberVisible = true
-            sheet.preferredCornerRadius = 25
+            sheet.preferredCornerRadius = 40
         }
         present(detailsVC, animated: true, completion: nil)
         
