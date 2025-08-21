@@ -25,7 +25,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x1h-49-3CD">
-                                <rect key="frame" x="48" y="203" width="41.333333333333343" height="20.333333333333343"/>
+                                <rect key="frame" x="48" y="171" width="41.333333333333343" height="20.333333333333343"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -70,7 +70,7 @@
                             <constraint firstItem="Snd-CO-fgB" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="64" id="9F9-Hb-Xcl"/>
                             <constraint firstItem="x1h-49-3CD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="48" id="fdc-b3-cqM"/>
                             <constraint firstItem="Snd-CO-fgB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="48" id="gyd-lj-CG1"/>
-                            <constraint firstItem="x1h-49-3CD" firstAttribute="top" secondItem="Snd-CO-fgB" secondAttribute="bottom" constant="64" id="wRm-IZ-oIJ"/>
+                            <constraint firstItem="x1h-49-3CD" firstAttribute="top" secondItem="Snd-CO-fgB" secondAttribute="bottom" constant="32" id="wRm-IZ-oIJ"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Główna" image="house" catalog="system" id="qnt-0P-a2X"/>

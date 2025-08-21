@@ -18,6 +18,7 @@ class GameCardView: UIView {
     @IBOutlet var timeLabel: UILabel!
     @IBOutlet var locationLabel: UILabel!
     @IBOutlet var peopleLabel: UILabel!
+    @IBOutlet var leaveEvent: UIButton!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -52,6 +53,7 @@ class GameCardView: UIView {
         timeLabel.text = event.time
         locationLabel.text = event.location
         peopleLabel.text = "\(event.currentPlayersCount)/\(event.maxPlayersCount)"
+        leaveEvent.layer.cornerRadius = 8
         
         switch state {
         case .active:
