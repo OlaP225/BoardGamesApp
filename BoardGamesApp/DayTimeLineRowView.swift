@@ -81,7 +81,7 @@ extension DayTimeLineRowView: UICollectionViewDataSource, UICollectionViewDelega
             return UICollectionViewCell()
         }
         let event = eventsForThisDay[indexPath.item]
-        cell.gameCardView.configure(with: event, state: self.cardDisplayState)
+        cell.gameCardView.configure(with: event, state: self.cardDisplayState, isUserJoined: true)
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

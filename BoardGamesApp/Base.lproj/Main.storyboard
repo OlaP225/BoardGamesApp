@@ -38,9 +38,10 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="bell" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="iul-V9-op2">
-                                <rect key="frame" x="337" y="73.666666666666686" width="40" height="39"/>
+                                <rect key="frame" x="337" y="92.666666666666686" width="25" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" systemColor="systemGrayColor"/>
+                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="828-Rw-Bui">
                                 <rect key="frame" x="183" y="251" width="30" height="34"/>

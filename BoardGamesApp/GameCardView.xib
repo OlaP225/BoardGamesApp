@@ -11,7 +11,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GameCardView" customModule="BoardGamesApp" customModuleProvider="target">
             <connections>
                 <outlet property="contentView" destination="iN0-l3-epB" id="L0V-Rb-yDA"/>
-                <outlet property="leaveEvent" destination="WfM-fZ-2VD" id="kRr-Yl-xXi"/>
+                <outlet property="detailsButton" destination="koR-4u-hcf" id="1XZ-Oo-iJt"/>
+                <outlet property="leaveJoinButton" destination="WfM-fZ-2VD" id="la1-mW-zrK"/>
                 <outlet property="locationLabel" destination="bos-Ho-8XN" id="99A-MO-F6c"/>
                 <outlet property="peopleLabel" destination="rZ3-Rd-Pmz" id="7Sg-k1-K4k"/>
                 <outlet property="timeLabel" destination="yGf-dY-8Jw" id="xoH-Lq-ciU"/>
@@ -24,55 +25,61 @@
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="MONOPOLY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2JT-cW-Q2o">
-                    <rect key="frame" x="16" y="7.9999999999999982" width="68.666666666666671" height="20.333333333333329"/>
+                    <rect key="frame" x="16" y="8" width="68.666666666666671" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="j2v-oR-520">
-                    <rect key="frame" x="102.66666666666667" y="11.333333333333332" width="21.333333333333329" height="15"/>
+                    <rect key="frame" x="102.66666666666667" y="11.33333333333333" width="21.333333333333329" height="15.66666666666667"/>
                     <imageReference key="image" image="person.2.fill" catalog="system" symbolScale="small" variableValue="0.0"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="3/4" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rZ3-Rd-Pmz">
-                    <rect key="frame" x="122" y="7.9999999999999982" width="16" height="20.333333333333329"/>
+                    <rect key="frame" x="122" y="8" width="16" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="NPP-Wl-xSa">
-                    <rect key="frame" x="16" y="34.666666666666671" width="15.666666666666664" height="15.666666666666664"/>
+                    <rect key="frame" x="16" y="35.333333333333329" width="15.666666666666664" height="15.666666666666664"/>
                     <imageReference key="image" image="clock.fill" catalog="system" symbolScale="small"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10:00 - 12:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yGf-dY-8Jw">
-                    <rect key="frame" x="35.666666666666657" y="37.666666666666664" width="53.333333333333343" height="9.6666666666666643"/>
+                    <rect key="frame" x="35.666666666666657" y="38.333333333333336" width="53.333333333333343" height="9.6666666666666643"/>
                     <fontDescription key="fontDescription" type="system" pointSize="8"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="RHT-gO-O72">
-                    <rect key="frame" x="16" y="50.666666666666671" width="15.666666666666664" height="19"/>
+                    <rect key="frame" x="16" y="51.333333333333329" width="15.666666666666664" height="18.333333333333329"/>
                     <imageReference key="image" image="paperplane.circle.fill" catalog="system" symbolScale="small"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Planty Racławickie" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bos-Ho-8XN">
-                    <rect key="frame" x="35.666666666666657" y="55.333333333333336" width="74" height="9.6666666666666643"/>
+                    <rect key="frame" x="35.666666666666657" y="55.666666666666664" width="74" height="9.6666666666666643"/>
                     <fontDescription key="fontDescription" type="system" pointSize="8"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WfM-fZ-2VD">
-                    <rect key="frame" x="126.66666666666667" y="32.333333333333336" width="55.333333333333329" height="23.666666666666664"/>
+                    <rect key="frame" x="132" y="33" width="56" height="23"/>
                     <state key="normal" title="Button"/>
                     <buttonConfiguration key="configuration" style="tinted" title="Opuść">
                         <fontDescription key="titleFontDescription" type="system" pointSize="10"/>
                     </buttonConfiguration>
+                    <connections>
+                        <action selector="didTapLeaveJoinButton:" destination="-1" eventType="touchUpInside" id="dzX-z2-f7F"/>
+                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="koR-4u-hcf">
-                    <rect key="frame" x="146" y="7.9999999999999982" width="46" height="20.333333333333329"/>
+                    <rect key="frame" x="146" y="8" width="46" height="21"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                     <state key="normal" title="Szczegóły"/>
                     <buttonConfiguration key="configuration" style="plain">
                         <imageReference key="image" image="ellipsis.rectangle" catalog="system" symbolScale="medium"/>
                     </buttonConfiguration>
+                    <connections>
+                        <action selector="didTapDetailsButton:" destination="-1" eventType="touchUpInside" id="3xO-0j-jLk"/>
+                    </connections>
                 </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="s6H-tx-2Nd"/>
@@ -93,7 +100,7 @@
                 <constraint firstItem="bos-Ho-8XN" firstAttribute="leading" secondItem="RHT-gO-O72" secondAttribute="trailing" constant="4" id="Y24-aC-v4k"/>
                 <constraint firstItem="yGf-dY-8Jw" firstAttribute="leading" secondItem="NPP-Wl-xSa" secondAttribute="trailing" constant="4" id="fXS-fi-kxp"/>
                 <constraint firstItem="rZ3-Rd-Pmz" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="fok-j0-9Ml"/>
-                <constraint firstItem="s6H-tx-2Nd" firstAttribute="trailing" secondItem="WfM-fZ-2VD" secondAttribute="trailing" constant="18" id="l0C-fr-Hz4"/>
+                <constraint firstItem="s6H-tx-2Nd" firstAttribute="trailing" secondItem="WfM-fZ-2VD" secondAttribute="trailing" constant="12" id="l0C-fr-Hz4"/>
                 <constraint firstItem="NPP-Wl-xSa" firstAttribute="top" secondItem="2JT-cW-Q2o" secondAttribute="bottom" constant="4" id="lOf-0I-hbr"/>
                 <constraint firstItem="koR-4u-hcf" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="oAF-yu-D5j"/>
                 <constraint firstItem="NPP-Wl-xSa" firstAttribute="centerY" secondItem="yGf-dY-8Jw" secondAttribute="centerY" id="q5p-Lc-67p"/>

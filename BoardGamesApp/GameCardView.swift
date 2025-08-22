@@ -18,7 +18,19 @@ class GameCardView: UIView {
     @IBOutlet var timeLabel: UILabel!
     @IBOutlet var locationLabel: UILabel!
     @IBOutlet var peopleLabel: UILabel!
-    @IBOutlet var leaveEvent: UIButton!
+    @IBOutlet var leaveJoinButton: UIButton!
+    @IBOutlet var detailsButton: UIButton!
+    
+    var onDetailsButtonTapped: (() -> Void)?
+    var onLeaveJoinButtonTapped: (() -> Void)?
+    
+
+    @IBAction func didTapDetailsButton(_ sender: UIButton) {
+    }
+    
+    @IBAction func didTapLeaveJoinButton(_ sender: UIButton) {
+    }
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -48,12 +60,12 @@ class GameCardView: UIView {
         ])
     }
     
-    func configure(with event: GameEvent, state: CardState = .active){
+    func configure(with event: GameEvent, state: CardState = .active, isUserJoined: Bool){
         titleLabel.text = event.title
         timeLabel.text = event.time
         locationLabel.text = event.location
         peopleLabel.text = "\(event.currentPlayersCount)/\(event.maxPlayersCount)"
-        leaveEvent.layer.cornerRadius = 8
+        leaveJoinButton.layer.cornerRadius = 8
         
         switch state {
         case .active:
@@ -70,6 +82,18 @@ class GameCardView: UIView {
             peopleLabel.textColor = .black
             contentView.backgroundColor = .secondarySystemBackground
         }
+        
+        if isUserJoined {
+            leaveJoinButton.setTitle("Opuść", for: .normal )
+           // leaveJoinButton.backgroundColor = .systemRed
+           //leaveJoinButton.tintColor = .white
+        } else {
+            leaveJoinButton.setTitle("Dołącz", for: .normal)
+            //leaveJoinButton.backgroundColor = .systemBlue
+            //leaveJoinButton.tintColor = .white
+        }
+        
+
     }
     
 }
