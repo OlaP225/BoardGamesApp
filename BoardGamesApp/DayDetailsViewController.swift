@@ -27,13 +27,15 @@ class DayDetailsViewController: UIViewController {
         
         gamesTableView.translatesAutoresizingMaskIntoConstraints = false
         
-        gamesTableView.register(UITableViewCell.self, forCellReuseIdentifier: "GameCardCell")
+        gamesTableView.register(GameCardCell.self, forCellReuseIdentifier: GameCardCell.identifier)
         
         NSLayoutConstraint.activate([
             gamesTableView.topAnchor.constraint(equalTo: view.topAnchor),
             gamesTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             gamesTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            gamesTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            gamesTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            gamesTableView.heightAnchor.constraint(equalToConstant: 80),
+            gamesTableView.widthAnchor.constraint(equalToConstant: 200)
         ])
     }
     
@@ -45,10 +47,17 @@ extension DayDetailsViewController: UITableViewDelegate, UITableViewDataSource{
         return events.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
+        guard let cell = gamesTableView.dequeueReusableCell(withIdentifier: GameCardCell.identifier, for: indexPath) as? GameCardCell else {
+            fatalError("Could not dequeue GameCardCell")
+        }
+        
         let event = events[indexPath.row]
-        gamesTableView.dequeueReusableCell(withIdentifier: "GameCardCell", for: indexPath)
-        cell.textLabel?.text = event.title
+        let isUserJoined = false
+        
+        cell.configure(with: event, isUserJoined: isUserJoined)
+
         return cell
     }
+        
+    
 }
