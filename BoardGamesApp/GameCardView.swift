@@ -29,6 +29,7 @@ class GameCardView: UIView {
     }
     
     @IBAction func didTapLeaveJoinButton(_ sender: UIButton) {
+        onLeaveJoinButtonTapped?()
     }
     
     

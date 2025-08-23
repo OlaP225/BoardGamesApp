@@ -14,4 +14,5 @@ struct GameEvent {
     let time: String
     let location: String
     let date: Date
+    var participantsIDs: [String]
 }

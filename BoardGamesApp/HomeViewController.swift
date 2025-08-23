@@ -50,18 +50,18 @@ class HomeViewController: UIViewController{
     }
     
     var upcomingEvents: [GameEvent] = [
-        GameEvent(title: "Monopoly", currentPlayersCount: 3, maxPlayersCount: 4, time: "10:00 - 12:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 2))!),
-        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 12))!),
-        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 12))!),
-        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 12))!),
-        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 13))!),
-        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 13))!)
+        GameEvent(title: "Monopoly", currentPlayersCount: 3, maxPlayersCount: 4, time: "10:00 - 12:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 2))!, participantsIDs: []),
+        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 12))!, participantsIDs: []),
+        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 12))!, participantsIDs: []),
+        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 12))!, participantsIDs: []),
+        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 13))!, participantsIDs: []),
+        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 13))!, participantsIDs: [])
         ]
     
     var pastEvents: [GameEvent] = [
-        GameEvent(title: "Endgame", currentPlayersCount: 5, maxPlayersCount: 6, time: "10:00 - 12:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 3, day: 2))!),
-        GameEvent(title: "NeedForSpeed", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 3, day: 10))!),
-        GameEvent(title: "CitySkylines", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 2, day: 15))!)
+        GameEvent(title: "Endgame", currentPlayersCount: 5, maxPlayersCount: 6, time: "10:00 - 12:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 3, day: 2))!, participantsIDs: []),
+        GameEvent(title: "NeedForSpeed", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 3, day: 10))!, participantsIDs: []),
+        GameEvent(title: "CitySkylines", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Planty Racławickie", date: Calendar.current.date(from: DateComponents(year: 2025, month: 2, day: 15))!, participantsIDs: [])
     ]
     
     override func viewDidLoad() {

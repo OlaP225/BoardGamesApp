@@ -12,6 +12,7 @@ class GameCardCell: UITableViewCell {
     static let identifier = "GameCardCell"
     
     let gameCardView = GameCardView()
+    var onLeaveJoinButtonTapped: (() -> Void)?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -34,6 +35,11 @@ class GameCardCell: UITableViewCell {
             gameCardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             gameCardView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
+        
+        gameCardView.onLeaveJoinButtonTapped = { [weak self] in
+            self?.onLeaveJoinButtonTapped?()
+            
+        }
     }
     func configure(with event: GameEvent, isUserJoined: Bool){
         gameCardView.configure(with: event, state: .active, isUserJoined: isUserJoined)

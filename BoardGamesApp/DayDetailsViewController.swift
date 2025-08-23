@@ -9,6 +9,7 @@ import UIKit
 
 class DayDetailsViewController: UIViewController {
     var events = [GameEvent]()
+    let currentUserID = "user123"
     
     private let gamesTableView = UITableView()
     
@@ -51,10 +52,20 @@ extension DayDetailsViewController: UITableViewDelegate, UITableViewDataSource{
             fatalError("Could not dequeue GameCardCell")
         }
         
-        let event = events[indexPath.row]
-        let isUserJoined = false
+        let event = self.events[indexPath.row]
+        let isUserJoined = event.participantsIDs.contains(currentUserID)
         
         cell.configure(with: event, isUserJoined: isUserJoined)
+        
+        cell.onLeaveJoinButtonTapped = { [weak self] in
+            guard let self = self else { return }
+            
+            if isUserJoined{
+                self.events[indexPath.row].participantsIDs.removeAll { $0 == self.currentUserID }
+            } else {
+                self.events[indexPath.row].participantsIDs.append(self.currentUserID)
+            }
+        }
 
         return cell
     }
