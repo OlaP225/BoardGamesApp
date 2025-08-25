@@ -67,6 +67,14 @@ class HomeViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let defaults = UserDefaults.standard
+        if let username = defaults.string(forKey: "username") {
+            greeting.text = "Cześć, \(username)!"
+            greeting.sizeToFit()
+        } else {
+            greeting.text = "Cześć!"
+        }
+        
         upcomingTitle.text = "Nadchodzące spotkania"
         pastTitle.text = "Zakończone spotkania"
         upcomingTitle.text! += " 🗓️"
