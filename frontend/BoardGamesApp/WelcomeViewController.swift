@@ -25,6 +25,9 @@ class WelcomeViewController: UIViewController {
         defaults.set(username, forKey: "username")
         defaults.set(true, forKey: "userHasOnboarded")
         
+        let registrationData = UserRegistrationData(username: username, userID: userID)
+        APIService.shared.registerUser(userData: registrationData)
+        
         switchToMainApp()
     }
     private func switchToMainApp() {
