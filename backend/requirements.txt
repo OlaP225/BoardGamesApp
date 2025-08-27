@@ -1,2 +1,4 @@
 fastapi
-uvicorncd
+uvicorn
+sqlalchemy
+pydantic-settings
