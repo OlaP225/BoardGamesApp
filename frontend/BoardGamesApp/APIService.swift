@@ -15,7 +15,7 @@ struct UserRegistrationData: Codable {
 class APIService {
     static let shared = APIService()
     private init () {}
-    private let baseURL = "http://127.0.1:8000"
+    private let baseURL = "http://127.0.0.1:8000"
     
     func registerUser(userData: UserRegistrationData){
         guard let url = URL(string: "\(baseURL)/api/users") else {
