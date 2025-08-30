@@ -200,32 +200,66 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
     @IBAction func didTapAddAvailabilityButton(_ sender: Any) {
         
         guard let date = selectedDay, let timeFrom = selectedDurationFrom, let timeTo = selectedDurationTo else {
-            print("Wypełnij wszystkie pola!!")
+            let ac = UIAlertController(title: "Brak danych", message: "Proszę, wybierz dzień oraz godzinę 'od' i 'do'.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Ok", style: .default))
+            present(ac, animated: true)
             return
         }
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "HH:mm"
-        let formattedTimeFrom = timeFormatter.string(from: timeFrom)
-        let formattedTimeTo = timeFormatter.string(from: timeTo)
-        let time = "\(formattedTimeFrom) - \(formattedTimeTo)"
         
-        let newSlot = AvailabilitySlot(date: date, time: time)
-        
-        if !availabilities.contains(newSlot) {
-            availabilities.append(newSlot)
-            availabilities.sort()
-            if let newIndex = availabilities.firstIndex(of: newSlot) {
-                let indexPath = IndexPath(row: newIndex, section: 0)
-                availabilitiesTable.insertRows(at: [indexPath], with: .automatic)
-            }
-            updateEmptyState()
-        } else {
-            let ac = UIAlertController(title: "Podaj nową dostepność." , message: "Taka dostępność już istnieje!", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
-            present(ac, animated: true)
+        guard let userID = UserDefaults.standard.string(forKey: "userID") else {
+            print("Nie znaleziono userID. Nie można zapisać dostępności")
+            return
         }
         
+        let calendar = Calendar.current
+        let finalFromDate = calendar.date(bySettingHour: calendar.component(.hour, from: timeFrom), minute: calendar.component(.minute, from: timeFrom), second: calendar.component(.second, from: timeFrom), of: date)!
+        let finalToDate = calendar.date(bySettingHour: calendar.component(.hour, from: timeTo), minute: calendar.component(.minute, from: timeTo), second: calendar.component(.second, from: timeTo), of: date)!
         
+        guard finalToDate > finalFromDate else {
+            let ac = UIAlertController(title: "Błąd", message: "Godzina 'od' nie może być późniejsza niż godzina 'do'.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Ok", style: .default))
+            present(ac, animated: true)
+            return
+        }
+        
+        let availabilityData = AvailabilityCreateData(from_time: finalFromDate, to_time: finalToDate)
+        // pokaż wskaźnik ładowania
+        //showLoadingIndicator()
+        
+        APIService.shared.addAvailability(userID: userID, addAvailability: availabilityData) {[weak self] success in
+            guard let self = self else {return}
+            DispatchQueue.main.async {
+                //self.hideLoadingIndicator()
+                if success {
+                    print("Dostępność zapisana na serwerze")
+                    
+                    
+                    let timeFormatter = DateFormatter()
+                    timeFormatter.dateFormat = "HH:mm"
+                    let formattedTimeFrom = timeFormatter.string(from: timeFrom)
+                    let formattedTimeTo = timeFormatter.string(from: timeTo)
+                    let time = "\(formattedTimeFrom) - \(formattedTimeTo)"
+                    
+                    let newSlot = AvailabilitySlot(date: date, time: time)
+                    
+                    if !self.availabilities.contains(newSlot) {
+                        self.availabilities.insert(newSlot, at: 0)
+                        self.availabilities.sort()
+                        self.availabilitiesTable.reloadData()
+                        self.updateEmptyState()
+                    } else {
+                        let ac = UIAlertController(title: "Duplikat" , message: "Taka dostępność już istnieje!", preferredStyle: .alert)
+                        ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
+                        self.present(ac, animated: true)
+                    }
+                } else {
+                    print("Błąd zapisu na serwerze.")
+                    let alert = UIAlertController(title: "Błąd Sieci", message: "Nie udało się zapisać dostępności. Spróbuj ponownie.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(alert, animated: true)
+                }
+            }
+        }
     }
     
     override func viewDidLoad() {

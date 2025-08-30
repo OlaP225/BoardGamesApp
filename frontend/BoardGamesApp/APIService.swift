@@ -12,6 +12,11 @@ struct UserRegistrationData: Codable {
     let userID: String
 }
 
+struct AvailabilityCreateData: Codable {
+    let from_time: Date
+    let to_time: Date
+}
+
 class APIService {
     static let shared = APIService()
     private init () {}
@@ -44,6 +49,39 @@ class APIService {
         }
         task.resume()
     
+    }
+    
+    func addAvailability(userID: String, addAvailability: AvailabilityCreateData, completion: @escaping (Bool)-> Void) {
+        guard let url = URL(string:"\(baseURL)/api/users/\(userID)/availabilities") else {
+            completion(false)
+            return
+        }
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        
+        guard let jsonData = try? encoder.encode(addAvailability) else {
+            completion(false)
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+        
+        let task = URLSession.shared.dataTask(with: request){ data, response, error in
+            if error != nil {
+                completion(false)
+                return
+            }
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                completion(true)
+            } else {
+                completion(false)
+            }
+               
+        }
+        task.resume()
     }
     
     
