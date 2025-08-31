@@ -7,17 +7,22 @@
 
 import UIKit
 
+protocol AvailabilityTableViewCellDelegate: AnyObject {
+    func didTapDeleteButton(on cell: AvailabilityTableViewCell)
+}
+
 class AvailabilityTableViewCell: UITableViewCell {
     @IBOutlet var dateLabel: UILabel!
     @IBOutlet var timeLabel: UILabel!
     @IBOutlet var removeButton: UIButton!
     @IBOutlet var cellBackground: UIView!
     
-    var deleteButtonTapped: (() -> Void)?
+    weak var delegate: AvailabilityTableViewCellDelegate?
     
     @IBAction func removeAvailability(_ sender: UIButton) {
-        deleteButtonTapped?()
+        delegate?.didTapDeleteButton(on: self)
     }
+    
     static let identifier = "AvailabilityTableViewCell"
     
     func configure(with slot: AvailabilitySlot) {
@@ -25,11 +30,17 @@ class AvailabilityTableViewCell: UITableViewCell {
         dateFormatter.locale = Locale(identifier: "PL_pl")
         dateFormatter.dateFormat = "EEEE, d MMM"
         
-        let formattedDate = dateFormatter.string(from: slot.date).capitalized
-    
-        dateLabel.text = formattedDate
-        timeLabel.text = slot.time
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm"
         
+        
+                
+        let dateString = dateFormatter.string(from: slot.from).capitalized
+        let fromTimeString = timeFormatter.string(from: slot.from)
+        let toTimeString = timeFormatter.string(from: slot.to)
+                
+        dateLabel.text = dateString
+        timeLabel.text = "\(fromTimeString) - \(toTimeString)"
     }
     
     override func awakeFromNib() {

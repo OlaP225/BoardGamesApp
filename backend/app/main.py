@@ -45,3 +45,23 @@ def create_availability_for_user(user_id: str, availability: schemas.Availabilit
     db.refresh(db_availability)
     print(f"Zapisano dostępność dla użytkownika {user_id}: {db_availability.from_time} - {db_availability.to_time}")
     return db_availability
+
+@app.delete("/api/availabilities/{availability_id}", status_code=204)
+def delete_availability(availability_id: int, db: Session = Depends(get_db)):
+    db_availability = db.query(models.Availability).filter(models.Availability.id == availability_id).first()
+    if db_availability is None:
+        raise HTTPException(status_code=404, detail="Availability not found")
+    db.delete(db_availability)
+    db.commit()
+    print(f"Usunięto dostępność o ID {availability_id}")
+    return
+
+
+
+@app.get("/api/users/{user_id}/availabilities", response_model=list[schemas.Availability])
+def read_availabilities_for_user(user_id: str, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.userID == user_id).first()
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user.availabilities
+

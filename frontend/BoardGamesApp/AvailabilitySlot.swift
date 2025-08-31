@@ -8,11 +8,16 @@
 import Foundation
 
 struct AvailabilitySlot: Equatable, Comparable {
-    let date: Date
-    let time: String
+    let id: Int
+    let from: Date
+    let to: Date
+    
+    static func == (lhs: AvailabilitySlot, rhs: AvailabilitySlot) -> Bool {
+        return abs(lhs.from.timeIntervalSince(rhs.from)) < 1 && abs(lhs.to.timeIntervalSince(rhs.to)) < 1
+    }
     
     static func < (lhs: AvailabilitySlot, rhs: AvailabilitySlot) -> Bool {
-        return lhs.date < rhs.date
+        return lhs.from < rhs.from
     }
 }
 

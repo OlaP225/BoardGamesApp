@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
 class UserCreate(BaseModel):
@@ -6,8 +6,7 @@ class UserCreate(BaseModel):
     username: str
 
 class User(UserCreate):
-    class Config:
-        from_atributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class AvailabilityCreate(BaseModel):
     from_time: datetime
@@ -17,5 +16,9 @@ class Availability(AvailabilityCreate):
     id: int
     owner_id: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_encoders={
+            datetime: lambda v: v.isoformat(),
+        }
+    )

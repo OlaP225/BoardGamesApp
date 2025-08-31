@@ -45,15 +45,6 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
             availabilitiesTable.backgroundView = nil }
     }
     
-    private func removePastAvailabilities() {
-        let todayStart = Calendar.current.startOfDay(for: Date())
-        
-        availabilities.removeAll(){ slot in
-            return slot.date < todayStart
-        }
-        availabilitiesTable.reloadData()
-    }
-    
     private func updateDurationLabel() {
         guard let startTime = selectedDurationFrom, let endTime = selectedDurationTo else {
             durationLabel!.text = ""
@@ -226,37 +217,28 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         // pokaż wskaźnik ładowania
         //showLoadingIndicator()
         
-        APIService.shared.addAvailability(userID: userID, addAvailability: availabilityData) {[weak self] success in
-            guard let self = self else {return}
-            DispatchQueue.main.async {
-                //self.hideLoadingIndicator()
-                if success {
-                    print("Dostępność zapisana na serwerze")
-                    
-                    
-                    let timeFormatter = DateFormatter()
-                    timeFormatter.dateFormat = "HH:mm"
-                    let formattedTimeFrom = timeFormatter.string(from: timeFrom)
-                    let formattedTimeTo = timeFormatter.string(from: timeTo)
-                    let time = "\(formattedTimeFrom) - \(formattedTimeTo)"
-                    
-                    let newSlot = AvailabilitySlot(date: date, time: time)
-                    
-                    if !self.availabilities.contains(newSlot) {
-                        self.availabilities.insert(newSlot, at: 0)
-                        self.availabilities.sort()
-                        self.availabilitiesTable.reloadData()
-                        self.updateEmptyState()
-                    } else {
-                        let ac = UIAlertController(title: "Duplikat" , message: "Taka dostępność już istnieje!", preferredStyle: .alert)
-                        ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
-                        self.present(ac, animated: true)
-                    }
-                } else {
-                    print("Błąd zapisu na serwerze.")
+        APIService.shared.addAvailability(userID: userID, availabilityData: availabilityData) { [weak self] newSlotFromServer in
+            guard let self = self, let newSlot = newSlotFromServer else {
+                DispatchQueue.main.async {
                     let alert = UIAlertController(title: "Błąd Sieci", message: "Nie udało się zapisać dostępności. Spróbuj ponownie.", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default))
-                    self.present(alert, animated: true)
+                    self?.present(alert, animated: true)
+                }
+                return
+            }
+            
+            DispatchQueue.main.async {
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = "HH:mm"
+                let formattedTimeFrom = timeFormatter.string(from: newSlot.from)
+                let formattedTimeTo = timeFormatter.string(from: newSlot.to)
+                let timeString = "\(formattedTimeFrom) - \(formattedTimeTo)"
+                
+                if !self.availabilities.contains(newSlot) {
+                    self.availabilities.append(newSlot)
+                    self.availabilities.sort()
+                    self.availabilitiesTable.reloadData()
+                    self.updateEmptyState()
                 }
             }
         }
@@ -264,6 +246,11 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
+        setupTableView()
+        
+    }
+    private func setupUI() {
         availabilitiesTable.dataSource = self
         availabilitiesTable.delegate = self
         yourAvailabilitiesTitle.text = "Twoje dostępności"
@@ -271,16 +258,17 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         addAvailabilityContainer.layer.cornerRadius = 15
         addAvailabilityContainer.layer.borderWidth = 1
         addAvailabilityContainer.layer.borderColor = UIColor.systemGray.cgColor
-        
+    }
+    
+    private func setupTableView() {
         let nib = UINib(nibName: "AvailabilityTableViewCell", bundle: nil)
         availabilitiesTable.register(nib, forCellReuseIdentifier: AvailabilityTableViewCell.identifier)
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        removePastAvailabilities()
         updateEmptyState()
+        fetchAvailabilities()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -294,30 +282,78 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         let slot = availabilities[indexPath.row]
         cell.configure(with: slot)
         
-        cell.deleteButtonTapped = { [weak self] in
-            guard let self = self else { return }
-            
-            let rowToDelete = availabilities[indexPath.row]
-            let dateFormatter =  DateFormatter()
-            dateFormatter.locale = Locale(identifier: "PL_pl")
-            dateFormatter.dateFormat = "EEEE, d MMM"
-            let formattedDate = dateFormatter.string(from: rowToDelete.date)
-        
-            
-            let ac = UIAlertController(title: "Potwierdź usunięcie", message: "Czy na pewno chcesz usunąć dostępność \(formattedDate) o \(rowToDelete.time)?", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Nie", style: .cancel))
-            ac.addAction(UIAlertAction(title: "Tak", style: .destructive){ _ in
-                self.availabilities.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .fade)
-                self.updateEmptyState()
-            })
-            self.present(ac, animated: true)
-        }
+        cell.delegate = self
         
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
+    
+    private func fetchAvailabilities() {
+        guard let userID = UserDefaults.standard.string(forKey: "userID") else {
+            print("Brak userID, nie można pobrać dostępności")
+            return
+        }
+        
+        APIService.shared.fetchAvailabilities(userID: userID) { [weak self] fetchedAvailabilities in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                if let slots = fetchedAvailabilities {
+                    self.availabilities = slots
+                    self.availabilities.sort()
+                    self.availabilitiesTable.reloadData()
+                    
+                } else {
+                    print("Nie udało się pobrać dostępności.")
+                    self.availabilities = [] // Wyczyść listę w razie błędu
+                    self.availabilitiesTable.reloadData()
+                }
+                
+                
+                self.updateEmptyState()
+            }
+        }
+        
+    }
+}
 
+extension AvailabilityViewController: AvailabilityTableViewCellDelegate {
+    func didTapDeleteButton(on cell: AvailabilityTableViewCell) {
+        guard let indexPath = availabilitiesTable.indexPath(for: cell) else { return }
+        let slotToDelete = availabilities[indexPath.row]
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "pl_PL")
+        dateFormatter.dateFormat = "EEEE, d MMM"
+        let formattedDate = dateFormatter.string(from: slotToDelete.from)
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm"
+        let fromTime = timeFormatter.string(from: slotToDelete.from)
+        let toTime = timeFormatter.string(from: slotToDelete.to)
+        
+        let alert = UIAlertController(title: "Potwierdź usunięcie", message: "Czy na pewno chcesz usunąć dostępność \(formattedDate) od \(fromTime) do \(toTime)?", preferredStyle: .alert)
+                
+        alert.addAction(UIAlertAction(title: "Nie", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Tak", style: .destructive) { [weak self] _ in
+            guard let self = self else {return}
+            
+            APIService.shared.deleteAvailability(availabilityID: slotToDelete.id) { success in
+                DispatchQueue.main.async {
+                    if success {
+                        self.availabilities.remove(at: indexPath.row)
+                        self.availabilitiesTable.deleteRows(at: [indexPath], with: .fade)
+                        self.updateEmptyState()
+                    } else {
+                        print("Błąd podczas usuwania połączenia sieciowego.")
+                    }
+                }
+                
+            }
+            
+        })
+        present(alert, animated: true)
+    }
 }
