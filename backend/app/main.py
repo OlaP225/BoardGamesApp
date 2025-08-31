@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from . import models, schemas
 from .database import SessionLocal, engine
+from .matchmaking import prepare_input_data
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -27,6 +28,18 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+
+    #test
+
+    db_user_test = db.query(models.User).filter(models.User.userID == user.userID).first()
+    if db_user_test:
+        print("Sprawdzamy dostępności dla użytkownika", db_user_test.username)
+        for slot in db_user_test.availabilities:
+            print(f"  Dostępność: {slot.from_time} - {slot.to_time}")
+
+
+    #test
+
     print(f"Created user: {db_user.userID}, {db_user.username}")
     return db_user
 
@@ -64,4 +77,19 @@ def read_availabilities_for_user(user_id: str, db: Session = Depends(get_db)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user.availabilities
+
+@app.post("/api/matchmaking/run")
+def run_matchmaking(db: Session = Depends(get_db)):
+    print("\n\n --- Uruchamianie procesu matchmakingu... --- ")
+    input_data = prepare_input_data(db)
+    if input_data is None:
+        print("Zakończono: Brak danych do przetworzenia. ")
+        return {"message": "Brak dostępności do przetworzenia"}
+    print("Dane wejściowe przygotowane do algorytmu: ")
+    print(input_data)
+    import json
+    print(json.dumps(input_data, indent=2, default=str))
+
+    print("--- Zakończono proces matchmakingu --- \n")
+    return {"status": "success", "message": "Proces matchmakingu zakończony. Sprawdź logi serwera."}
 
