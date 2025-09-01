@@ -73,7 +73,11 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .inline
         datePicker.backgroundColor = .white
-        datePicker.minimumDate = Date()
+        let calendar = Calendar.current
+        let today = Date()
+        let thirtyDaysFromToday = calendar.date(byAdding: .day, value: 29, to: today)
+        datePicker.minimumDate = today
+        datePicker.maximumDate = thirtyDaysFromToday
         
         let selectAction = UIAction { [weak self] action in
             guard let self = self, let picker = action.sender as? UIDatePicker else { return }
@@ -109,7 +113,7 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         let timePicker = UIDatePicker()
         timePicker.datePickerMode = .time
         timePicker.preferredDatePickerStyle = .wheels
-        timePicker.minuteInterval = 5
+        timePicker.minuteInterval = 30
         timePicker.backgroundColor = .white
         let calendar = Calendar.current
         let minTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: Date())
@@ -151,7 +155,7 @@ class AvailabilityViewController: UIViewController, UITableViewDelegate, UITable
         let timePicker = UIDatePicker()
         timePicker.datePickerMode = .time
         timePicker.preferredDatePickerStyle = .wheels
-        timePicker.minuteInterval = 5
+        timePicker.minuteInterval = 30
         timePicker.backgroundColor = .white
         let calendar = Calendar.current
         let minTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: Date())

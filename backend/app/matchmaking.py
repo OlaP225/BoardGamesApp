@@ -4,7 +4,9 @@ from . import models
 import pytz
 
 target_timezone = pytz.timezone("Europe/Warsaw")
-days_in_schedule = 7 #7 days in a week
+local_now = datetime.now(target_timezone)
+start_of_day = local_now.replace(hour=0, minute=0, second=0, microsecond=0)
+days_in_schedule = 30 #30 upcoming days
 slots_per_day = 28 # 30 minute slots from 8:00 - 22:00
 
 def prepare_input_data(db: Session):
@@ -23,6 +25,8 @@ def prepare_input_data(db: Session):
 
     for user in all_users:
         player_index = userid_index_map[user.userID]
+        if player_index is None:
+            continue
         for availability in user.availabilities:
 
             from_time_utc = pytz.utc.localize(availability.from_time)
@@ -31,9 +35,10 @@ def prepare_input_data(db: Session):
             from_time_local = from_time_utc.astimezone(target_timezone)
             to_time_local =  to_time_utc.astimezone(target_timezone)
 
-            day_of_week = from_time_local.weekday()
+            delta_days = (from_time_local.date() - start_of_day.date()).days
+            day_index = delta_days
 
-            if 0 <= day_of_week < days_in_schedule:
+            if 0 <= day_index < days_in_schedule:
                 start_hour = from_time_local.hour
                 start_minue = from_time_local.minute
                 end_hour = to_time_local.hour
@@ -44,7 +49,7 @@ def prepare_input_data(db: Session):
 
                 for slot_index in range(start_slot_index, end_slot_index):
                     if 0 <= slot_index < slots_per_day:
-                        availability_matrix[player_index][day_of_week][slot_index] = 1
+                        availability_matrix[player_index][day_index][slot_index] = 1
 
 
 
