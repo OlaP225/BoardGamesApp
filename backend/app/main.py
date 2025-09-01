@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 from .database import SessionLocal, engine
 from .matchmaking import prepare_input_data
+import json
+from . import algorithm
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -86,9 +88,11 @@ def run_matchmaking(db: Session = Depends(get_db)):
         print("Zakończono: Brak danych do przetworzenia. ")
         return {"message": "Brak dostępności do przetworzenia"}
     print("Dane wejściowe przygotowane do algorytmu: ")
-    print(input_data)
-    import json
     print(json.dumps(input_data, indent=2, default=str))
+    print("Uruchamianie algorytmu...")
+
+    #model_gnn = algorithm.GNN()
+    #general_schedule, user_schedules = algorithm.run_gnn_prediction(model_gnn,input_data)
 
     print("--- Zakończono proces matchmakingu --- \n")
     return {"status": "success", "message": "Proces matchmakingu zakończony. Sprawdź logi serwera."}

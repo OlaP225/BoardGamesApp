@@ -22,3 +22,18 @@ class Availability(AvailabilityCreate):
             datetime: lambda v: v.isoformat(),
         }
     )
+
+class EventBase(BaseModel):
+    game_name: str
+    from_time: datetime
+    to_time: datetime
+
+class EventCreate(EventBase):
+    pass
+
+class Event(EventBase):
+    id: int
+    participants: list[User] = []
+    model_config = ConfigDict(from_attributes=True)
+
+
