@@ -5,6 +5,7 @@ from .database import SessionLocal, engine
 from .matchmaking import prepare_input_data
 import json
 from . import algorithm
+import numpy as np
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -87,12 +88,18 @@ def run_matchmaking(db: Session = Depends(get_db)):
     if input_data is None:
         print("Zakończono: Brak danych do przetworzenia. ")
         return {"message": "Brak dostępności do przetworzenia"}
-    print("Dane wejściowe przygotowane do algorytmu: ")
-    print(json.dumps(input_data, indent=2, default=str))
+
     print("Uruchamianie algorytmu...")
 
-    #model_gnn = algorithm.GNN()
-    #general_schedule, user_schedules = algorithm.run_gnn_prediction(model_gnn,input_data)
+    ilosc_graczy = input_data["iloscOsob"]
+    symulowana_macierz = np.ones((ilosc_graczy, algorithm.NUMBER_OF_NODES))
+
+    przetlumaczone_wydarzenia = algorithm.translate_schedule_to_events(
+        schedule_per_player=symulowana_macierz,
+        user_ids=input_data["user_ids"]
+    )
+    
+    algorithm.save_events_to_db(db, przetlumaczone_wydarzenia)
 
     print("--- Zakończono proces matchmakingu --- \n")
     return {"status": "success", "message": "Proces matchmakingu zakończony. Sprawdź logi serwera."}

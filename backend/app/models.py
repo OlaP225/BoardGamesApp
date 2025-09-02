@@ -25,6 +25,7 @@ class Event(Base):
     game_name = Column(String, index = True)
     from_time = Column(DateTime, index = True)
     to_time = Column(DateTime)
+    status = Column(String, default="pending", index = True)
 
     participants = relationship("User", secondary="events_participants", back_populates="events")
 

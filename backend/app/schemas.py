@@ -33,7 +33,8 @@ class EventCreate(EventBase):
 
 class Event(EventBase):
     id: int
-    participants: list[User] = []
+    participants: list[str] = []
+    status: str
     model_config = ConfigDict(from_attributes=True)
 
 
