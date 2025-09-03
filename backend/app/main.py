@@ -6,6 +6,7 @@ from .matchmaking import prepare_input_data
 import json
 from . import algorithm
 import numpy as np
+import torch
 
 models.Base.metadata.create_all(bind=engine)
 

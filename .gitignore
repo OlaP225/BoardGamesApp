@@ -298,3 +298,7 @@ docker-compose.yml
 
 # Docker-specific folder
 .docker/
+
+# Ignore generated training data
+/training_data_raw/
+/training_data_matrix/ # Nazwa folderu, który stworzymy w przyszłości

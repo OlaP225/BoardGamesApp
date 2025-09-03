@@ -7,3 +7,4 @@ pytz
 torch
 numpy
 torch-geometric
+docplex
