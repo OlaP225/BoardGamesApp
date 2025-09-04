@@ -4,6 +4,7 @@ import os
 import json
 import pytz
 import numpy as np
+from docplex.mp.model import Model
 
 target_timezone = pytz.timezone("Europe/Warsaw")
 
@@ -11,11 +12,11 @@ number_of_simulations = 50
 min_players = 4
 max_players = 9
 min_availabilities_per_user = 1
-max_availabilities_per_user = 5
-days = 30
-time_slots_per_day = 28 # from 8:00 to 22:00 in 30-minute intervals
+max_availabilities_per_user = 3
+days = 7
+time_slots_per_day = 7 # from 8:00 to 22:00 in 30-minute intervals
 MIN_HOUR = 8
-MAX_HOUR = 22
+MAX_HOUR = 15
 
 def generate_random_availabilities():
     """
@@ -103,12 +104,61 @@ def convert_availabilities_to_matrix(users_data: dict):
     
     return input_data
 
+def solve_with_cplex(input_data: dict):
+    """
+    Solves scheduling problem with CPLEX.
+    """
+    number_of_players = input_data["iloscOsob"]
+    max_games = input_data["maxGierDlaGracza"]
+    availability = input_data["dostepnosc"]
+    min_players = 2
+    max_players = 3
+
+    mdl = Model(name= "Game Scheduler")
+    players_games = mdl.binary_var_cube(range(number_of_players), range(days), range(time_slots_per_day), name="playersGames")
+    games = mdl.binary_var_matrix(range(days), range(time_slots_per_day), name='games')
+
+    mdl.maximize(mdl.sum(players_games[g, d, h] for g in range(number_of_players) for d in range(days) for h in range(time_slots_per_day)))
+
+    # Ograniczenie 1: Dostępność gracza (dodawane RAZ)
+    mdl.add_constraints(players_games[g, d, h] <= availability[g][d][h] for g in range(number_of_players) for d in range(days) for h in range(time_slots_per_day))
+
+    # Ograniczenie 2: Liczba graczy w grze
+    for d in range(days):
+        for h in range(time_slots_per_day):
+            mdl.add_constraint(mdl.sum(players_games[g, d, h] for g in range(number_of_players)) >= min_players * games[d, h])
+            mdl.add_constraint(mdl.sum(players_games[g, d, h] for g in range(number_of_players)) <= max_players * games[d, h])
+    
+    # Ograniczenie 3: Powiązanie `gryGracza` z `gry` (dodawane RAZ)
+    mdl.add_constraints(players_games[g, d, h] <= games[d, h] for g in range(number_of_players) for d in range(days) for h in range(time_slots_per_day))
+
+    # Ograniczenie 4: Limit gier dla gracza (dodawane RAZ)
+    mdl.add_constraints(mdl.sum(players_games[g, d, h] for d in range(days) for h in range(time_slots_per_day)) <= max_games[g] for g in range(number_of_players))
+    
+    print("Uruchamianie CPLEXa...")
+    solution = mdl.solve()
+
+    if solution:
+        print("Znaleziono rozwiązanie.")
+        scheduled_games = np.zeros(((number_of_players ,days, time_slots_per_day)))
+        for g in range(number_of_players):
+            for d in range(days):
+                for h in range(time_slots_per_day):
+                    scheduled_games[g, d, h] = solution.get_value(players_games[g, d, h])
+        return scheduled_games
+    else:
+        print("Nie znaleziono rozwiązania.")
+
+
 if __name__ == "__main__":
     
     SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
     RAW_DATA_DIR = os.path.join(SCRIPT_DIR, '..', 'training_data_raw')
+    PROCESSED_DATA_DIR = os.path.join(SCRIPT_DIR, '..', 'processed_data')
+
 
     os.makedirs(RAW_DATA_DIR, exist_ok=True)
+    os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
     
     for i in range(1, number_of_simulations + 1):
         availabilities_dict = generate_random_availabilities()
@@ -120,8 +170,14 @@ if __name__ == "__main__":
 
         input_matrix_data = convert_availabilities_to_matrix(availabilities_dict)
         if input_matrix_data:
-            matrix = np.array(input_matrix_data["dostepnosc"])
-            print(f"Pomyślnie przekonwertowano na macierz o kształcie: {matrix.shape}")
+            output = solve_with_cplex(input_matrix_data)
+            processed_file_path = os.path.join(PROCESSED_DATA_DIR, f"simulation_{i}_processed.npz")
+            np.savez_compressed(
+                processed_file_path,
+                x=np.array(input_matrix_data["dostepnosc"]),
+                y=output
+            )
+            print(f"Zapisano parę treningową do: {processed_file_path}")
     
         
     print(f"\nZakończono. Wygenerowano {number_of_simulations} plików z symulacjami w folderze 'training_data_raw'.")

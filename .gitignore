@@ -301,4 +301,4 @@ docker-compose.yml
 
 # Ignore generated training data
 /training_data_raw/
-/training_data_matrix/ # Nazwa folderu, który stworzymy w przyszłości
+/processed_data/
