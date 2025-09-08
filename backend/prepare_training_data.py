@@ -9,14 +9,14 @@ from docplex.mp.model import Model
 target_timezone = pytz.timezone("Europe/Warsaw")
 
 number_of_simulations = 50
-min_players = 4
-max_players = 9
+min_players = 2
+max_players = 6
 min_availabilities_per_user = 1
-max_availabilities_per_user = 3
+max_availabilities_per_user = 2
 days = 7
-time_slots_per_day = 7 # from 8:00 to 22:00 in 30-minute intervals
-MIN_HOUR = 8
-MAX_HOUR = 15
+time_slots_per_day = 10 
+MIN_HOUR = 10
+MAX_HOUR = 20
 
 def generate_random_availabilities():
     """
