@@ -7,7 +7,7 @@ class User(Base):
     __tablename__ = "users"
     userID = Column(String, primary_key = True, index = True)
     username = Column(String, index = True)
-    availabilities = relationship("Availability", back_populates="owner")
+    availabilities = relationship("Availability", back_populates="owner", cascade="all, delete-orphan")
     events = relationship("Event", secondary="events_participants", back_populates="participants")
 
 class Availability(Base):

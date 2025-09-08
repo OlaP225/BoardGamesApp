@@ -6,8 +6,8 @@ import pytz
 target_timezone = pytz.timezone("Europe/Warsaw")
 local_now = datetime.now(target_timezone)
 start_of_day = local_now.replace(hour=0, minute=0, second=0, microsecond=0)
-days_in_schedule = 30 #30 upcoming days
-slots_per_day = 28 # 30 minute slots from 8:00 - 22:00
+days_in_schedule = 7 #30 upcoming days
+slots_per_day = 10 # 30 minute slots from 8:00 - 22:00
 
 def prepare_input_data(db: Session):
     """

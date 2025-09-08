@@ -79,7 +79,11 @@ def translate_schedule_to_events(schedule_per_player, user_ids, target_timezone_
     return final_events
 
 def save_events_to_db(db: Session, events_to_create: list[schemas.Event]):
-    db.query(models.Event).filter(models.Event.status == "pending").delete()
+    old_pending_events = db.query(models.Event).filter(models.Event.status == "pending").all()
+    if old_pending_events:
+        for event in old_pending_events:
+            db.delete(event)
+
 
     for event_data in events_to_create:
         new_event = models.Event(
