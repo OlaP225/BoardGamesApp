@@ -8,3 +8,5 @@ torch
 numpy
 torch-geometric
 docplex
+scikit-learn
+cplex

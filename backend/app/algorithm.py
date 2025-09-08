@@ -1,92 +1,9 @@
-import os
-import json
 import numpy as np
-import torch
-import torch.nn.functional as F
-from torch_geometric.nn import GCNConv
-from torch_geometric.data import Data
-from torch_geometric.loader import DataLoader
 from datetime import datetime, timedelta
 import pytz
 from . import schemas, models
 from sqlalchemy.orm import Session
-
-DAYS_IN_SCHEDULE = 30
-SLOTS_PER_DAY = 28    # 30 minute slots from 8:00 - 22:00
-NUMBER_OF_NODES = DAYS_IN_SCHEDULE * SLOTS_PER_DAY
-
-PLAYERS_CONSTANT = 25 
-MIN_PLAYERS = 2
-MAX_PLAYERS = 3
-
-class GNN(torch.nn.Module):
-    def __init__(self, liczba_wejsc, liczba_wyjsc, ukryte=64):
-        super(GNN, self).__init__()
-        self.conv1 = GCNConv(liczba_wejsc, ukryte)
-        self.conv2 = GCNConv(ukryte, liczba_wyjsc)
-
-    def forward(self, data):
-        x, indeks_krawedzi = data.x, data.edge_index
-        x = F.relu(self.conv1(x, indeks_krawedzi))
-        x = F.dropout(x, p=0.5, training=self.training)
-        x = self.conv2(x, indeks_krawedzi)
-        return x
-    
-def run_gnn_prediction(model, input_data):
-    """
-    Function runs GNN model predicition with prepared input data.
-    """
-    model.eval()
-
-    number_of_players = input_data["iloscOsob"]
-    availability = input_data["dostepnosc"]
-
-
-    node_features = np.array(availability).reshape(number_of_players, NUMBER_OF_NODES).T
-    padding_size = PLAYERS_CONSTANT - number_of_players
-    if padding_size < 0:
-        print("Error: Number of players exceeds the constant limit.")
-        return None, None
-    else:
-        node_features_padding = np.pad(node_features, ((0, 0), (0, padding_size)), 'constant')
-
-    edges = []
-    for i in range(NUMBER_OF_NODES - 1):
-        dzien_wezla_i = i // SLOTS_PER_DAY
-        j = i + 1
-        dzien_wezla_j = j // SLOTS_PER_DAY
-        if dzien_wezla_i == dzien_wezla_j:
-            edges.append([i, j])
-            edges.append([j, i])
-    indeks_krawedzi = torch.tensor(edges, dtype=torch.long).t().contiguous()
-
-    graph_for_test = Data(
-        x=torch.tensor(node_features_padding, dtype=torch.float), 
-        edge_index=indeks_krawedzi
-    )
-
-    with torch.no_grad():
-        logits = model(graph_for_test)
-        probabilities = torch.sigmoid(logits)[:, :number_of_players]
-    
-    final_schedule_players = np.zeros((NUMBER_OF_NODES, number_of_players), dtype=int)
-    for slot_idx in range(NUMBER_OF_NODES):
-        slot_probabilities = probabilities[slot_idx].numpy()
-        available_players_in_slot = node_features[slot_idx]
-        sorted_player_indices = np.argsort(-slot_probabilities)
-        
-        selected_players = []
-        for player_idx in sorted_player_indices:
-            if available_players_in_slot[player_idx] == 1:
-                selected_players.append(player_idx)
-            if len(selected_players) == MAX_PLAYERS:
-                break
-        
-        if len(selected_players) >= MIN_PLAYERS:
-            for player_idx in selected_players:
-                final_schedule_players[slot_idx, player_idx] = 1
-
-    return final_schedule_players.T
+from app.config import *
 
 def translate_schedule_to_events(schedule_per_player, user_ids, target_timezone_str="Europe/Warsaw"):
     target_timezone = pytz.timezone(target_timezone_str)
