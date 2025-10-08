@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 from .database import SessionLocal, engine
 from .matchmaking import prepare_input_data
-import json
 from . import algorithm, gnn_model
 import numpy as np
 import torch
@@ -23,7 +22,7 @@ def get_db():
 
 @app.get("/")
 def read_root():
-    return {"message": "Serwer BoardGamesApp działa!"}
+    return {"message": "Serwer BoardGamesApp is working!"}
 
 @app.post("/api/users", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
@@ -39,9 +38,9 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
     db_user_test = db.query(models.User).filter(models.User.userID == user.userID).first()
     if db_user_test:
-        print("Sprawdzamy dostępności dla użytkownika", db_user_test.username)
+        print("Checking availability of user:", db_user_test.username)
         for slot in db_user_test.availabilities:
-            print(f"  Dostępność: {slot.from_time} - {slot.to_time}")
+            print(f"  Availability: {slot.from_time} - {slot.to_time}")
 
 
     #test
@@ -62,7 +61,7 @@ def create_availability_for_user(user_id: str, availability: schemas.Availabilit
     db.add(db_availability)
     db.commit()
     db.refresh(db_availability)
-    print(f"Zapisano dostępność dla użytkownika {user_id}: {db_availability.from_time} - {db_availability.to_time}")
+    print(f"Availability saved for user {user_id}: {db_availability.from_time} - {db_availability.to_time}")
     return db_availability
 
 @app.delete("/api/availabilities/{availability_id}", status_code=204)
@@ -72,7 +71,7 @@ def delete_availability(availability_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Availability not found")
     db.delete(db_availability)
     db.commit()
-    print(f"Usunięto dostępność o ID {availability_id}")
+    print(f"Removed availability with ID: {availability_id}")
     return
 
 
@@ -92,39 +91,39 @@ def load_model():
     global global_gnn_model
     model_path = os.path.join(os.path.dirname(__file__), "gnn_model.pth")
     if not os.path.exists(model_path):
-        print(f"Krytyczny błąd: Nie znaleziono pliku modelu pod ściezką {model_path}")
+        print(f"Error: There is no file under path {model_path}")
         return
     
-    print(f"Ładowanie modelu GNN...")
-    global_gnn_model = gnn_model.GNN(liczba_wejsc=PLAYERS_CONSTANT, liczba_wyjsc=PLAYERS_CONSTANT)
+    print(f"Loading GNN model...")
+    global_gnn_model = gnn_model.GNN(in_channels=PLAYERS_CONSTANT, out_channels=PLAYERS_CONSTANT)
     global_gnn_model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
     global_gnn_model.eval()
-    print("Model GNN pomyślnie załadowany i gotowy do predykcji.")
+    print("GNN model loaded and ready for predictions.")
 
 
 @app.post("/api/matchmaking/run")
 def run_matchmaking(db: Session = Depends(get_db)):
-    print("\n\n --- Uruchamianie procesu matchmakingu... --- ")
+    print("\n\n Matchmaking started ... ")
 
     if global_gnn_model is None:
-        raise HTTPException(status_code=503, detail="Model GNN nie jest załadowany lub wystąpił błąd.")
+        raise HTTPException(status_code=503, detail="GNN model is not loaded.")
     
     input_data = prepare_input_data(db)
     if input_data is None:
-        print("Zakończono: Brak danych do przetworzenia. ")
-        return {"message": "Brak dostępności do przetworzenia"}
+        print("Finished matchmaking - no availabilities to process. ")
+        return {"message": "No availabilities found to process."}
 
-    print("Uruchamianie algorytmu GNN...")
+    print("Model and availabilities are ready, running GNN prediction...")
 
     result_matrix = gnn_model.run_gnn_prediction(global_gnn_model, input_data)
 
-    przetlumaczone_wydarzenia = algorithm.translate_schedule_to_events(
+    translated_events = algorithm.translate_schedule_to_events(
         schedule_per_player=result_matrix,
         user_ids=input_data["user_ids"]
     )
     
-    algorithm.save_events_to_db(db, przetlumaczone_wydarzenia)
+    algorithm.save_events_to_db(db, translated_events)
 
-    print("--- Zakończono proces matchmakingu --- \n")
-    return {"status": "success", "message": "Proces matchmakingu zakończony. Sprawdź logi serwera."}
+    print("GNN prediction finished \n")
+    return {"status": "success", "message": "Matchmaking completed and events saved."}
 

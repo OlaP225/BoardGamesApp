@@ -1,32 +1,29 @@
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import os
 import json
-import pytz
 import numpy as np
 from docplex.mp.model import Model
-
-target_timezone = pytz.timezone("Europe/Warsaw")
+from app.config import *
 
 number_of_simulations = 50
-min_players = 2
-max_players = 6
+min_players_sim = 2
+max_players_sim = 6
 min_availabilities_per_user = 1
 max_availabilities_per_user = 2
-days = 7
-time_slots_per_day = 10 
 MIN_HOUR = 10
 MAX_HOUR = 20
 
 def generate_random_availabilities():
     """
-    Gnerates random availabilities for a set of users.
+    Gnerates random availabilities for a set of users. Function returns a dictionary in a format:
+    {"user_1": [{"from": "2023-10-01T10:00:00", "to": "2023-10-01T12:00:00"}, ...], "user_2": [...], ...}       
     """
 
-    num_users = random.randint(min_players, max_players)
+    num_users = random.randint(min_players_sim, max_players_sim)
     users_with_availabilities = {}
 
-    print(f"Generowanie dostępności dla {num_users} uzytkowników")
+    print(f"Generating availability for {num_users} users...")
 
     for i in range(num_users):
         user_id = f"user_{i+1}"
@@ -34,24 +31,20 @@ def generate_random_availabilities():
         num_availabilities = random.randint(min_availabilities_per_user, max_availabilities_per_user)
 
         for _ in range(num_availabilities):
-            random_day_offset = random.randint(0, days - 1)
-            start_hour = random.randint(MIN_HOUR, MAX_HOUR - 2)
+            random_day_offset = random.randint(0, DAYS_IN_SCHEDULE - 1)
+            start_hour = random.randint(MIN_HOUR, MAX_HOUR - 1)
             
-            duration_in_half_hours = random.randint(2, 8)
-            duration_in_minutes = duration_in_half_hours * 30
+            duration_in_hours = random.randint(1,4)
             
-            today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-            start_time = today + timedelta(days=random_day_offset, hours=start_hour)
-            
-            if random.random() > 0.5:
-                start_time = start_time.replace(minute=30)
-            else:
-                start_time = start_time.replace(minute=0)
+            today_utc = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+            start_time_utc = today_utc + timedelta(days=random_day_offset, hours=start_hour)
                 
-            end_time = start_time + timedelta(minutes=duration_in_minutes)
-            users_with_availabilities[user_id].append({"from": start_time, "to": end_time})
+            end_time_utc = start_time_utc + timedelta(hours=duration_in_hours)
+            if end_time_utc.hour > MAX_HOUR:
+                end_time_utc = end_time_utc.replace(hour=MAX_HOUR)
+            users_with_availabilities[user_id].append({"from": start_time_utc, "to": end_time_utc})
 
-    print(f"Wygenerowano {sum(len(v) for v in users_with_availabilities.values())} dostępności.")
+    print(f"There were  {sum(len(v) for v in users_with_availabilities.values())} availabilities generated.")
     return users_with_availabilities
 
 
@@ -63,36 +56,31 @@ def convert_availabilities_to_matrix(users_data: dict):
     if number_of_users == 0:
         return None
     
-    availability_matrix = [[[0] * time_slots_per_day for _ in range(days)] for _ in range(number_of_users)]
+    availability_matrix = [[[0] * SLOTS_PER_DAY for _ in range(DAYS_IN_SCHEDULE)] for _ in range(number_of_users)]
     max_games_per_user = [2] * number_of_users
     userid_index_map = {user_id: i for i, user_id in enumerate(all_users_ids)}
 
-    start_of_today = datetime.now(target_timezone).replace(hour=0, minute=0, second=0, microsecond=0)
+    start_of_today_utc = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
 
     for user_id, availabilities in users_data.items():
         player_index = userid_index_map[user_id]
         for availability in availabilities:
 
-            from_time = availability["from"]
-            to_time = availability["to"]
+            from_time_utc = availability["from"]
+            to_time_utc = availability["to"]
 
-            from_time_local = target_timezone.localize(from_time) if from_time.tzinfo is None else from_time
-            to_time_local = target_timezone.localize(to_time) if to_time.tzinfo is None else to_time
+            delta_days = (from_time_utc.date() - start_of_today_utc.date())
+            day_index = delta_days.days
 
-            delta_days = (from_time_local.date() - start_of_today.date()).days
-            day_index = delta_days
+            if 0 <= day_index < DAYS_IN_SCHEDULE:
+                start_hour = from_time_utc.hour
+                end_hour = to_time_utc.hour
 
-            if 0 <= day_index < days:
-                start_hour = from_time_local.hour
-                start_minue = from_time_local.minute
-                end_hour = to_time_local.hour
-                end_minute = to_time_local.minute
-
-                start_slot_index = (start_hour - MIN_HOUR) *2 + (1 if start_minue >= 30 else 0)
-                end_slot_index = (end_hour - MIN_HOUR) * 2 + (1 if end_minute > 0 else 0)
+                start_slot_index = start_hour - MIN_HOUR
+                end_slot_index = end_hour - MIN_HOUR
 
                 for slot_index in range(start_slot_index, end_slot_index):
-                    if 0 <= slot_index < time_slots_per_day:
+                    if 0 <= slot_index < SLOTS_PER_DAY:
                         availability_matrix[player_index][day_index][slot_index] = 1
 
     input_data = {
@@ -105,45 +93,41 @@ def convert_availabilities_to_matrix(users_data: dict):
     return input_data
 
 def solve_with_cplex(input_data: dict):
-    """
-    Solves scheduling problem with CPLEX.
-    """
+ 
     number_of_players = input_data["iloscOsob"]
     max_games = input_data["maxGierDlaGracza"]
-    availability = input_data["dostepnosc"]
-    min_players = 2
-    max_players = 3
+    availability = np.array(input_data["dostepnosc"])
 
     mdl = Model(name= "Game Scheduler")
-    players_games = mdl.binary_var_cube(range(number_of_players), range(days), range(time_slots_per_day), name="playersGames")
-    games = mdl.binary_var_matrix(range(days), range(time_slots_per_day), name='games')
+    players_games = mdl.binary_var_cube(range(number_of_players), range(DAYS_IN_SCHEDULE), range(SLOTS_PER_DAY), name="playersGames")
+    games = mdl.binary_var_matrix(range(DAYS_IN_SCHEDULE), range(SLOTS_PER_DAY), name='games')
 
-    mdl.maximize(mdl.sum(players_games[g, d, h] for g in range(number_of_players) for d in range(days) for h in range(time_slots_per_day)))
+    mdl.maximize(mdl.sum(players_games[g, d, h] for g in range(number_of_players) for d in range(DAYS_IN_SCHEDULE) for h in range(SLOTS_PER_DAY)))
 
     # Ograniczenie 1: Dostępność gracza (dodawane RAZ)
-    mdl.add_constraints(players_games[g, d, h] <= availability[g][d][h] for g in range(number_of_players) for d in range(days) for h in range(time_slots_per_day))
+    mdl.add_constraints(players_games[g, d, h] <= availability[g][d][h] for g in range(number_of_players) for d in range(DAYS_IN_SCHEDULE) for h in range(SLOTS_PER_DAY))
 
     # Ograniczenie 2: Liczba graczy w grze
-    for d in range(days):
-        for h in range(time_slots_per_day):
-            mdl.add_constraint(mdl.sum(players_games[g, d, h] for g in range(number_of_players)) >= min_players * games[d, h])
-            mdl.add_constraint(mdl.sum(players_games[g, d, h] for g in range(number_of_players)) <= max_players * games[d, h])
+    for d in range(DAYS_IN_SCHEDULE):
+        for h in range(SLOTS_PER_DAY):
+            mdl.add_constraint(mdl.sum(players_games[g, d, h] for g in range(number_of_players)) >= min_players_sim * games[d, h])
+            mdl.add_constraint(mdl.sum(players_games[g, d, h] for g in range(number_of_players)) <= max_players_sim * games[d, h])
     
     # Ograniczenie 3: Powiązanie `gryGracza` z `gry` (dodawane RAZ)
-    mdl.add_constraints(players_games[g, d, h] <= games[d, h] for g in range(number_of_players) for d in range(days) for h in range(time_slots_per_day))
+    mdl.add_constraints(players_games[g, d, h] <= games[d, h] for g in range(number_of_players) for d in range(DAYS_IN_SCHEDULE) for h in range(SLOTS_PER_DAY))
 
     # Ograniczenie 4: Limit gier dla gracza (dodawane RAZ)
-    mdl.add_constraints(mdl.sum(players_games[g, d, h] for d in range(days) for h in range(time_slots_per_day)) <= max_games[g] for g in range(number_of_players))
+    mdl.add_constraints(mdl.sum(players_games[g, d, h] for d in range(DAYS_IN_SCHEDULE) for h in range(SLOTS_PER_DAY)) <= max_games[g] for g in range(number_of_players))
     
     print("Uruchamianie CPLEXa...")
     solution = mdl.solve()
 
     if solution:
         print("Znaleziono rozwiązanie.")
-        scheduled_games = np.zeros(((number_of_players ,days, time_slots_per_day)))
+        scheduled_games = np.zeros(((number_of_players ,DAYS_IN_SCHEDULE, SLOTS_PER_DAY)))
         for g in range(number_of_players):
-            for d in range(days):
-                for h in range(time_slots_per_day):
+            for d in range(DAYS_IN_SCHEDULE):
+                for h in range(SLOTS_PER_DAY):
                     scheduled_games[g, d, h] = solution.get_value(players_games[g, d, h])
         return scheduled_games
     else:

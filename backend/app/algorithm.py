@@ -50,14 +50,11 @@ def translate_schedule_to_events(schedule_per_player, user_ids, target_timezone_
             day_offset = slot_index // SLOTS_PER_DAY
             slot_in_day = slot_index % SLOTS_PER_DAY
             
-            hour_offset = slot_in_day // 2
-            minute_offset = (slot_in_day % 2) * 30
-            
-            hour = 8 + hour_offset
-            minute = minute_offset
+            hour = MIN_HOUR + slot_in_day
+
             
             event_date = start_of_today + timedelta(days=day_offset)
-            event_datetime = event_date.replace(hour=hour, minute=minute)
+            event_datetime = event_date.replace(hour=hour, minute=0, second=0)
             
             return event_datetime
 

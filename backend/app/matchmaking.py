@@ -2,12 +2,13 @@ from sqlalchemy.orm import Session
 from datetime import datetime, time
 from . import models
 import pytz
+from app.config import *
 
 target_timezone = pytz.timezone("Europe/Warsaw")
 local_now = datetime.now(target_timezone)
 start_of_day = local_now.replace(hour=0, minute=0, second=0, microsecond=0)
-days_in_schedule = 7 #30 upcoming days
-slots_per_day = 10 # 30 minute slots from 8:00 - 22:00
+days_in_schedule = 7 
+slots_per_day = 10 
 
 def prepare_input_data(db: Session):
     """
@@ -40,12 +41,10 @@ def prepare_input_data(db: Session):
 
             if 0 <= day_index < days_in_schedule:
                 start_hour = from_time_local.hour
-                start_minue = from_time_local.minute
                 end_hour = to_time_local.hour
-                end_minute = to_time_local.minute
 
-                start_slot_index = (start_hour - 8) *2 + (1 if start_minue >= 30 else 0)
-                end_slot_index = (end_hour - 8) * 2 + (1 if end_minute > 0 else 0)
+                start_slot_index = start_hour - MIN_HOUR
+                end_slot_index = end_hour - MIN_HOUR
 
                 for slot_index in range(start_slot_index, end_slot_index):
                     if 0 <= slot_index < slots_per_day:
