@@ -17,7 +17,7 @@ MAX_HOUR = 20
 def generate_random_availabilities():
     """
     Gnerates random availabilities for a set of users. Function returns a dictionary in a format:
-    {"user_1": [{"from": "2023-10-01T10:00:00", "to": "2023-10-01T12:00:00"}, ...], "user_2": [...], ...}       
+    {"user_1": [{"from": "2023-10-01T10:00:00", "to": "2023-10-01T12:00:00"}, ...], "user_2": etc ...}       
     """
 
     num_users = random.randint(min_players_sim, max_players_sim)
@@ -97,48 +97,48 @@ def solve_with_cplex(input_data: dict):
     number_of_players = input_data["iloscOsob"]
     max_games = input_data["maxGierDlaGracza"]
     availability = np.array(input_data["dostepnosc"])
+    min_players_num = 2
+    max_players_num = 4
 
     mdl = Model(name= "Game Scheduler")
     players_games = mdl.binary_var_cube(range(number_of_players), range(DAYS_IN_SCHEDULE), range(SLOTS_PER_DAY), name="playersGames")
     games = mdl.binary_var_matrix(range(DAYS_IN_SCHEDULE), range(SLOTS_PER_DAY), name='games')
 
-    mdl.maximize(mdl.sum(players_games[g, d, h] for g in range(number_of_players) for d in range(DAYS_IN_SCHEDULE) for h in range(SLOTS_PER_DAY)))
+    mdl.maximize(mdl.sum(players_games[p, d, h] for p in range(number_of_players) for d in range(DAYS_IN_SCHEDULE) for h in range(SLOTS_PER_DAY)))
 
-    # Ograniczenie 1: Dostępność gracza (dodawane RAZ)
-    mdl.add_constraints(players_games[g, d, h] <= availability[g][d][h] for g in range(number_of_players) for d in range(DAYS_IN_SCHEDULE) for h in range(SLOTS_PER_DAY))
+    # Constraint 1: Player has a game only when they are available
+    mdl.add_constraints(players_games[p, d, h] <= availability[p][d][h] for p in range(number_of_players) for d in range(DAYS_IN_SCHEDULE) for h in range(SLOTS_PER_DAY))
 
-    # Ograniczenie 2: Liczba graczy w grze
+
+    # Constraint 2: Game will happen only if there are enough players (for now min 2, max 4)
     for d in range(DAYS_IN_SCHEDULE):
         for h in range(SLOTS_PER_DAY):
-            mdl.add_constraint(mdl.sum(players_games[g, d, h] for g in range(number_of_players)) >= min_players_sim * games[d, h])
-            mdl.add_constraint(mdl.sum(players_games[g, d, h] for g in range(number_of_players)) <= max_players_sim * games[d, h])
-    
-    # Ograniczenie 3: Powiązanie `gryGracza` z `gry` (dodawane RAZ)
-    mdl.add_constraints(players_games[g, d, h] <= games[d, h] for g in range(number_of_players) for d in range(DAYS_IN_SCHEDULE) for h in range(SLOTS_PER_DAY))
+            mdl.add_constraint(mdl.sum(players_games[p, d, h] for p in range(number_of_players)) >= min_players_num * games[d, h])
+            mdl.add_constraint(mdl.sum(players_games[p, d, h] for p in range(number_of_players)) <= max_players_num * games[d, h])
 
-    # Ograniczenie 4: Limit gier dla gracza (dodawane RAZ)
-    mdl.add_constraints(mdl.sum(players_games[g, d, h] for d in range(DAYS_IN_SCHEDULE) for h in range(SLOTS_PER_DAY)) <= max_games[g] for g in range(number_of_players))
+    # Constraint 3: Each player can't play more times than their max allowed games.
+    mdl.add_constraints(mdl.sum(players_games[p, d, h] for d in range(DAYS_IN_SCHEDULE) for h in range(SLOTS_PER_DAY)) <= max_games[p] for p in range(number_of_players))
     
-    print("Uruchamianie CPLEXa...")
+    print("Starting CPLEX calculations...")
     solution = mdl.solve()
 
     if solution:
-        print("Znaleziono rozwiązanie.")
+        print("Solution found.")
         scheduled_games = np.zeros(((number_of_players ,DAYS_IN_SCHEDULE, SLOTS_PER_DAY)))
-        for g in range(number_of_players):
+        for p in range(number_of_players):
             for d in range(DAYS_IN_SCHEDULE):
                 for h in range(SLOTS_PER_DAY):
-                    scheduled_games[g, d, h] = solution.get_value(players_games[g, d, h])
+                    scheduled_games[p, d, h] = solution.get_value(players_games[p, d, h])
         return scheduled_games
     else:
-        print("Nie znaleziono rozwiązania.")
+        print("No solution found")
 
 
 if __name__ == "__main__":
     
     SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
-    RAW_DATA_DIR = os.path.join(SCRIPT_DIR, '..', 'training_data_raw')
-    PROCESSED_DATA_DIR = os.path.join(SCRIPT_DIR, '..', 'processed_data')
+    RAW_DATA_DIR = os.path.join(SCRIPT_DIR, '..', 'cplex_training_data')
+    PROCESSED_DATA_DIR = os.path.join(SCRIPT_DIR, '..', 'cplex_processed_data')
 
 
     os.makedirs(RAW_DATA_DIR, exist_ok=True)
@@ -150,18 +150,19 @@ if __name__ == "__main__":
         file_path = os.path.join(RAW_DATA_DIR, f"simulation_{i}.json")
         with open(file_path, 'w') as f:
             json.dump(availabilities_dict, f, indent=2, default=str)
-        print(f"Zapisano symulację do: {file_path}")
+        print(f"Simulation saved to: {file_path}")
 
         input_matrix_data = convert_availabilities_to_matrix(availabilities_dict)
         if input_matrix_data:
             output = solve_with_cplex(input_matrix_data)
+            print(f"Cplex solution for simulation number {i}:\n{output}") ##test
             processed_file_path = os.path.join(PROCESSED_DATA_DIR, f"simulation_{i}_processed.npz")
             np.savez_compressed(
                 processed_file_path,
                 x=np.array(input_matrix_data["dostepnosc"]),
                 y=output
             )
-            print(f"Zapisano parę treningową do: {processed_file_path}")
+            print(f"Final package with simulated availabilities data and cplex output representing arranged schedule saved to: {processed_file_path}")
     
         
-    print(f"\nZakończono. Wygenerowano {number_of_simulations} plików z symulacjami w folderze 'training_data_raw'.")
+    print(f"\Fninished. There are {number_of_simulations} files generated with simulations and cplex results.")
