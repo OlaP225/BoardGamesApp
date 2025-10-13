@@ -1,79 +1,69 @@
 import torch
 import torch.nn.functional as F
-from torch_geometric.nn import GCNConv
-from torch_geometric.data import Data
-from torch_geometric.loader import DataLoader
+from torch_geometric.nn import SAGEConv
 from app.config import *
 import numpy as np
-from torch_geometric.nn.conv.gcn_conv import gcn_norm
-
 
 class GNN(torch.nn.Module):
-    def __init__(self, in_channels, out_channels, hidden_channels=64):
+    def __init__(self, in_channels, out_channels, hidden_channels=256):
         super(GNN, self).__init__()
-        self.conv1 = GCNConv(in_channels, hidden_channels)
-        self.conv2 = GCNConv(hidden_channels, out_channels)
+        self.conv1 = SAGEConv(in_channels, hidden_channels)
+        self.conv2 = SAGEConv(hidden_channels, out_channels)
+        self.edge_predictor = torch.nn.Sequential(
+            torch.nn.Linear(out_channels * 2, hidden_channels),
+            torch.nn.ReLU(),
+            torch.nn.Linear(hidden_channels, 1)
+        )
 
-    def forward(self, data):
-        x, edge_index = data.x, data.edge_index
-        edge_index, _ = gcn_norm(edge_index, num_nodes=x.size(0), add_self_loops=True)
+    def forward(self, x, edge_index):
         x = F.relu(self.conv1(x, edge_index))
-        x = F.dropout(x, p=0.5, training=self.training)
-        x = self.conv2(x, edge_index)
-        return x
+        x = F.relu(self.conv2(x, edge_index))
+        
+        start_node_features = x[edge_index[0]]
+        end_node_features = x[edge_index[1]]
     
-def run_gnn_prediction(model, input_data):
-    """
-    Function runs GNN model predicition with prepared input data.
-    """
+        edge_features = torch.cat([start_node_features, end_node_features], dim=-1)
+        return self.edge_predictor(edge_features)
+
+def train_model(model, loader, epochs=200):
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    criterion = torch.nn.BCEWithLogitsLoss()
+    model.train()
+
+    print("Model training started...")
+    for epoch in range(1, epochs + 1):
+        total_loss = 0
+        for data in loader:
+            optimizer.zero_grad()
+            out = model(data.x, data.edge_index)
+            loss = criterion(out.squeeze(), data.y.squeeze())
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item()
+            
+        avg_loss = total_loss / len(loader)
+        if epoch % 10 == 0:
+            print(f"`Epoch`: {epoch:03d}, Average loss: {avg_loss:.4f}")
+    print("Training finished.")
+
+def run_gnn_prediction(model, graph_data):
     model.eval()
-
-    number_of_players = input_data["iloscOsob"]
-    availability = input_data["dostepnosc"]
-
-
-    node_features = np.array(availability).reshape(number_of_players, NUMBER_OF_NODES).T
-    padding_size = PLAYERS_CONSTANT - number_of_players
-    if padding_size < 0:
-        print("Error: Number of players exceeds the constant limit.")
-        return None, None
-    else:
-        node_features_padding = np.pad(node_features, ((0, 0), (0, padding_size)), 'constant')
-
-    edges = []
-    for i in range(NUMBER_OF_NODES - 1):
-        dzien_wezla_i = i // SLOTS_PER_DAY
-        j = i + 1
-        dzien_wezla_j = j // SLOTS_PER_DAY
-        if dzien_wezla_i == dzien_wezla_j:
-            edges.append([i, j])
-            edges.append([j, i])
-    indeks_krawedzi = torch.tensor(edges, dtype=torch.long).t().contiguous()
-
-    graph_for_test = Data(
-        x=torch.tensor(node_features_padding, dtype=torch.float), 
-        edge_index=indeks_krawedzi
-    )
-
-    with torch.no_grad():
-        logits = model(graph_for_test)
-        probabilities = torch.sigmoid(logits)[:, :number_of_players]
     
-    final_schedule_players = np.zeros((NUMBER_OF_NODES, number_of_players), dtype=int)
-    for slot_idx in range(NUMBER_OF_NODES):
-        slot_probabilities = probabilities[slot_idx].numpy()
-        available_players_in_slot = node_features[slot_idx]
-        sorted_player_indices = np.argsort(-slot_probabilities)
+    with torch.no_grad():
+        logits = model(graph_data.x, graph_data.edge_index)
+        probabilities = torch.sigmoid(logits)
         
-        selected_players = []
-        for player_idx in sorted_player_indices:
-            if available_players_in_slot[player_idx] == 1:
-                selected_players.append(player_idx)
-            if len(selected_players) == MAX_PLAYERS:
-                break
+        threshold = 0.5
+        predictions = (probabilities > threshold).int().cpu().numpy()
         
-        if len(selected_players) >= MIN_PLAYERS:
-            for player_idx in selected_players:
-                final_schedule_players[slot_idx, player_idx] = 1
-
-    return final_schedule_players.T
+        num_players = graph_data.num_players
+        final_schedule = np.zeros((num_players, NUMBER_OF_NODES), dtype=int)
+        player_to_slot_edges = graph_data.edge_index[:, graph_data.edge_index[0] < num_players]
+        
+        for i in range(len(predictions)):
+            if predictions[i] == 1:
+                player_idx = player_to_slot_edges[0, i].item()
+                slot_idx = player_to_slot_edges[1, i].item() - num_players
+                final_schedule[player_idx, slot_idx] = 1
+                
+        return final_schedule.reshape(num_players, DAYS_IN_SCHEDULE, SLOTS_PER_DAY)

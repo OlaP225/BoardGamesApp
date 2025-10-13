@@ -6,7 +6,7 @@ import numpy as np
 from docplex.mp.model import Model
 from app.config import *
 
-number_of_simulations = 50
+number_of_simulations = 500
 min_players_sim = 2
 max_players_sim = 6
 min_availabilities_per_user = 1
@@ -160,7 +160,8 @@ if __name__ == "__main__":
             np.savez_compressed(
                 processed_file_path,
                 x=np.array(input_matrix_data["dostepnosc"]),
-                y=output
+                y=output,
+                maxGames = np.array(input_matrix_data["maxGierDlaGracza"])
             )
             print(f"Final package with simulated availabilities data and cplex output representing arranged schedule saved to: {processed_file_path}")
     
