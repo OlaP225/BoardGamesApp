@@ -17,13 +17,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hej Ola!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DEt-lI-CmS">
-                                <rect key="frame" x="139" y="88" width="74.666666666666686" height="27"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Hej Ola!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DEt-lI-CmS">
+                                <rect key="frame" x="139" y="88" width="74.666666666666686" height="30.333333333333329"/>
                                 <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x1h-49-3CD">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x1h-49-3CD">
                                 <rect key="frame" x="48" y="171" width="41.333333333333343" height="20.333333333333343"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -46,43 +46,37 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Snd-CO-fgB">
-                                <rect key="frame" x="48" y="64" width="75" height="75"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="75" id="lfg-J3-oz5"/>
-                                    <constraint firstAttribute="height" constant="75" id="vMi-tw-2Ky"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" buttonSize="large">
-                                    <imageReference key="image" image="person.circle" catalog="system" symbolScale="large"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="didTapImageButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fbY-xG-MKc"/>
-                                </connections>
-                            </button>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BNH-4l-i90">
+                                <rect key="frame" x="48" y="72" width="60" height="60"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BGH-bt-rsn">
+                                        <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemCyanColor"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <accessibility key="accessibilityConfiguration" identifier="pastCell"/>
                         <constraints>
                             <constraint firstItem="DEt-lI-CmS" firstAttribute="centerY" secondItem="iul-V9-op2" secondAttribute="centerY" id="5Rs-8q-bPS"/>
-                            <constraint firstItem="Snd-CO-fgB" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="64" id="9F9-Hb-Xcl"/>
+                            <constraint firstItem="BNH-4l-i90" firstAttribute="centerY" secondItem="DEt-lI-CmS" secondAttribute="centerY" id="9PG-Ez-e6D"/>
+                            <constraint firstItem="BNH-4l-i90" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="48" id="Aq7-6h-jIN"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="iul-V9-op2" secondAttribute="trailing" constant="31" id="Cug-yh-ihp"/>
                             <constraint firstItem="DEt-lI-CmS" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="29" id="SeY-jh-TYp"/>
-                            <constraint firstItem="DEt-lI-CmS" firstAttribute="leading" secondItem="Snd-CO-fgB" secondAttribute="trailing" constant="16" id="f4i-Ag-Khx"/>
                             <constraint firstItem="iul-V9-op2" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="34" id="fTV-Y4-NRg"/>
                             <constraint firstItem="x1h-49-3CD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="48" id="fdc-b3-cqM"/>
-                            <constraint firstItem="Snd-CO-fgB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="48" id="gyd-lj-CG1"/>
-                            <constraint firstItem="DEt-lI-CmS" firstAttribute="centerY" secondItem="Snd-CO-fgB" secondAttribute="centerY" id="nhR-EG-JO4"/>
-                            <constraint firstItem="x1h-49-3CD" firstAttribute="top" secondItem="Snd-CO-fgB" secondAttribute="bottom" constant="32" id="wRm-IZ-oIJ"/>
+                            <constraint firstItem="BGH-bt-rsn" firstAttribute="centerY" secondItem="DEt-lI-CmS" secondAttribute="centerY" id="ygF-gn-VZl"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Główna" image="house" catalog="system" id="qnt-0P-a2X"/>
+                    <tabBarItem key="tabBarItem" title="Główna" id="qnt-0P-a2X">
+                        <imageReference key="image" image="house" catalog="system"/>
+                        <color key="badgeColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBarItem>
                     <connections>
                         <outlet property="greeting" destination="DEt-lI-CmS" id="uRw-OG-3k5"/>
                         <outlet property="pastTitle" destination="kC7-U6-VEI" id="WmD-fG-YtC"/>
-                        <outlet property="profileImageButton" destination="Snd-CO-fgB" id="U7Z-w5-wDs"/>
                         <outlet property="upcomingTitle" destination="x1h-49-3CD" id="95T-La-fmd"/>
                     </connections>
                 </viewController>
@@ -268,6 +262,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" systemColor="systemGray6Color"/>
                     </tabBar>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="ExJ-L5-fkT"/>
@@ -346,9 +341,14 @@
         <image name="calendar" catalog="system" width="128" height="107"/>
         <image name="clock.badge.questionmark" catalog="system" width="128" height="114"/>
         <image name="house" catalog="system" width="128" height="104"/>
-        <image name="person.circle" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemCyanColor">
+            <color red="0.1960784314" green="0.67843137249999996" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGray6Color">
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGrayColor">
             <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

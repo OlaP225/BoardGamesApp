@@ -81,7 +81,7 @@ class GameCardView: UIView {
             timeLabel.textColor = .black
             locationLabel.textColor = .black
             peopleLabel.textColor = .black
-            contentView.backgroundColor = .secondarySystemBackground
+            contentView.backgroundColor = UIColor(named: "InactiveCardBackground")
         }
         
         if isUserJoined {

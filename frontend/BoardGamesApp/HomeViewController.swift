@@ -7,11 +7,12 @@
 
 import UIKit
 
-class HomeViewController: UIViewController{
+class HomeViewController: BaseViewController{
     @IBOutlet var greeting: UILabel!
     @IBOutlet var upcomingTitle: UILabel!
     @IBOutlet var pastTitle: UILabel!
-    @IBOutlet var profileImageButton: UIButton!
+    @IBOutlet var profileImageView: UIImageView!
+    @IBOutlet var profileImageContainerView: UIView!
     
     let scrollView = UIScrollView()
     let daysStackView = UIStackView()
@@ -71,15 +72,16 @@ class HomeViewController: UIViewController{
         if let username = defaults.string(forKey: "username") {
             greeting.text = "Cześć, \(username)!"
             greeting.sizeToFit()
+            greeting.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         } else {
             greeting.text = "Cześć!"
+            greeting.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         }
         
         upcomingTitle.text = "Nadchodzące spotkania"
         pastTitle.text = "Zakończone spotkania"
-        upcomingTitle.text! += " 🗓️"
-        upcomingTitle.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        pastTitle.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        upcomingTitle.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        pastTitle.font = UIFont.systemFont(ofSize: 20, weight: .bold)
 
         profileImageButton.layer.cornerRadius = profileImageButton.frame.size.width / 2
         profileImageButton.clipsToBounds = true

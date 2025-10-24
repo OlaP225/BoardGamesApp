@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EventsCalendarViewController: UIViewController {
+class EventsCalendarViewController: BaseViewController {
     @IBOutlet var calendarContainerView: UIView!
     
     let allEvents : [GameEvent] = [

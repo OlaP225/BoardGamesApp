@@ -21,12 +21,12 @@ def create_bipartite_graph_from_data(file_path: str):
 
     num_players = availability_matrix.shape[0]
     
-    availability_flat = availability_matrix.reshape(num_players, -1)
+    availability_flat = availability_matrix.reshape(num_players, -1) #2 dim (num_players, days * slots)
     solution_flat_y = solution_matrix_y.reshape(num_players, -1)
     
     slot_features = torch.ones((NUMBER_OF_NODES, 1), dtype=torch.float)
-    
     player_features = torch.tensor(max_games_per_player, dtype=torch.float).view(-1, 1)
+    
     x = torch.cat([player_features, slot_features], dim=0)
     
     player_indices, slot_indices = np.where(availability_flat == 1)

@@ -5,7 +5,7 @@ from app.config import *
 import numpy as np
 
 class GNN(torch.nn.Module):
-    def __init__(self, in_channels, out_channels, hidden_channels=256):
+    def __init__(self, in_channels, out_channels, hidden_channels=128):
         super(GNN, self).__init__()
         self.conv1 = SAGEConv(in_channels, hidden_channels)
         self.conv2 = SAGEConv(hidden_channels, out_channels)

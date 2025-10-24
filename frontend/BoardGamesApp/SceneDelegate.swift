@@ -17,6 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
          //If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
+        configureTabBarAppearance()
         let window = UIWindow(windowScene: windowScene)
         let userHasOnboarded = UserDefaults.standard.bool(forKey: "userHasOnboarded")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -32,7 +33,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
     }
 
-    
+    private func configureTabBarAppearance() {
+
+        let standardAppearance = UITabBarAppearance()
+        standardAppearance.configureWithDefaultBackground()
+        standardAppearance.stackedLayoutAppearance.normal.iconColor = .darkGray
+        standardAppearance.stackedLayoutAppearance.selected.iconColor = .purple // Zmień na swój kolor
+        standardAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [
+            .foregroundColor: UIColor.darkGray
+        ]
+        standardAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [
+            .foregroundColor: UIColor.purple
+        ]
+
+        UITabBar.appearance().standardAppearance = standardAppearance
+        UITabBar.appearance().scrollEdgeAppearance = standardAppearance
+    }
     
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

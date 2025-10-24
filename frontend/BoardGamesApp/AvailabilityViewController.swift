@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AvailabilityViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet var addAvailabilityContainer: UIView!
     @IBOutlet var addAvailabilityTitle: UILabel!
     @IBOutlet var dateLabel: UILabel!

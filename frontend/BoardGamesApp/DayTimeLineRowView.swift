@@ -55,6 +55,11 @@ class DayTimeLineRowView: UIView {
         addSubview(contentView)
         contentView.frame = bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.backgroundColor = .clear
+        contentView.backgroundColor = .clear
+        collectionView.backgroundColor = .clear
+        dayLabel.backgroundColor = .clear
+        dateLabel.backgroundColor = .clear
         
         collectionView.dataSource = self
         collectionView.delegate = self
