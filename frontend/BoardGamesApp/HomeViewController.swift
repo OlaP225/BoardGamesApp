@@ -21,33 +21,9 @@ class HomeViewController: BaseViewController{
     
     private func presentImagePicker(sourceType: UIImagePickerController.SourceType) {
         let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
         imagePickerController.sourceType = sourceType
         imagePickerController.allowsEditing = true
         present(imagePickerController, animated: true)
-    }
-    
-    @IBAction func didTapImageButton(_ sender: UIButton) {
-        let ac = UIAlertController(title: "Zdjęcie profilowe", message: "Wybierz opcję", preferredStyle: .actionSheet)
-        
-        if UIImagePickerController.isSourceTypeAvailable(.camera){
-            let cameraAction = UIAlertAction(title: "Zrób zdjęcie", style: .default){ [weak self] _ in
-                self?.presentImagePicker(sourceType: .camera)
-            }
-            ac.addAction(cameraAction)
-        }
-        
-        let libraryAction = UIAlertAction(title: "Wybierz zdjęcie z galerii", style: .default){ [weak self] _ in
-            self?.presentImagePicker(sourceType: .photoLibrary)
-        }
-        ac.addAction(libraryAction)
-        
-        let deleteAction = UIAlertAction(title: "Usuń zdjęcie", style: .destructive){ [weak self] _ in
-            self?.profileImageButton.setImage(UIImage(systemName: "person.circle"), for: .normal)
-        }
-        ac.addAction(deleteAction)
-        ac.addAction(UIAlertAction(title: "Anuluj", style: .cancel))
-        present(ac, animated: true)
     }
     
     var upcomingEvents: [GameEvent] = [
@@ -83,14 +59,34 @@ class HomeViewController: BaseViewController{
         upcomingTitle.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         pastTitle.font = UIFont.systemFont(ofSize: 20, weight: .bold)
 
-        profileImageButton.layer.cornerRadius = profileImageButton.frame.size.width / 2
-        profileImageButton.clipsToBounds = true
-        profileImageButton.imageView?.contentMode = .scaleAspectFit
+
+        setupProfileImageView()
 
         setUpcomingEvents()
         setUpPastEvents()
 
     }
+    private func setupProfileImageView() {
+        profileImageView.image = UIImage(named: "profile3")
+        profileImageContainerView.layer.cornerRadius = 20
+        print(profileImageView.frame.size.width)
+        profileImageContainerView.backgroundColor = .white
+        profileImageView.layer.cornerRadius = 20
+        profileImageView.clipsToBounds = true
+        profileImageView.contentMode = .scaleAspectFill
+        profileImageView.layer.borderWidth = 2.0
+        profileImageView.layer.borderColor = UIColor.white.cgColor
+        
+        profileImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            profileImageView.widthAnchor.constraint(equalToConstant: 80),
+            profileImageView.heightAnchor.constraint(equalToConstant: 80),
+            upcomingTitle.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 20),
+            upcomingTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 48),
+        ])
+    
+    }
+    
     
     func groupAndSort(events: [GameEvent]) -> (sortedDays: [Date], groupedEvents: [Date: [GameEvent]]){
         let grouped = Dictionary(grouping: events) { event in
@@ -176,17 +172,3 @@ class HomeViewController: BaseViewController{
 
 }
 
-extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let editedImage = info[.editedImage] as? UIImage {
-            self.profileImageButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
-        } else if let originalImage = info[.originalImage] as? UIImage {
-            self.profileImageButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
-        }
-        picker.dismiss(animated: true, completion: nil)
-    }
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-    }
-    
-}
