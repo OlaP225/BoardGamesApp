@@ -35,7 +35,7 @@ class DayDetailsViewController: UIViewController {
             gamesTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             gamesTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             gamesTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            gamesTableView.heightAnchor.constraint(equalToConstant: 80),
+            gamesTableView.heightAnchor.constraint(equalToConstant: 70),
             gamesTableView.widthAnchor.constraint(equalToConstant: 200)
         ])
     }

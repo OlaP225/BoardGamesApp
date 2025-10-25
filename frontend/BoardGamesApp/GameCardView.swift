@@ -67,6 +67,15 @@ class GameCardView: UIView {
         locationLabel.text = event.location
         peopleLabel.text = "\(event.currentPlayersCount)/\(event.maxPlayersCount)"
         leaveJoinButton.layer.cornerRadius = 8
+  //      leaveJoinButton.layer.borderColor = UIColor.red.cgColor
+  //      leaveJoinButton.layer.borderWidth = 0.5
+        
+        var config = leaveJoinButton.configuration ?? .filled()
+
+        var attributes = AttributeContainer()
+        attributes.font = UIFont.systemFont(ofSize: 2.0, weight: .semibold)
+        config.attributedTitle?.setAttributes(attributes)
+        config.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4)
         
         switch state {
         case .active:
@@ -93,6 +102,7 @@ class GameCardView: UIView {
             //leaveJoinButton.backgroundColor = .systemBlue
             //leaveJoinButton.tintColor = .white
         }
+        leaveJoinButton.configuration = config
         
 
     }

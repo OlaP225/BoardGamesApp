@@ -5,6 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -25,43 +26,47 @@
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="MONOPOLY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2JT-cW-Q2o">
-                    <rect key="frame" x="16" y="8" width="68.666666666666671" height="21"/>
+                    <rect key="frame" x="16" y="7.9999999999999982" width="68.666666666666671" height="20.333333333333329"/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="j2v-oR-520">
-                    <rect key="frame" x="102.66666666666667" y="11.33333333333333" width="21.333333333333329" height="15.66666666666667"/>
+                    <rect key="frame" x="102.66666666666667" y="11.333333333333332" width="21.333333333333329" height="15"/>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <imageReference key="image" image="person.2.fill" catalog="system" symbolScale="small" variableValue="0.0"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="3/4" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rZ3-Rd-Pmz">
-                    <rect key="frame" x="122" y="8" width="16" height="21"/>
+                    <rect key="frame" x="122" y="7.9999999999999982" width="16" height="20.333333333333329"/>
                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="NPP-Wl-xSa">
-                    <rect key="frame" x="16" y="35.333333333333329" width="15.666666666666664" height="15.666666666666664"/>
+                    <rect key="frame" x="16" y="34.666666666666671" width="15.666666666666664" height="15.666666666666664"/>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <imageReference key="image" image="clock.fill" catalog="system" symbolScale="small"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10:00 - 12:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yGf-dY-8Jw">
-                    <rect key="frame" x="35.666666666666657" y="38.333333333333336" width="53.333333333333343" height="9.6666666666666643"/>
+                    <rect key="frame" x="35.666666666666657" y="37.666666666666664" width="53.333333333333343" height="9.6666666666666643"/>
                     <fontDescription key="fontDescription" type="system" pointSize="8"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="RHT-gO-O72">
-                    <rect key="frame" x="16" y="51.333333333333329" width="15.666666666666664" height="18.333333333333329"/>
+                    <rect key="frame" x="16" y="50.666666666666671" width="15.666666666666664" height="19"/>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <imageReference key="image" image="paperplane.circle.fill" catalog="system" symbolScale="small"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Planty Racławickie" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bos-Ho-8XN">
-                    <rect key="frame" x="35.666666666666657" y="55.666666666666664" width="74" height="9.6666666666666643"/>
+                    <rect key="frame" x="35.666666666666657" y="55.333333333333336" width="74" height="9.6666666666666643"/>
                     <fontDescription key="fontDescription" type="system" pointSize="8"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WfM-fZ-2VD">
-                    <rect key="frame" x="132" y="33" width="56" height="23"/>
+                    <rect key="frame" x="132.66666666666666" y="32.333333333333336" width="55.333333333333343" height="23.666666666666664"/>
+                    <color key="tintColor" systemColor="systemRedColor"/>
                     <state key="normal" title="Button"/>
                     <buttonConfiguration key="configuration" style="tinted" title="Opuść">
                         <fontDescription key="titleFontDescription" type="system" pointSize="10"/>
@@ -71,7 +76,8 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="koR-4u-hcf">
-                    <rect key="frame" x="146" y="8" width="46" height="21"/>
+                    <rect key="frame" x="146" y="7.9999999999999982" width="46" height="20.333333333333329"/>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                     <state key="normal" title="Szczegóły"/>
                     <buttonConfiguration key="configuration" style="plain">
@@ -112,7 +118,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <userDefinedRuntimeAttributes>
                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                    <integer key="value" value="12"/>
+                    <integer key="value" value="25"/>
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
             <point key="canvasLocation" x="59.541984732824424" y="107.04225352112677"/>
@@ -123,5 +129,8 @@
         <image name="ellipsis.rectangle" catalog="system" width="128" height="79"/>
         <image name="paperplane.circle.fill" catalog="system" width="128" height="123"/>
         <image name="person.2.fill" catalog="system" width="128" height="86"/>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

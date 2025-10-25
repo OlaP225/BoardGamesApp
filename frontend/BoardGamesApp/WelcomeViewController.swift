@@ -13,6 +13,7 @@ class WelcomeViewController: BaseViewController {
     @IBOutlet var textFiled: UITextField!
     @IBOutlet var startButton: UIButton!
     
+    
     @IBAction func didTapStartButton(_ sender: UIButton) {
         guard let username = textFiled.text, !username.isEmpty else {
             let ac = UIAlertController(title: "Podaj imię", message: "To pole nie może być puste", preferredStyle: .alert)
@@ -47,7 +48,11 @@ class WelcomeViewController: BaseViewController {
         textFiled.placeholder = "Wpisz swoje imię"
         textFiled.textAlignment = .center
         startButton.setTitle("Zaczynajmy!", for: .normal)
-
+        startButton.tintColor = .black
+        startButton.backgroundColor = .white
+        startButton.layer.cornerRadius = 10
+        startButton.layer.borderColor = UIColor.darkGray.cgColor
+        startButton.layer.borderWidth = 2
     }
     
 }
