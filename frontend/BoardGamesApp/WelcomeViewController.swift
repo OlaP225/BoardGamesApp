@@ -12,6 +12,7 @@ class WelcomeViewController: BaseViewController {
     @IBOutlet var greetingLabel: UILabel!
     @IBOutlet var textFiled: UITextField!
     @IBOutlet var startButton: UIButton!
+    @IBOutlet var logoView: UIImageView!
     
     
     @IBAction func didTapStartButton(_ sender: UIButton) {
@@ -45,15 +46,27 @@ class WelcomeViewController: BaseViewController {
         super.viewDidLoad()
         welcomeLabel.text = "Witaj!"
         greetingLabel.text = "Jak się do Ciebie zwracać?"
+        welcomeLabel.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        greetingLabel.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         textFiled.placeholder = "Wpisz swoje imię"
         textFiled.textAlignment = .center
         startButton.setTitle("Zaczynajmy!", for: .normal)
         startButton.tintColor = .black
         startButton.backgroundColor = .white
-        startButton.layer.cornerRadius = 10
-        startButton.layer.borderColor = UIColor.darkGray.cgColor
-        startButton.layer.borderWidth = 2
+        startButton.layer.cornerRadius = 15
+        startButton.titleLabel?.font = UIFont.systemFont(ofSize: 30, weight: .medium)
+        startButton.setTitleColor(.gray, for: .highlighted)
+        startButton.backgroundColor = UIColor(named: "PinkStartButton")
+        logoView.image = UIImage(named: "dices")
+        
+        startButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            startButton.widthAnchor.constraint(equalToConstant: 300),
+            startButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
     }
+    
     
 }
 

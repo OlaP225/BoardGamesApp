@@ -276,19 +276,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wzk-uq-YHU">
-                                <rect key="frame" x="175.66666666666666" y="209" width="42" height="21"/>
+                                <rect key="frame" x="175.66666666666666" y="409" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ys2-3n-bvn">
-                                <rect key="frame" x="175.66666666666666" y="254" width="42" height="21"/>
+                                <rect key="frame" x="175.66666666666666" y="454" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="T1g-4V-mYY">
-                                <rect key="frame" x="111.66666666666669" y="323" width="170" height="34"/>
+                                <rect key="frame" x="111.66666666666669" y="523" width="170" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="170" id="hZt-LA-k5e"/>
                                 </constraints>
@@ -296,13 +296,22 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y6P-wx-eJf">
-                                <rect key="frame" x="159" y="405" width="75" height="35"/>
+                                <rect key="frame" x="154.66666666666666" y="690" width="84" height="41"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button">
+                                    <fontDescription key="titleFontDescription" name="Impact" family="Impact" pointSize="22"/>
+                                </buttonConfiguration>
                                 <connections>
                                     <action selector="didTapStartButton:" destination="lGx-P7-ZyH" eventType="touchUpInside" id="UYa-au-ofO"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YRs-Pk-hhg">
+                                <rect key="frame" x="96.666666666666686" y="159" width="200" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="HhN-UC-om6"/>
+                                    <constraint firstAttribute="height" constant="200" id="llq-wP-Cyz"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="8Gb-Ze-ngf"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -311,14 +320,17 @@
                             <constraint firstItem="Wzk-uq-YHU" firstAttribute="centerX" secondItem="8Gb-Ze-ngf" secondAttribute="centerX" id="DQ7-fO-WDv"/>
                             <constraint firstItem="ys2-3n-bvn" firstAttribute="top" secondItem="Wzk-uq-YHU" secondAttribute="bottom" constant="24" id="Hjd-nt-Rng"/>
                             <constraint firstItem="T1g-4V-mYY" firstAttribute="centerX" secondItem="8Gb-Ze-ngf" secondAttribute="centerX" id="U1c-dL-17W"/>
-                            <constraint firstItem="Wzk-uq-YHU" firstAttribute="top" secondItem="8Gb-Ze-ngf" secondAttribute="top" constant="150" id="eF9-Im-7m2"/>
-                            <constraint firstItem="y6P-wx-eJf" firstAttribute="top" secondItem="T1g-4V-mYY" secondAttribute="bottom" constant="48" id="jII-KP-2gb"/>
+                            <constraint firstItem="Wzk-uq-YHU" firstAttribute="top" secondItem="YRs-Pk-hhg" secondAttribute="centerY" constant="150" id="eF9-Im-7m2"/>
+                            <constraint firstItem="YRs-Pk-hhg" firstAttribute="centerX" secondItem="Wzk-uq-YHU" secondAttribute="centerX" id="jHc-AC-qtW"/>
+                            <constraint firstItem="y6P-wx-eJf" firstAttribute="top" secondItem="T1g-4V-mYY" secondAttribute="centerY" constant="150" id="jII-KP-2gb"/>
                             <constraint firstItem="T1g-4V-mYY" firstAttribute="top" secondItem="ys2-3n-bvn" secondAttribute="bottom" constant="48" id="pA1-4g-aaO"/>
                             <constraint firstItem="y6P-wx-eJf" firstAttribute="centerX" secondItem="T1g-4V-mYY" secondAttribute="centerX" id="pk0-jo-m79"/>
+                            <constraint firstItem="YRs-Pk-hhg" firstAttribute="top" secondItem="8Gb-Ze-ngf" secondAttribute="top" constant="100" id="qm9-yp-rvp"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="greetingLabel" destination="ys2-3n-bvn" id="RJ2-Bk-5cB"/>
+                        <outlet property="logoView" destination="YRs-Pk-hhg" id="2DE-DL-OuE"/>
                         <outlet property="startButton" destination="y6P-wx-eJf" id="s5L-Ma-Tmb"/>
                         <outlet property="textFiled" destination="T1g-4V-mYY" id="ICi-fr-WsY"/>
                         <outlet property="welcomeLabel" destination="Wzk-uq-YHU" id="cQc-uH-XMw"/>
