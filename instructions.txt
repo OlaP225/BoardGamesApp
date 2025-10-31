@@ -1,0 +1,11 @@
+docker-compose up --build
+docker-compose down
+
+
+Środowisko:
+source venv/bin/activate
+
+
+Strona internetowa:
+http://localhost:8000/docs
+http://localhost:8000

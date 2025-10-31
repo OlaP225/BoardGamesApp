@@ -75,9 +75,9 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
         datePicker.backgroundColor = .white
         let calendar = Calendar.current
         let today = Date()
-        let thirtyDaysFromToday = calendar.date(byAdding: .day, value: 29, to: today)
+        let sevenDaysFromToday = calendar.date(byAdding: .day, value: 6, to: today)
         datePicker.minimumDate = today
-        datePicker.maximumDate = thirtyDaysFromToday
+        datePicker.maximumDate = sevenDaysFromToday
         
         let selectAction = UIAction { [weak self] action in
             guard let self = self, let picker = action.sender as? UIDatePicker else { return }
@@ -113,11 +113,11 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
         let timePicker = UIDatePicker()
         timePicker.datePickerMode = .time
         timePicker.preferredDatePickerStyle = .wheels
-        timePicker.minuteInterval = 30
+        timePicker.minuteInterval = 60
         timePicker.backgroundColor = .white
         let calendar = Calendar.current
         let minTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: Date())
-        let maxTime = calendar.date(bySettingHour: 21, minute: 30, second: 0, of: Date())
+        let maxTime = calendar.date(bySettingHour: 19, minute: 0, second: 0, of: Date())
         timePicker.minimumDate = minTime
         timePicker.maximumDate = maxTime
         
@@ -155,11 +155,11 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
         let timePicker = UIDatePicker()
         timePicker.datePickerMode = .time
         timePicker.preferredDatePickerStyle = .wheels
-        timePicker.minuteInterval = 30
+        timePicker.minuteInterval = 60
         timePicker.backgroundColor = .white
         let calendar = Calendar.current
         let minTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: Date())
-        let maxTime = calendar.date(bySettingHour: 22, minute: 5, second: 0, of: Date())
+        let maxTime = calendar.date(bySettingHour: 20, minute: 0, second: 0, of: Date())
         timePicker.minimumDate = minTime
         timePicker.maximumDate = maxTime
         
@@ -236,7 +236,7 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
                 timeFormatter.dateFormat = "HH:mm"
                 let formattedTimeFrom = timeFormatter.string(from: newSlot.from)
                 let formattedTimeTo = timeFormatter.string(from: newSlot.to)
-                let timeString = "\(formattedTimeFrom) - \(formattedTimeTo)"
+       //         let timeString = "\(formattedTimeFrom) - \(formattedTimeTo)"
                 
                 if !self.availabilities.contains(newSlot) {
                     self.availabilities.append(newSlot)

@@ -95,7 +95,7 @@ def load_model():
         return
     
     print(f"Loading GNN model...")
-    global_gnn_model = gnn_model.GNN(in_channels=PLAYERS_CONSTANT, out_channels=PLAYERS_CONSTANT)
+    global_gnn_model = gnn_model.GNN(in_channels=1, out_channels=1)
     global_gnn_model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
     global_gnn_model.eval()
     print("GNN model loaded and ready for predictions.")
@@ -119,7 +119,7 @@ def run_matchmaking(db: Session = Depends(get_db)):
 
     translated_events = algorithm.translate_schedule_to_events(
         schedule_per_player=result_matrix,
-        user_ids=input_data["user_ids"]
+        user_ids=input_data.user_ids
     )
     
     algorithm.save_events_to_db(db, translated_events)
