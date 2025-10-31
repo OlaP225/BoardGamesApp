@@ -113,27 +113,61 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
         let timePicker = UIDatePicker()
         timePicker.datePickerMode = .time
         timePicker.preferredDatePickerStyle = .wheels
-        timePicker.minuteInterval = 60
         timePicker.backgroundColor = .white
+        timePicker.minuteInterval = 1
+
         let calendar = Calendar.current
         let minTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: Date())
         let maxTime = calendar.date(bySettingHour: 19, minute: 0, second: 0, of: Date())
         timePicker.minimumDate = minTime
         timePicker.maximumDate = maxTime
-        
+
+   
+        if let existing = selectedDurationFrom {
+            var comps = calendar.dateComponents([.year, .month, .day, .hour], from: existing)
+            comps.minute = 0; comps.second = 0
+            if let rounded = calendar.date(from: comps) {
+                timePicker.setDate(rounded, animated: false)
+            }
+        } else {
+            var comps = calendar.dateComponents([.year, .month, .day, .hour], from: Date())
+            comps.minute = 0; comps.second = 0
+            if let rounded = calendar.date(from: comps) {
+                timePicker.setDate(rounded, animated: false)
+            }
+        }
+        let snapAction = UIAction { action in
+            guard let picker = action.sender as? UIDatePicker else { return }
+            var comps = calendar.dateComponents([.year, .month, .day, .hour], from: picker.date)
+            comps.minute = 0; comps.second = 0
+            if let rounded = calendar.date(from: comps) {
+                picker.setDate(rounded, animated: false)
+            }
+        }
+        timePicker.addAction(snapAction, for: .valueChanged)
+
         let selectAction = UIAction { [weak self] action in
-            guard let self = self, let timePicker = action.sender as? UIDatePicker else { return }
+            guard let self = self, let picker = action.sender as? UIDatePicker else { return }
+
+            var comps = calendar.dateComponents([.year, .month, .day, .hour], from: picker.date)
+            comps.minute = 0; comps.second = 0
+            guard let roundedDate = calendar.date(from: comps) else { return }
+
+            picker.setDate(roundedDate, animated: false)
+
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "HH:mm"
-            let formattedTime = dateFormatter.string(from: timePicker.date)
-            selectedDurationFrom = timePicker.date
+            let formattedTime = dateFormatter.string(from: roundedDate)
+
+            self.selectedDurationFrom = roundedDate
             self.durationFromButton.setTitle(formattedTime, for: .normal)
-            updateDurationLabel()
+            self.updateDurationLabel()
+
             timePickerController.dismiss(animated: true)
         }
         timePicker.addAction(selectAction, for: .valueChanged)
+
         timePickerController.view.addSubview(timePicker)
-        
         timePicker.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             timePicker.topAnchor.constraint(equalTo: timePickerController.view.topAnchor),
@@ -141,56 +175,85 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
             timePicker.trailingAnchor.constraint(equalTo: timePickerController.view.trailingAnchor),
             timePicker.bottomAnchor.constraint(equalTo: timePickerController.view.bottomAnchor)
         ])
-        
+
         if let sheet = timePickerController.sheetPresentationController {
-            sheet.detents = [.custom(resolver: {context in return 300})]
+            sheet.detents = [.custom(resolver: { context in return 300 })]
         }
+
         present(timePickerController, animated: true)
-        
-        
     }
+
     
     @IBAction func didTapDurationToButton(_ sender: UIButton) {
         let timePickerController = UIViewController()
         let timePicker = UIDatePicker()
         timePicker.datePickerMode = .time
         timePicker.preferredDatePickerStyle = .wheels
-        timePicker.minuteInterval = 60
         timePicker.backgroundColor = .white
+        timePicker.minuteInterval = 1
+
         let calendar = Calendar.current
         let minTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: Date())
         let maxTime = calendar.date(bySettingHour: 20, minute: 0, second: 0, of: Date())
         timePicker.minimumDate = minTime
         timePicker.maximumDate = maxTime
-        
+
+        if let existing = selectedDurationTo {
+            var comps = calendar.dateComponents([.year, .month, .day, .hour], from: existing)
+            comps.minute = 0; comps.second = 0
+            if let rounded = calendar.date(from: comps) {
+                timePicker.setDate(rounded, animated: false)
+            }
+        } else {
+            var comps = calendar.dateComponents([.year, .month, .day, .hour], from: Date())
+            comps.minute = 0; comps.second = 0
+            if let rounded = calendar.date(from: comps) {
+                timePicker.setDate(rounded, animated: false)
+            }
+        }
+
+        let snapAction = UIAction { action in
+            guard let picker = action.sender as? UIDatePicker else { return }
+            var comps = calendar.dateComponents([.year, .month, .day, .hour], from: picker.date)
+            comps.minute = 0; comps.second = 0
+            if let rounded = calendar.date(from: comps) {
+                picker.setDate(rounded, animated: false)
+            }
+        }
+        timePicker.addAction(snapAction, for: .valueChanged)
+
         let selectAction = UIAction { [weak self] action in
-            guard let self = self, let timePicker = action.sender as? UIDatePicker else { return }
+            guard let self = self, let picker = action.sender as? UIDatePicker else { return }
+            var comps = calendar.dateComponents([.year, .month, .day, .hour], from: picker.date)
+            comps.minute = 0; comps.second = 0
+            guard let roundedDate = calendar.date(from: comps) else { return }
+            picker.setDate(roundedDate, animated: false)
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "HH:mm"
-            let formattedTime = dateFormatter.string(from: timePicker.date)
-            selectedDurationTo = timePicker.date
-            updateDurationLabel()
+            let formattedTime = dateFormatter.string(from: roundedDate)
+            self.selectedDurationTo = roundedDate
             self.durationToButton.setTitle(formattedTime, for: .normal)
+            self.updateDurationLabel()
             timePickerController.dismiss(animated: true)
         }
-        
         timePicker.addAction(selectAction, for: .valueChanged)
+
         timePickerController.view.addSubview(timePicker)
-        
         timePicker.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             timePicker.topAnchor.constraint(equalTo: timePickerController.view.topAnchor),
-            timePicker.bottomAnchor.constraint(equalTo: timePickerController.view.bottomAnchor),
             timePicker.leadingAnchor.constraint(equalTo: timePickerController.view.leadingAnchor),
-            timePicker.trailingAnchor.constraint(equalTo: timePickerController.view.trailingAnchor)
+            timePicker.trailingAnchor.constraint(equalTo: timePickerController.view.trailingAnchor),
+            timePicker.bottomAnchor.constraint(equalTo: timePickerController.view.bottomAnchor)
         ])
-        
+
         if let sheet = timePickerController.sheetPresentationController {
-            sheet.detents = [.custom(resolver: {context in return 300})]
+            sheet.detents = [.custom(resolver: { context in return 300 })]
         }
+
         present(timePickerController, animated: true)
-        
     }
+
     
     @IBAction func didTapAddAvailabilityButton(_ sender: Any) {
         
