@@ -53,10 +53,11 @@ def run_gnn_prediction(model, graph_data):
         logits = model(graph_data.x, graph_data.edge_index)
         probabilities = torch.sigmoid(logits)
         
-        threshold = 0.5
+        threshold = 0.1
         predictions = (probabilities > threshold).int().cpu().numpy()
         
         num_players = graph_data.num_players
+        print(f"Number of players: {num_players}")
         final_schedule = np.zeros((num_players, NUMBER_OF_NODES), dtype=int)
         player_to_slot_edges = graph_data.edge_index[:, graph_data.edge_index[0] < num_players]
         

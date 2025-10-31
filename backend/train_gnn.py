@@ -14,7 +14,17 @@ if __name__ == "__main__":
     
     print("Loading files from npz files and generating graphs...")
     all_files = [os.path.join(PROCESSED_DATA_DIR, f) for f in os.listdir(PROCESSED_DATA_DIR) if f.endswith('.npz')]
-    graph_list = [create_bipartite_graph_from_data(f) for f in all_files]
+
+    graph_list = []
+    for f in all_files:
+        g = create_bipartite_graph_from_data(f)
+        if g is None:
+            continue
+        # zachowaj tylko grafy, które mają przynajmniej jedną pozytywną etykietę
+        if g.y is not None and torch.sum(g.y).item() > 0:
+            graph_list.append(g)
+
+    print(f"Kept {len(graph_list)} graphs out of {len(all_files)}")
 
     if not graph_list:
         print("Execution stopped: No graphs were created.")

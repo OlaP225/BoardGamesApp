@@ -114,18 +114,19 @@ def run_matchmaking(db: Session = Depends(get_db)):
         return {"message": "No availabilities found to process."}
 
     print("Model and availabilities are ready, running GNN prediction...")
+    print(input_data)
 
     result_matrix = gnn_model.run_gnn_prediction(global_gnn_model, input_data)
 
     print(result_matrix)
 
-    translated_events = algorithm.translate_schedule_to_events(
-        schedule_per_player=result_matrix,
-        user_ids=input_data.user_ids
-    )
-    print("Translated events:", translated_events)
+  ##  translated_events = algorithm.translate_schedule_to_events(
+    #    schedule_per_player=result_matrix,
+    #    user_ids=input_data.user_ids
+    #)
+  #  print("Translated events:", translated_events)
     
-    algorithm.save_events_to_db(db, translated_events)
+   # algorithm.save_events_to_db(db, translated_events)
 
     print("GNN prediction finished \n")
     return {"status": "success", "message": "Matchmaking completed and events saved."}

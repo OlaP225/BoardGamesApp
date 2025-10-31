@@ -82,4 +82,10 @@ def prepare_input_data(db: Session) -> Optional[Data]:
     graph_data.user_ids = [user.userID for user in all_users]
 
     print("Successfully prepared graph data for GNN model input.")
+
+
+    if edge_index.numel() > 0:
+        print("DEBUG: edge_index max:", int(edge_index.max().item()), "edge_index min:", int(edge_index.min().item()))
+        assert int(edge_index.max().item()) < x.shape[0], "edge_index odnosi się do nieistniejących węzłów!"
+
     return graph_data
