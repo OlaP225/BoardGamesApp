@@ -9,8 +9,8 @@ from app.config import *
 number_of_simulations = 500
 min_players_sim = 2
 max_players_sim = 6
-min_availabilities_per_user = 1
-max_availabilities_per_user = 2
+min_availabilities_per_user = 10
+max_availabilities_per_user = 20
 MIN_HOUR = 10
 MAX_HOUR = 20
 
