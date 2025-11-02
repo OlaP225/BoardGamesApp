@@ -12,11 +12,9 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
     @IBOutlet var addAvailabilityTitle: UILabel!
     @IBOutlet var dateLabel: UILabel!
     @IBOutlet var chooseDateButton: UIButton!
-    @IBOutlet var durationLabel: UILabel!
     @IBOutlet var durationTitleLabel: UILabel!
     @IBOutlet var durationFromButton: UIButton!
     @IBOutlet var durationToButton: UIButton!
-    @IBOutlet var durationSummaryLabel: UILabel!
     @IBOutlet var addAvailabilityButton: UIButton!
     @IBOutlet var availabilitiesTable: UITableView!
     @IBOutlet var yourAvailabilitiesTitle: UILabel!
@@ -36,36 +34,24 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
             messageLabel.textAlignment = .center
             messageLabel.font = UIFont.systemFont(ofSize: 15)
             messageLabel.sizeToFit()
+            messageLabel.layer.backgroundColor = UIColor(named: "addAvailabilityBackground")?.cgColor
+            messageLabel.layer.borderColor = UIColor.systemGray2.cgColor
+            messageLabel.layer.cornerRadius = 20
             
             availabilitiesTable.backgroundView = messageLabel
-            availabilitiesTable.backgroundView?.layer.cornerRadius = 15
+            availabilitiesTable.backgroundView?.layer.cornerRadius = 20
             availabilitiesTable.backgroundView?.layer.borderWidth = 1
-            availabilitiesTable.backgroundView?.layer.borderColor = UIColor.systemGray4.cgColor
+            availabilitiesTable.backgroundView?.layer.borderColor = UIColor.systemGray.cgColor
+            availabilitiesTable.layer.cornerRadius = 20
         } else {
-            availabilitiesTable.backgroundView = nil }
+            availabilitiesTable.backgroundView = nil
+            availabilitiesTable.layer.cornerRadius = 20
+            availabilitiesTable.layer.borderColor = UIColor.systemGray.cgColor
+            availabilitiesTable.layer.borderWidth = 1
+        }
     }
     
-    private func updateDurationLabel() {
-        guard let startTime = selectedDurationFrom, let endTime = selectedDurationTo else {
-            durationLabel!.text = ""
-            return
-        }
-        guard endTime>startTime else {
-            durationLabel.text = "Niepoprawny czas!"
-            durationLabel.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-            durationLabel.textColor = .red
-            return
-        }
-        
-        let difference = endTime.timeIntervalSince(startTime)
-        
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .abbreviated
-        formatter.allowedUnits = [.hour, .minute]
-        
-        let formattedDifference = formatter.string(from: difference)
-        durationLabel.text = "\(formattedDifference!)"
-    }
+
     
     @IBAction func didTapChooseDateButton(_ sender: UIButton) {
         let datePickerViewController = UIViewController()
@@ -87,7 +73,6 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
             let formatedString = dateFormatter.string(from: picker.date)
             self.chooseDateButton.setTitle(formatedString, for: .normal)
             selectedDay = picker.date
-            updateDurationLabel()
             datePickerViewController.dismiss(animated: true)
         }
         datePicker.addAction(selectAction, for: .valueChanged)
@@ -161,7 +146,6 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
 
             self.selectedDurationFrom = roundedDate
             self.durationFromButton.setTitle(formattedTime, for: .normal)
-            self.updateDurationLabel()
 
             timePickerController.dismiss(animated: true)
         }
@@ -233,7 +217,6 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
             let formattedTime = dateFormatter.string(from: roundedDate)
             self.selectedDurationTo = roundedDate
             self.durationToButton.setTitle(formattedTime, for: .normal)
-            self.updateDurationLabel()
             timePickerController.dismiss(animated: true)
         }
         timePicker.addAction(selectAction, for: .valueChanged)
@@ -321,8 +304,14 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
         availabilitiesTable.dataSource = self
         availabilitiesTable.delegate = self
         yourAvailabilitiesTitle.text = "Twoje dostępności"
+        chooseDateButton.tintColor = UIColor(named: "purple")
+        durationFromButton.tintColor = UIColor(named: "purple")
+        durationToButton.tintColor = UIColor(named: "purple")
         
         addAvailabilityContainer.layer.cornerRadius = 15
+        addAvailabilityButton.backgroundColor = .clear
+        addAvailabilityButton.tintColor = UIColor(named: "purple")
+        addAvailabilityContainer.backgroundColor = UIColor(named: "addAvailabilityBackground")
         addAvailabilityContainer.layer.borderWidth = 1
         addAvailabilityContainer.layer.borderColor = UIColor.systemGray.cgColor
     }

@@ -91,6 +91,7 @@ class GameCardView: UIView {
             locationLabel.textColor = .black
             peopleLabel.textColor = .black
             contentView.backgroundColor = UIColor(named: "InactiveCardBackground")
+            leaveJoinButton.isHidden = true
         }
         
         if isUserJoined {

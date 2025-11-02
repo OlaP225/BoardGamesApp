@@ -119,16 +119,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rdE-Fd-Ovp">
-                                <rect key="frame" x="16" y="83" width="361" height="218"/>
+                                <rect key="frame" x="34" y="123.66666666666669" width="325" height="180"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dzień" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iec-5r-A2l">
-                                        <rect key="frame" x="24" y="62" width="44" height="21"/>
+                                        <rect key="frame" x="24" y="23.999999999999986" width="44" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CD1-Vj-3y2">
-                                        <rect key="frame" x="92" y="55" width="125" height="35"/>
+                                        <rect key="frame" x="92" y="16.999999999999986" width="125" height="35"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Wybierz datę"/>
                                         <connections>
@@ -136,13 +136,13 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Czas trwania" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="srj-az-BbZ">
-                                        <rect key="frame" x="24" y="107" width="98" height="21"/>
+                                        <rect key="frame" x="24" y="68.999999999999986" width="98" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IqX-QW-Fdj">
-                                        <rect key="frame" x="146" y="100" width="44" height="35"/>
+                                        <rect key="frame" x="146" y="61.999999999999986" width="44" height="35"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="od"/>
                                         <connections>
@@ -150,64 +150,57 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a2g-0c-zfR">
-                                        <rect key="frame" x="194" y="100" width="44" height="35"/>
+                                        <rect key="frame" x="194" y="61.999999999999986" width="44" height="35"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="do"/>
                                         <connections>
                                             <action selector="didTapDurationToButton:" destination="lgE-Ve-sfk" eventType="touchUpInside" id="qzq-1g-eA5"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qUm-au-DEg">
-                                        <rect key="frame" x="254" y="107" width="42" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zcN-de-TYG">
-                                        <rect key="frame" x="72" y="159" width="217" height="35"/>
+                                        <rect key="frame" x="72" y="121" width="181" height="35"/>
+                                        <color key="tintColor" red="0.41960784309999999" green="0.0039215686269999999" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Dodaj dostępność"/>
                                         <connections>
                                             <action selector="didTapAddAvailabilityButton:" destination="lgE-Ve-sfk" eventType="touchUpInside" id="FYz-pi-A4b"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ustaw dostępność" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qfg-BT-jzI">
-                                        <rect key="frame" x="24" y="17" width="153" height="22"/>
-                                        <fontDescription key="fontDescription" name="Kailasa-Bold" family="Kailasa" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                 </subviews>
-                                <color key="backgroundColor" red="1" green="0.96150410348256998" blue="0.94994519812248024" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" red="0.97645620748299322" green="0.95839504736012104" blue="0.98031828485717409" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstItem="zcN-de-TYG" firstAttribute="leading" secondItem="rdE-Fd-Ovp" secondAttribute="leading" constant="72" id="1YL-UX-TT4"/>
+                                    <constraint firstItem="Iec-5r-A2l" firstAttribute="top" secondItem="rdE-Fd-Ovp" secondAttribute="top" constant="24" id="5VY-qG-wwE"/>
                                     <constraint firstItem="Iec-5r-A2l" firstAttribute="leading" secondItem="rdE-Fd-Ovp" secondAttribute="leading" constant="24" id="7WT-mH-NG4"/>
-                                    <constraint firstItem="qUm-au-DEg" firstAttribute="centerY" secondItem="a2g-0c-zfR" secondAttribute="centerY" id="BtS-nZ-yEJ"/>
                                     <constraint firstItem="CD1-Vj-3y2" firstAttribute="leading" secondItem="Iec-5r-A2l" secondAttribute="trailing" constant="24" id="FMF-q1-Rhj"/>
                                     <constraint firstAttribute="bottom" secondItem="zcN-de-TYG" secondAttribute="bottom" constant="24" id="GPI-jC-kme"/>
                                     <constraint firstItem="CD1-Vj-3y2" firstAttribute="centerY" secondItem="Iec-5r-A2l" secondAttribute="centerY" id="I1b-n1-G30"/>
                                     <constraint firstItem="srj-az-BbZ" firstAttribute="top" secondItem="Iec-5r-A2l" secondAttribute="bottom" constant="24" id="JBQ-1R-gFg"/>
                                     <constraint firstItem="zcN-de-TYG" firstAttribute="top" secondItem="IqX-QW-Fdj" secondAttribute="bottom" constant="24" id="JLb-Zw-EEB"/>
-                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="qUm-au-DEg" secondAttribute="trailing" constant="5" id="JhT-Ok-8oe"/>
-                                    <constraint firstItem="Qfg-BT-jzI" firstAttribute="leading" secondItem="rdE-Fd-Ovp" secondAttribute="leading" constant="25" id="Kar-Yu-TxM"/>
                                     <constraint firstItem="IqX-QW-Fdj" firstAttribute="leading" secondItem="srj-az-BbZ" secondAttribute="trailing" constant="24" id="NRX-1p-8T0"/>
                                     <constraint firstItem="a2g-0c-zfR" firstAttribute="centerY" secondItem="IqX-QW-Fdj" secondAttribute="centerY" id="NoM-4X-rmo"/>
-                                    <constraint firstItem="Qfg-BT-jzI" firstAttribute="top" secondItem="rdE-Fd-Ovp" secondAttribute="top" constant="16" id="NyG-SO-aQE"/>
-                                    <constraint firstItem="qUm-au-DEg" firstAttribute="leading" secondItem="a2g-0c-zfR" secondAttribute="trailing" constant="16" id="dHh-Lo-crO"/>
                                     <constraint firstItem="IqX-QW-Fdj" firstAttribute="centerY" secondItem="srj-az-BbZ" secondAttribute="centerY" id="lfy-7v-Q9v"/>
                                     <constraint firstAttribute="trailing" secondItem="zcN-de-TYG" secondAttribute="trailing" constant="72" id="p3A-Wn-WX7"/>
                                     <constraint firstItem="srj-az-BbZ" firstAttribute="leading" secondItem="rdE-Fd-Ovp" secondAttribute="leading" constant="24" id="w8g-ua-QYi"/>
-                                    <constraint firstItem="Iec-5r-A2l" firstAttribute="top" secondItem="Qfg-BT-jzI" secondAttribute="bottom" constant="24" id="whL-hz-eq9"/>
                                     <constraint firstItem="a2g-0c-zfR" firstAttribute="leading" secondItem="IqX-QW-Fdj" secondAttribute="trailing" constant="4" id="x8t-QD-64L"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="GSp-Di-P54">
-                                <rect key="frame" x="16" y="363" width="361" height="326"/>
+                                <rect key="frame" x="34" y="368.33333333333326" width="325" height="320.66666666666674"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bXX-Fo-Ce1">
-                                <rect key="frame" x="44" y="333" width="44.666666666666657" height="22"/>
-                                <fontDescription key="fontDescription" name="Kailasa-Bold" family="Kailasa" pointSize="17"/>
+                                <rect key="frame" x="54" y="335.66666666666669" width="49.666666666666657" height="24.666666666666686"/>
+                                <fontDescription key="fontDescription" name="Kailasa-Bold" family="Kailasa" pointSize="19"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ustaw dostępność" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qfg-BT-jzI">
+                                <rect key="frame" x="54.000000000000014" y="91" width="170.33333333333337" height="24.666666666666671"/>
+                                <fontDescription key="fontDescription" name="Kailasa-Bold" family="Kailasa" pointSize="19"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -215,14 +208,16 @@
                         <viewLayoutGuide key="safeArea" id="ovq-UE-di1"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="bXX-Fo-Ce1" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="44" id="58O-8E-k2I"/>
-                            <constraint firstItem="ovq-UE-di1" firstAttribute="trailing" secondItem="rdE-Fd-Ovp" secondAttribute="trailing" constant="16" id="9my-G0-LBJ"/>
+                            <constraint firstItem="bXX-Fo-Ce1" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="54" id="58O-8E-k2I"/>
+                            <constraint firstItem="ovq-UE-di1" firstAttribute="trailing" secondItem="rdE-Fd-Ovp" secondAttribute="trailing" constant="34" id="9my-G0-LBJ"/>
                             <constraint firstItem="GSp-Di-P54" firstAttribute="top" secondItem="bXX-Fo-Ce1" secondAttribute="bottom" constant="8" id="HMe-fK-igU"/>
-                            <constraint firstItem="GSp-Di-P54" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="16" id="RKb-lT-ezn"/>
-                            <constraint firstItem="rdE-Fd-Ovp" firstAttribute="top" secondItem="ovq-UE-di1" secondAttribute="top" constant="24" id="RO4-xz-Pk3"/>
+                            <constraint firstItem="Qfg-BT-jzI" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="54" id="HcB-Vn-rPe"/>
+                            <constraint firstItem="Qfg-BT-jzI" firstAttribute="top" secondItem="ovq-UE-di1" secondAttribute="top" constant="32" id="LXE-rX-rg1"/>
+                            <constraint firstItem="rdE-Fd-Ovp" firstAttribute="top" secondItem="Qfg-BT-jzI" secondAttribute="bottom" constant="8" id="QCT-im-OCv"/>
+                            <constraint firstItem="GSp-Di-P54" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="34" id="RKb-lT-ezn"/>
                             <constraint firstItem="bXX-Fo-Ce1" firstAttribute="top" secondItem="rdE-Fd-Ovp" secondAttribute="bottom" constant="32" id="UAb-us-lBc"/>
-                            <constraint firstItem="ovq-UE-di1" firstAttribute="trailing" secondItem="GSp-Di-P54" secondAttribute="trailing" constant="16" id="c9t-aw-v6C"/>
-                            <constraint firstItem="rdE-Fd-Ovp" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="16" id="gZR-pt-uS5"/>
+                            <constraint firstItem="ovq-UE-di1" firstAttribute="trailing" secondItem="GSp-Di-P54" secondAttribute="trailing" constant="34" id="c9t-aw-v6C"/>
+                            <constraint firstItem="rdE-Fd-Ovp" firstAttribute="leading" secondItem="ovq-UE-di1" secondAttribute="leading" constant="34" id="gZR-pt-uS5"/>
                             <constraint firstItem="ovq-UE-di1" firstAttribute="bottom" secondItem="GSp-Di-P54" secondAttribute="bottom" constant="80" id="uVW-AQ-g8g"/>
                         </constraints>
                     </view>
@@ -235,8 +230,6 @@
                         <outlet property="chooseDateButton" destination="CD1-Vj-3y2" id="k1e-QH-pMG"/>
                         <outlet property="dateLabel" destination="Iec-5r-A2l" id="Kyl-Zb-5W1"/>
                         <outlet property="durationFromButton" destination="IqX-QW-Fdj" id="WT8-mP-qnN"/>
-                        <outlet property="durationLabel" destination="qUm-au-DEg" id="SlY-Q7-g0a"/>
-                        <outlet property="durationSummaryLabel" destination="qUm-au-DEg" id="HFt-iJ-0VA"/>
                         <outlet property="durationTitleLabel" destination="srj-az-BbZ" id="fTT-4S-2Xm"/>
                         <outlet property="durationToButton" destination="a2g-0c-zfR" id="b9q-So-8NG"/>
                         <outlet property="yourAvailabilitiesTitle" destination="bXX-Fo-Ce1" id="5Uf-HU-vaD"/>

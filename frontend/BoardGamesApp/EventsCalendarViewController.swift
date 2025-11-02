@@ -31,9 +31,14 @@ class EventsCalendarViewController: BaseViewController {
         calendarView.selectionBehavior = selection
         calendarView.locale = Locale(identifier: "pl_PL")
         calendarView.layer.cornerRadius = 15
+        calendarView.layer.backgroundColor = UIColor(named: "addAvailabilityBackground")?.cgColor
        // calendarView.layer.borderWidth = 1
         calendarView.layer.borderColor = UIColor.systemGray5.cgColor
         calendarContainerView.addSubview(calendarView)
+        calendarContainerView.backgroundColor = .clear
+        calendarContainerView.layer.borderWidth = 2
+        calendarContainerView.layer.borderColor = UIColor.systemGray4.cgColor
+        calendarContainerView.layer.cornerRadius = 15
         
         calendarView.translatesAutoresizingMaskIntoConstraints = false
         
