@@ -9,8 +9,8 @@ from app.config import *
 number_of_simulations = 500
 min_players_sim = 2
 max_players_sim = 6
-min_availabilities_per_user = 10
-max_availabilities_per_user = 20
+min_availabilities_per_user = 3
+max_availabilities_per_user = 6
 MIN_HOUR = 10
 MAX_HOUR = 20
 
@@ -89,7 +89,7 @@ def convert_availabilities_to_matrix(users_data: dict):
         "dostepnosc": availability_matrix,
         "user_ids": all_users_ids
     }
-    
+    print(input_data["dostepnosc"])
     return input_data
 
 def solve_with_cplex(input_data: dict):
@@ -129,6 +129,7 @@ def solve_with_cplex(input_data: dict):
             for d in range(DAYS_IN_SCHEDULE):
                 for h in range(SLOTS_PER_DAY):
                     scheduled_games[p, d, h] = solution.get_value(players_games[p, d, h])
+        print("Scheduled games matrix:\n", scheduled_games)
         return scheduled_games
     else:
         print("No solution found")

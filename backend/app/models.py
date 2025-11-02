@@ -34,6 +34,7 @@ class EventParticipant(Base):
     id = Column(Integer, primary_key = True, index = True)
     user_id = Column(String, ForeignKey("users.userID"))
     event_id = Column(Integer, ForeignKey("events.id"))
+    status = Column(String, default="pending", index = True)
 
 
 

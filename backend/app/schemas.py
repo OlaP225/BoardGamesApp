@@ -37,4 +37,16 @@ class Event(EventBase):
     status: str
     model_config = ConfigDict(from_attributes=True)
 
+class EventParticipantBase(BaseModel):
+    user_id: str
+    event_id: int
+    status: str = "pending"
 
+
+class EventParticipantCreate(EventParticipantBase):
+    pass
+
+
+class EventParticipant(EventParticipantBase):
+    id: int
+    model_config = ConfigDict(from_attributes=True)

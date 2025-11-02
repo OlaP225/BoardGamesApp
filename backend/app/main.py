@@ -2,12 +2,15 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from . import models, schemas
 from .database import SessionLocal, engine
-from .matchmaking import prepare_input_data
-from . import algorithm, gnn_model
+from .matchmaking import prepare_input_data, run_gnn_prediction
 import numpy as np
 import torch
 from .config import *
 import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from create_gnn_model import GNN
+from . import save_games
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -95,10 +98,12 @@ def load_model():
         return
     
     print(f"Loading GNN model...")
-    global_gnn_model = gnn_model.GNN(in_channels=1, out_channels=1)
-    global_gnn_model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
-    global_gnn_model.eval()
+    model = GNN(in_features=PLAYERS_CONSTANT, hidden=128, out_features=PLAYERS_CONSTANT)
+    model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+    model.eval()
     print("GNN model loaded and ready for predictions.")
+
+    global_gnn_model = model
 
 
 @app.post("/api/matchmaking/run")
@@ -116,17 +121,17 @@ def run_matchmaking(db: Session = Depends(get_db)):
     print("Model and availabilities are ready, running GNN prediction...")
     print(input_data)
 
-    result_matrix = gnn_model.run_gnn_prediction(global_gnn_model, input_data)
+    result_matrix = run_gnn_prediction(global_gnn_model, input_data)
 
     print(result_matrix)
 
-  ##  translated_events = algorithm.translate_schedule_to_events(
-    #    schedule_per_player=result_matrix,
-    #    user_ids=input_data.user_ids
-    #)
-  #  print("Translated events:", translated_events)
+    translated_events = save_games.translate_schedule_to_events(
+        schedule_per_player=result_matrix,
+        user_ids=input_data.user_ids
+    )
+    print("Translated events:", translated_events)
     
-   # algorithm.save_events_to_db(db, translated_events)
+    save_games.save_events_to_db(db, translated_events)
 
     print("GNN prediction finished \n")
     return {"status": "success", "message": "Matchmaking completed and events saved."}
