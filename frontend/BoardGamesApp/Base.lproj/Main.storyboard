@@ -239,6 +239,22 @@
             </objects>
             <point key="canvasLocation" x="2416.030534351145" y="-2.1126760563380285"/>
         </scene>
+        <!--Notif-->
+        <scene sceneID="OUN-RL-VkD">
+            <objects>
+                <viewController id="3rf-dj-EYa" customClass="Notif" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="txB-uq-D8J">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="zSo-Mg-VDU"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="xoo-Rf-eC1"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2Ty-9I-wB6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3126" y="-2"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="mtY-NH-et5">
             <objects>

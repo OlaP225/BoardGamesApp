@@ -6,7 +6,6 @@ import torch
 from torch_geometric.data import Data
 from typing import Optional
 
-start_of_day = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
 days_in_schedule = 7 
 slots_per_day = 10 
 

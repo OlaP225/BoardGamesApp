@@ -16,8 +16,8 @@ MODEL_SAVE_PATH = os.path.join(CURRENT_DIR, 'app', 'gnn_model.pth')
 
 def create_slot_graph_from_npz(file_path: str, pad_players: int = PLAYERS_CONSTANT):
     data = np.load(file_path)
-    x_arr = data['x']  # (p, d, h)
-    y_arr = data['y']  # (p, d, h)
+    x_arr = data['x']  # (p, d, h) 3
+    y_arr = data['y']  # (p, d, h) 3
     max_games = data.get('maxGames', None)
 
     if x_arr.ndim != 3 or y_arr.ndim != 3:
@@ -26,10 +26,10 @@ def create_slot_graph_from_npz(file_path: str, pad_players: int = PLAYERS_CONSTA
     num_players = x_arr.shape[0]
     num_slots = DAYS * SLOTS
 
-    X = x_arr.reshape(num_players, -1).T  # (num_slots, num_players)
-    Y = y_arr.reshape(num_players, -1).T  # (num_slots, num_players)
+    X = x_arr.reshape(num_players, -1).T  # 2 (d,h)
+    Y = y_arr.reshape(num_players, -1).T  # 2 (d,h)
 
-    if X.shape[1] < pad_players:
+    if X.shape[1] <= pad_players:
         pad = pad_players - X.shape[1]
         X = np.pad(X, ((0, 0), (0, pad)), 'constant')
         Y = np.pad(Y, ((0, 0), (0, pad)), 'constant')
@@ -37,14 +37,14 @@ def create_slot_graph_from_npz(file_path: str, pad_players: int = PLAYERS_CONSTA
         X = X[:, :pad_players]
         Y = Y[:, :pad_players]
 
-    x_tensor = torch.tensor(X, dtype=torch.float)  # features: (num_slots, pad_players)
-    y_tensor = torch.tensor(Y, dtype=torch.float)  # labels: (num_slots, pad_players)
+    x_tensor = torch.tensor(X, dtype=torch.float)  # 2 (num_slots, pad_players)
+    y_tensor = torch.tensor(Y, dtype=torch.float)  # 2 (num_slots, pad_players)
 
     edges = []
     for s in range(num_slots - 1):
-        if (s // SLOTS) == ((s + 1) // SLOTS):
-            edges.append([s, s + 1])
-            edges.append([s + 1, s])
+        if (s // SLOTS) == ((s + 1) // SLOTS): #connect slots in the same day 1+2, 2+3, 3+4 etc
+            edges.append([s, s + 1]) # adding forward edge
+            edges.append([s + 1, s]) # & backward edge
     if len(edges) == 0:
         edge_index = torch.empty((2, 0), dtype=torch.long)
     else:
@@ -58,10 +58,8 @@ def create_slot_graph_from_npz(file_path: str, pad_players: int = PLAYERS_CONSTA
 
 
 class GNN(torch.nn.Module):
-    def __init__(self, in_features, hidden=128, out_features=None):
+    def __init__(self, in_features, out_features, hidden=128):
         super().__init__()
-        if out_features is None:
-            out_features = in_features
         self.conv1 = GCNConv(in_features, hidden)
         self.conv2 = GCNConv(hidden, out_features)
 
@@ -80,7 +78,7 @@ def load_all_graphs(processed_dir=PROCESSED_DATA_DIR, pad_players=PLAYERS_CONSTA
         try:
             g = create_slot_graph_from_npz(f, pad_players=pad_players)
         except Exception as e:
-            print("Skipping", f, "due to", e)
+            print("Skipped", f, "due to", e)
             continue
         positives = int(g.y.sum().item())
         if require_positive and positives == 0:
@@ -89,12 +87,9 @@ def load_all_graphs(processed_dir=PROCESSED_DATA_DIR, pad_players=PLAYERS_CONSTA
     print(f"Loaded {len(graphs)} graphs (from {len(files)} files).")
     return graphs
 
-def train(model, train_loader, val_loader=None, epochs=200, lr=1e-3, pos_weight=None):
+def train(model, train_loader, val_loader=None, epochs=200, lr=1e-3):
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
-    if pos_weight is not None:
-        criterion = torch.nn.BCEWithLogitsLoss(pos_weight=pos_weight)
-    else:
-        criterion = torch.nn.BCEWithLogitsLoss()
+    criterion = torch.nn.BCEWithLogitsLoss()
     model.train()
     for epoch in range(1, epochs + 1):
         total_loss = 0.0

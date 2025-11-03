@@ -61,9 +61,20 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
         datePicker.backgroundColor = .white
         let calendar = Calendar.current
         let today = Date()
-        let sevenDaysFromToday = calendar.date(byAdding: .day, value: 6, to: today)
-        datePicker.minimumDate = today
+        let startOfToday = calendar.startOfDay(for: today)
+        let sevenDaysFromToday = calendar.date(byAdding: .day, value: 6, to: startOfToday)
+        
+        print("DEBUG: today = \(today)")
+        print("DEBUG: startOfToday = \(startOfToday)")
+        print("DEBUG: sevenDaysFromToday = \(String(describing: sevenDaysFromToday))")
+        
+        datePicker.minimumDate = startOfToday
         datePicker.maximumDate = sevenDaysFromToday
+        datePicker.date = startOfToday
+        
+        print("DEBUG: datePicker.minimumDate po ustawieniu = \(String(describing: datePicker.minimumDate))")
+        print("DEBUG: datePicker.maximumDate po ustawieniu = \(String(describing: datePicker.maximumDate))")
+        print("DEBUG: datePicker.date po ustawieniu = \(String(describing: datePicker.date))")
         
         let selectAction = UIAction { [weak self] action in
             guard let self = self, let picker = action.sender as? UIDatePicker else { return }
