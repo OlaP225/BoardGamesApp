@@ -48,6 +48,7 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
             availabilitiesTable.layer.cornerRadius = 20
             availabilitiesTable.layer.borderColor = UIColor.systemGray.cgColor
             availabilitiesTable.layer.borderWidth = 1
+     //       availabilitiesTable.layer.backgroundColor = UIColor(named: "NotiTableBackground")?.cgColor
         }
     }
     
@@ -322,7 +323,6 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
         addAvailabilityContainer.layer.cornerRadius = 15
         addAvailabilityButton.backgroundColor = .clear
         addAvailabilityButton.tintColor = UIColor(named: "purple")
-        addAvailabilityContainer.backgroundColor = UIColor(named: "addAvailabilityBackground")
         addAvailabilityContainer.layer.borderWidth = 1
         addAvailabilityContainer.layer.borderColor = UIColor.systemGray.cgColor
     }

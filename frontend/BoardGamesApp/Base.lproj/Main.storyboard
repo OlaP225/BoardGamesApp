@@ -239,21 +239,46 @@
             </objects>
             <point key="canvasLocation" x="2416.030534351145" y="-2.1126760563380285"/>
         </scene>
-        <!--Notif-->
+        <!--Powiadomienia-->
         <scene sceneID="OUN-RL-VkD">
             <objects>
-                <viewController id="3rf-dj-EYa" customClass="Notif" sceneMemberID="viewController">
+                <viewController id="3rf-dj-EYa" customClass="NotificationsViewController" customModule="BoardGamesApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="txB-uq-D8J">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EzN-fg-h8U">
+                                <rect key="frame" x="54" y="104" width="49.666666666666657" height="24.666666666666657"/>
+                                <fontDescription key="fontDescription" name="Kailasa-Bold" family="Kailasa" pointSize="19"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="iM2-i5-8At">
+                                <rect key="frame" x="34" y="136.66666666666669" width="325" height="576.33333333333326"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="zSo-Mg-VDU"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="iM2-i5-8At" firstAttribute="leading" secondItem="zSo-Mg-VDU" secondAttribute="leading" constant="34" id="5Aq-n3-MGW"/>
+                            <constraint firstItem="zSo-Mg-VDU" firstAttribute="trailing" secondItem="iM2-i5-8At" secondAttribute="trailing" constant="34" id="hho-rm-IcX"/>
+                            <constraint firstItem="iM2-i5-8At" firstAttribute="top" secondItem="EzN-fg-h8U" secondAttribute="bottom" constant="8" id="iFt-wc-jSI"/>
+                            <constraint firstItem="zSo-Mg-VDU" firstAttribute="bottom" secondItem="iM2-i5-8At" secondAttribute="bottom" constant="56" id="otp-ev-9N3"/>
+                            <constraint firstItem="EzN-fg-h8U" firstAttribute="top" secondItem="zSo-Mg-VDU" secondAttribute="top" constant="45" id="sB3-MT-WIJ"/>
+                            <constraint firstItem="EzN-fg-h8U" firstAttribute="leading" secondItem="zSo-Mg-VDU" secondAttribute="leading" constant="54" id="yXN-D5-ogw"/>
+                        </constraints>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Powiadomienia" image="bell" catalog="system" selectedImage="bell" id="PmM-1e-qfS"/>
                     <navigationItem key="navigationItem" id="xoo-Rf-eC1"/>
+                    <connections>
+                        <outlet property="notificationsTableView" destination="iM2-i5-8At" id="00t-5H-LC3"/>
+                        <outlet property="titleLabel" destination="EzN-fg-h8U" id="wfW-uk-9Ar"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Ty-9I-wB6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3126" y="-2"/>
+            <point key="canvasLocation" x="3125.9541984732823" y="-2.1126760563380285"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="mtY-NH-et5">
@@ -270,6 +295,7 @@
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="ExJ-L5-fkT"/>
                         <segue destination="cxE-Ww-dsJ" kind="relationship" relationship="viewControllers" id="dyX-zA-81h"/>
                         <segue destination="lgE-Ve-sfk" kind="relationship" relationship="viewControllers" id="Ux2-tY-urg"/>
+                        <segue destination="3rf-dj-EYa" kind="relationship" relationship="viewControllers" id="y2P-Bk-mpS"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nJT-jm-4Ja" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -351,6 +377,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="bell" catalog="system" width="125" height="128"/>
         <image name="calendar" catalog="system" width="128" height="107"/>
         <image name="clock.badge.questionmark" catalog="system" width="128" height="114"/>
         <image name="house" catalog="system" width="128" height="104"/>
