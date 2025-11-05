@@ -11,7 +11,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from create_gnn_model import GNN
 from . import save_games
-
+from fastapi import Body
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -135,4 +135,47 @@ def run_matchmaking(db: Session = Depends(get_db)):
 
     print("GNN prediction finished \n")
     return {"status": "success", "message": "Matchmaking completed and events saved."}
+
+@app.get("/api/users/{user_id}/events", response_model=list[schemas.Event])
+def get_user_events(user_id: str, db: Session = Depends(get_db)):
+    events = (
+        db.query(models.Event)
+        .join(models.EventParticipant, models.Event.id == models.EventParticipant.event_id)
+        .filter(models.EventParticipant.user_id == user_id)
+        .all()
+    )
+
+    result = []
+    for e in events:
+        result.append(
+            schemas.Event(
+                id=e.id,
+                game_name=e.game_name,
+                from_time=e.from_time,
+                to_time=e.to_time,
+                status=e.status,
+                participants=[p.userID for p in e.participants],
+            )
+        )
+    return result
+
+
+@app.post("/api/events/{event_id}/status")
+def update_event_status(event_id: int, status: str = Body(...), db: Session = Depends(get_db)):
+    event = db.query(models.Event).filter(models.Event.id == event_id).first()
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    if status not in ["accepted", "rejected"]:
+        raise HTTPException(status_code=400, detail="Invalid status")
+
+    event.status = status
+    db.commit()
+    db.refresh(event)
+    return {"message": f"Event {event_id} updated to {status}"}
+
+@app.get("/api/debug/events_participants")
+def debug_links(db: Session = Depends(get_db)):
+    links = db.query(models.EventParticipant).all()
+    return [{"id": l.id, "user_id": l.user_id, "event_id": l.event_id, "status": l.status} for l in links]
 

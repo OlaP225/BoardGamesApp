@@ -33,8 +33,8 @@ class EventCreate(EventBase):
 
 class Event(EventBase):
     id: int
-    participants: list[str] = []
     status: str
+    participants: list[str]
     model_config = ConfigDict(from_attributes=True)
 
 class EventParticipantBase(BaseModel):
@@ -50,3 +50,4 @@ class EventParticipantCreate(EventParticipantBase):
 class EventParticipant(EventParticipantBase):
     id: int
     model_config = ConfigDict(from_attributes=True)
+

@@ -40,15 +40,13 @@ class NotificationsViewController: BaseViewController {
     }
     
     private func fetchNotifications() {
-        // Symulacja pobierania danych (w prawdziwej aplikacji pobierałbyś z API)
-        notifications = [
-            NotificationItem(id: "1", date: Date(), message: "Gracz Jan Kowalski zaprasza Cię do gry 'Splendor' jutro o 19:00.", type: .action),
-            NotificationItem(id: "2", date: Calendar.current.date(byAdding: .hour, value: -2, to: Date())!, message: "Zaproszenie od Anny Nowak na 'Terraforming Mars' zostało odrzucone.", type: .info),
-            NotificationItem(id: "3",date: Calendar.current.date(byAdding: .day, value: -1, to: Date())!, message: "Nowa aktualizacja gry 'Ticket to Ride' jest dostępna!", type: .info),
-            NotificationItem(id: "4",date: Calendar.current.date(byAdding: .hour, value: -1, to: Date())!, message: "Gracz Adam Wiśniewski zaprasza Cię do gry 'Catan' dzisiaj o 20:30.", type: .action)
-        ]
-        
-        notificationsTableView.reloadData() // Odśwież tabelę po załadowaniu danych
+        guard let userID = UserDefaults.standard.string(forKey: "userID") else { return }
+        APIService.shared.fetchUserNotifications(userID: userID) { [weak self] fetched in
+            DispatchQueue.main.async {
+                self?.notifications = fetched
+                self?.notificationsTableView.reloadData()
+            }
+        }
     }
 
     /*
@@ -92,21 +90,36 @@ extension NotificationsViewController: UITableViewDataSource {
 
 extension NotificationsViewController: NotificationsTableViewCellDelegate {
     func notificationCell(_ cell: NotificationsTableViewCell, didTapAcceptFor notification: NotificationItem) {
-        print("Powiadomienie zaakceptowane: \(notification.message)")
-        if let index = notifications.firstIndex(where: { $0.id == notification.id }) {
-            notifications.remove(at: index)
-            notificationsTableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        guard let eventID = Int(notification.id) else { return }
+        APIService.shared.updateEventStatus(eventID: eventID, status: "accepted") { success in
+            if success {
+                DispatchQueue.main.async {
+                    self.removeNotification(notification)
+                }
+            }
         }
     }
     
     func notificationCell(_ cell: NotificationsTableViewCell, didTapRejectFor notification: NotificationItem) {
-        print("Powiadomienie odrzucone: \(notification.message)")
+        guard let eventID = Int(notification.id) else { return }
+        APIService.shared.updateEventStatus(eventID: eventID, status: "rejected") { success in
+            if success {
+                DispatchQueue.main.async {
+                    self.removeNotification(notification)
+                }
+            }
+        }
+    }
+
+    private func removeNotification(_ notification: NotificationItem) {
         if let index = notifications.firstIndex(where: { $0.id == notification.id }) {
             notifications.remove(at: index)
-            notificationsTableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+            notificationsTableView.reloadData()
         }
     }
 }
+
+
 extension NotificationsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         

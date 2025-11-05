@@ -25,6 +25,14 @@ struct AvailabilityResponse: Codable {
     let owner_id: String
 }
 
+struct EventNotification: Codable {
+    let id: Int
+    let game_name: String
+    let from_time: Date
+    let to_time: Date
+    let status: String
+}
+
 class APIService {
     static let shared = APIService()
     private init () {}
@@ -170,3 +178,64 @@ class APIService {
         }
     
 }
+
+extension APIService {
+    func fetchUserNotifications(userID: String, completion: @escaping ([NotificationItem]) -> Void) {
+        guard let url = URL(string: "\(baseURL)/api/users/\(userID)/events") else {
+            completion([])
+            return
+        }
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else {
+                print("Error fetching notifications: \(error?.localizedDescription ?? "Unknown")")
+                completion([])
+                return
+            }
+            do {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .formatted(iso8601DateFormatter())
+                let events = try decoder.decode([EventNotification].self, from: data)
+
+                let notifications = events.map { event -> NotificationItem in
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "d MMM, HH:mm"
+                    let dateText = formatter.string(from: event.from_time)
+                    return NotificationItem(
+                        id: String(event.id),
+                        date: event.from_time,
+                        message: "Nowe spotkanie '\(event.game_name)' w dniu \(dateText).",
+                        type: event.status == "pending" ? .action : .info
+                    )
+                }
+
+                completion(notifications)
+            } catch {
+                print("Decode error notifications: \(error)")
+                completion([])
+            }
+        }
+        task.resume()
+    }
+    
+    func updateEventStatus(eventID: Int, status: String, completion: @escaping (Bool) -> Void) {
+        guard let url = URL(string: "\(baseURL)/api/events/\(eventID)/status") else {
+            completion(false)
+            return
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let body = ["status": status]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard error == nil, let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+                completion(false)
+                return
+            }
+            completion(true)
+        }
+        task.resume()
+    }
+}
+
