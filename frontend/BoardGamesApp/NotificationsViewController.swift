@@ -91,10 +91,14 @@ extension NotificationsViewController: UITableViewDataSource {
 extension NotificationsViewController: NotificationsTableViewCellDelegate {
     func notificationCell(_ cell: NotificationsTableViewCell, didTapAcceptFor notification: NotificationItem) {
         guard let eventID = Int(notification.id) else { return }
-        APIService.shared.updateEventStatus(eventID: eventID, status: "accepted") { success in
+        guard let userID = UserDefaults.standard.string(forKey: "userID") else { return }
+        APIService.shared.updateEventStatus(eventID: eventID, userID: userID, status: "accepted") { success in
             if success {
                 DispatchQueue.main.async {
                     self.removeNotification(notification)
+                    let ac = UIAlertController(title: "Zaakceptowano powiadomienie", message: "Powiadomienie '\(notification.message)' zostało zaakceptowane. Poczekaj na innych graczy", preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(ac, animated: true)
                 }
             }
         }
@@ -102,10 +106,14 @@ extension NotificationsViewController: NotificationsTableViewCellDelegate {
     
     func notificationCell(_ cell: NotificationsTableViewCell, didTapRejectFor notification: NotificationItem) {
         guard let eventID = Int(notification.id) else { return }
-        APIService.shared.updateEventStatus(eventID: eventID, status: "rejected") { success in
+        guard let userID = UserDefaults.standard.string(forKey: "userID") else { return }
+        APIService.shared.updateEventStatus(eventID: eventID, userID: userID, status: "rejected") { success in
             if success {
                 DispatchQueue.main.async {
                     self.removeNotification(notification)
+                    let ac = UIAlertController(title: "Odrzucono powiadomienie", message: "Powiadomienie '\(notification.message)' zostało usunięte", preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(ac, animated: true)
                 }
             }
         }

@@ -51,3 +51,7 @@ class EventParticipant(EventParticipantBase):
     id: int
     model_config = ConfigDict(from_attributes=True)
 
+class ParticipantStatusUpdate(BaseModel):
+    user_id: str
+    status: str
+

@@ -217,23 +217,24 @@ extension APIService {
         task.resume()
     }
     
-    func updateEventStatus(eventID: Int, status: String, completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "\(baseURL)/api/events/\(eventID)/status") else {
+    func updateEventStatus(eventID: Int,userID: String, status: String, completion: @escaping (Bool) -> Void) {
+        guard let url = URL(string: "\(baseURL)/api/events/\(eventID)/participants/status") else {
             completion(false)
             return
         }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let body = ["status": status]
+        let body = ["user_id": userID, "status": status]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard error == nil, let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+            guard error == nil, let http = response as? HTTPURLResponse else {
+                print("Network error: \(error?.localizedDescription ?? "Unknown")")
                 completion(false)
                 return
             }
-            completion(true)
+            completion(http.statusCode == 200)
         }
         task.resume()
     }

@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from . import models, schemas
+from .schemas import ParticipantStatusUpdate
 from .database import SessionLocal, engine
 from .matchmaking import prepare_input_data, run_gnn_prediction
 import numpy as np
@@ -160,19 +161,44 @@ def get_user_events(user_id: str, db: Session = Depends(get_db)):
     return result
 
 
-@app.post("/api/events/{event_id}/status")
-def update_event_status(event_id: int, status: str = Body(...), db: Session = Depends(get_db)):
-    event = db.query(models.Event).filter(models.Event.id == event_id).first()
-    if not event:
-        raise HTTPException(status_code=404, detail="Event not found")
 
-    if status not in ["accepted", "rejected"]:
+
+@app.post("/api/events/{event_id}/participants/status")
+def update_participant_status(event_id: int, update: ParticipantStatusUpdate, db: Session = Depends(get_db)):
+    participant = (
+        db.query(models.EventParticipant)
+        .filter(
+            models.EventParticipant.event_id == event_id,
+            models.EventParticipant.user_id == update.user_id
+        )
+        .first()
+    )
+
+    if not participant:
+        raise HTTPException(status_code=404, detail="Participant not found for this event")
+
+    if update.status not in ["accepted", "rejected"]:
         raise HTTPException(status_code=400, detail="Invalid status")
 
-    event.status = status
+    participant.status = update.status
     db.commit()
-    db.refresh(event)
-    return {"message": f"Event {event_id} updated to {status}"}
+    db.refresh(participant)
+
+    accepted_count = (
+        db.query(models.EventParticipant)
+        .filter(
+            models.EventParticipant.event_id == event_id,
+            models.EventParticipant.status == "accepted"
+        )
+        .count()
+    )
+    if accepted_count >= 2:
+        event = db.query(models.Event).filter(models.Event.id == event_id).first()
+        if event.status != "accepted":
+            event.status = "accepted"
+            db.commit()
+
+    return {"message": f"Status updated for user {update.user_id} on event {event_id} -> {update.status}"}
 
 @app.get("/api/debug/events_participants")
 def debug_links(db: Session = Depends(get_db)):
