@@ -101,12 +101,6 @@ def run_gnn_prediction(model: torch.nn.Module, graph_data: Data, min_players: in
     with torch.no_grad():
         logits = model(graph_data)
 
-    if isinstance(logits, torch.Tensor) and logits.ndim == 3 and logits.shape[0] == 1:
-        logits = logits.squeeze(0)
-
-    if not isinstance(logits, torch.Tensor):
-        raise RuntimeError("Model did not return torch.Tensor logits")
-
     num_slots, feat_dim = logits.shape[0], logits.shape[1]
     orig_players = int(getattr(graph_data, "original_num_players", getattr(graph_data, "orig_num_players", PLAYERS_CONSTANT)))
     days = DAYS_IN_SCHEDULE

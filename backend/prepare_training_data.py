@@ -121,7 +121,7 @@ def solve_with_cplex(input_data: dict):
     
     print("Starting CPLEX calculations...")
     solution = mdl.solve()
-
+    
     if solution:
         print("Solution found.")
         scheduled_games = np.zeros(((number_of_players ,DAYS_IN_SCHEDULE, SLOTS_PER_DAY)))

@@ -26,7 +26,6 @@ class WelcomeViewController: BaseViewController {
         defaults.set(userID, forKey: "userID")
         defaults.set(username, forKey: "username")
         defaults.set(true, forKey: "userHasOnboarded")
-        
         let registrationData = UserRegistrationData(username: username, userID: userID)
         APIService.shared.registerUser(userData: registrationData)
         
@@ -44,6 +43,7 @@ class WelcomeViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        textFiled.delegate = self
         welcomeLabel.text = "Witaj!"
         greetingLabel.text = "Jak się do Ciebie zwracać?"
         welcomeLabel.font = UIFont.systemFont(ofSize: 20, weight: .medium)
@@ -68,6 +68,12 @@ class WelcomeViewController: BaseViewController {
     }
     
     
+}
+extension WelcomeViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 }
 
 
