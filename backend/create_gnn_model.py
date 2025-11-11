@@ -7,6 +7,7 @@ from torch_geometric.nn import GCNConv
 from sklearn.model_selection import train_test_split
 from app.config import DAYS_IN_SCHEDULE as DAYS, SLOTS_PER_DAY as SLOTS, PLAYERS_CONSTANT
 
+NUM_TAGS = 5
 MIN_PLAYERS_SLOT = 2
 MAX_PLAYERS_SLOT = 4
 
@@ -26,25 +27,67 @@ def create_slot_graph_from_npz(file_path: str, pad_players: int = PLAYERS_CONSTA
     num_players = x_arr.shape[0]
     num_slots = DAYS * SLOTS
 
-    X = x_arr.reshape(num_players, -1).T  # 2 (d,h)
-    Y = y_arr.reshape(num_players, -1).T  # 2 (d,h)
+    avail_flat = x_arr.reshape(num_players, -1).T  # shape (num_slots, num_players)
+    sched_flat = y_arr.reshape(num_players, -1).T  # shape (num_slots, num_players)
 
-    if X.shape[1] <= pad_players:
-        pad = pad_players - X.shape[1]
-        X = np.pad(X, ((0, 0), (0, pad)), 'constant')
-        Y = np.pad(Y, ((0, 0), (0, pad)), 'constant')
-    elif X.shape[1] > pad_players:
-        X = X[:, :pad_players]
-        Y = Y[:, :pad_players]
+    prefs_arr = None
+    if 'prefs' in data:
+        prefs_arr = np.array(data['prefs'])
+        # if 1D -> expand
+        if prefs_arr.ndim == 1:
+            prefs_arr = np.expand_dims(prefs_arr, axis=0)
+        # if too few rows, pad; if too many, truncate
+        if prefs_arr.shape[0] < num_players:
+            pad_rows = num_players - prefs_arr.shape[0]
+            pad_block = np.zeros((pad_rows, NUM_TAGS), dtype=int)
+            prefs_arr = np.vstack([prefs_arr, pad_block])
+        elif prefs_arr.shape[0] > num_players:
+            prefs_arr = prefs_arr[:num_players]
+        # ensure NUM_TAGS columns
+        if prefs_arr.shape[1] < NUM_TAGS:
+            pad_cols = NUM_TAGS - prefs_arr.shape[1]
+            prefs_arr = np.hstack([prefs_arr, np.zeros((prefs_arr.shape[0], pad_cols), dtype=int)])
+        elif prefs_arr.shape[1] > NUM_TAGS:
+            prefs_arr = prefs_arr[:, :NUM_TAGS]
+    else:
+        # default: zeros
+        prefs_arr = np.zeros((num_players, NUM_TAGS), dtype=int)
 
-    x_tensor = torch.tensor(X, dtype=torch.float)  # 2 (num_slots, pad_players)
-    y_tensor = torch.tensor(Y, dtype=torch.float)  # 2 (num_slots, pad_players)
+    # Now build X_expanded: for each slot s, for each player p (0..pad_players-1)
+    # create vector [avail_bit, prefs_p( NUM_TAGS )] and flatten per slot
+    in_per_player = 1 + NUM_TAGS
+    in_features = pad_players * in_per_player
+    X_expanded = np.zeros((num_slots, in_features), dtype=float)
 
+    for s in range(num_slots):
+        for p in range(pad_players):
+            col_start = p * in_per_player
+            col_end = col_start + in_per_player
+            if p < num_players:
+                avail_bit = float(avail_flat[s, p])
+                prefs_p = prefs_arr[p].astype(float)
+            else:
+                avail_bit = 0.0
+                prefs_p = np.zeros((NUM_TAGS,), dtype=float)
+            X_expanded[s, col_start] = avail_bit
+            X_expanded[s, col_start + 1:col_end] = prefs_p
+
+    # Prepare Y: pad/truncate players dimension to pad_players
+    if sched_flat.shape[1] <= pad_players:
+        pad_cols = pad_players - sched_flat.shape[1]
+        Y_padded = np.pad(sched_flat, ((0, 0), (0, pad_cols)), 'constant')
+    else:
+        Y_padded = sched_flat[:, :pad_players]
+
+    x_tensor = torch.tensor(X_expanded, dtype=torch.float)  # (num_slots, in_features)
+    y_tensor = torch.tensor(Y_padded, dtype=torch.float)   # (num_slots, pad_players)
+
+    # build graph edges connecting consecutive slots in the same day
     edges = []
-    for s in range(num_slots - 1):
-        if (s // SLOTS) == ((s + 1) // SLOTS): #connect slots in the same day 1+2, 2+3, 3+4 etc
-            edges.append([s, s + 1]) # adding forward edge
-            edges.append([s + 1, s]) # & backward edge
+    for idx in range(num_slots - 1):
+        if (idx // SLOTS) == ((idx + 1) // SLOTS):
+            edges.append([idx, idx + 1])
+            edges.append([idx + 1, idx])
     if len(edges) == 0:
         edge_index = torch.empty((2, 0), dtype=torch.long)
     else:
@@ -52,9 +95,19 @@ def create_slot_graph_from_npz(file_path: str, pad_players: int = PLAYERS_CONSTA
 
     data_obj = Data(x=x_tensor, edge_index=edge_index, y=y_tensor)
     data_obj.num_players = num_players
-    if max_games is not None:
-        data_obj.max_games = np.array(max_games)
+    data_obj.in_per_player = in_per_player
+    data_obj.pad_players = pad_players
+    # attach prefs (trimmed/padded to num_players x NUM_TAGS) for later inspection / use
+    data_obj.prefs = np.array(prefs_arr, dtype=int)
+
+    if 'maxGames' in data:
+        try:
+            data_obj.max_games = np.array(data['maxGames'])
+        except Exception:
+            data_obj.max_games = None
+
     return data_obj
+
 
 
 class GNN(torch.nn.Module):
@@ -136,7 +189,10 @@ def main():
     train_loader = DataLoader(train_graphs, batch_size=8, shuffle=True)
     val_loader = DataLoader(val_graphs, batch_size=8)
 
-    model = GNN(in_features=PLAYERS_CONSTANT, hidden=128, out_features=PLAYERS_CONSTANT)
+    in_features = PLAYERS_CONSTANT * (1 + NUM_TAGS)
+    out_features = PLAYERS_CONSTANT
+
+    model = GNN(in_features=in_features, hidden=128, out_features=out_features)
     model = train(model, train_loader, val_loader=val_loader, epochs=200, lr=1e-3)
 
     torch.save(model.state_dict(), MODEL_SAVE_PATH)

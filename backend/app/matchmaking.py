@@ -5,9 +5,11 @@ import numpy as np
 import torch
 from torch_geometric.data import Data
 from typing import Optional
+import json
 
 days_in_schedule = 7 
 slots_per_day = 10 
+NUM_TAGS = 5
 
 def prepare_input_data(db) -> Optional[Data]:
     all_users = db.query(models.User).filter(models.User.availabilities.any()).all()
@@ -62,17 +64,40 @@ def prepare_input_data(db) -> Optional[Data]:
     print("Successfully created availability matrix for all users.")
     print(avail_matrix.tolist())
 
+    prefs_list = []
+    for user in all_users:
+        raw = getattr(user, "prefs", None)
+        if raw is None:
+            prefs = [0] * NUM_TAGS
+        elif isinstance(raw, str):
+            prefs = json.loads(raw)
+        else:
+            prefs = list(raw)
+        prefs = (prefs + [0]*NUM_TAGS)[:NUM_TAGS]
+        prefs_list.append([int(x) for x in prefs])
+
+    # flatten availability: (players, days, slots) -> (num_slots, num_players)
     flat = avail_matrix.reshape(num_players, -1)
-    node_feat = flat.T                              
+    avail_flat = flat.T  # shape (num_slots, num_players)
 
-    if node_feat.shape[1] < PLAYERS_CONSTANT:
-        pad_cols = PLAYERS_CONSTANT - node_feat.shape[1]
-        node_feat_padded = np.pad(node_feat, ((0, 0), (0, pad_cols)), 'constant')
-    else:
-        node_feat_padded = node_feat[:, :PLAYERS_CONSTANT]
+    # build node features: for each slot s, concat for p=0..pad_players-1 [avail_bit, prefs(5)]
+    pad_players = PLAYERS_CONSTANT
+    in_per_player = 1 + NUM_TAGS
+    node_feat = np.zeros((num_slots, pad_players * in_per_player), dtype=float)
 
-    x_tensor = torch.tensor(node_feat_padded, dtype=torch.float)
+    for s in range(num_slots):
+        for p in range(pad_players):
+            base = p * in_per_player
+            if p < num_players:
+                node_feat[s, base] = float(avail_flat[s, p])
+                node_feat[s, base + 1: base + 1 + NUM_TAGS] = np.array(prefs_list[p], dtype=float)
+            else:
+                # already zero
+                pass
 
+    x_tensor = torch.tensor(node_feat, dtype=torch.float)
+
+    # build edges (consecutive slots in same day)
     edges = []
     for s in range(num_slots - 1):
         if (s // slots) == ((s + 1) // slots):
@@ -87,10 +112,7 @@ def prepare_input_data(db) -> Optional[Data]:
     data.user_ids = [u.userID for u in all_users]
     data.original_num_players = num_players
     data.avail_matrix = avail_matrix
-
-    if edge_index.numel() > 0:
-        max_idx = int(edge_index.max().item())
-        assert max_idx < x_tensor.shape[0]
+    data.prefs = np.array(prefs_list, dtype=int)
 
     print("Successfully prepared Data object for GNN inference.")
     return data

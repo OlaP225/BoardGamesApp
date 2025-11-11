@@ -1,12 +1,13 @@
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from .database import Base
-from sqlalchemy import Integer, DateTime, ForeignKey
+from sqlalchemy import Integer, DateTime, ForeignKey, Text
 
 class User(Base):
     __tablename__ = "users"
     userID = Column(String, primary_key = True, index = True)
     username = Column(String, index = True)
+    prefs = Column(Text, nullable=True)
     availabilities = relationship("Availability", back_populates="owner", cascade="all, delete-orphan")
     events = relationship("Event", secondary="events_participants", back_populates="participants")
 

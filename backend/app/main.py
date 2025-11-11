@@ -10,9 +10,11 @@ from .config import *
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from create_gnn_model import GNN
+from create_gnn_model import GNN, NUM_TAGS
 from . import save_games
 from fastapi import Body
+import json
+
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -33,7 +35,8 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user_existing = db.query(models.User).filter(models.User.userID == user.userID).first()
     if db_user_existing:
         raise HTTPException(status_code=400, detail="User with this ID already exists!")
-    db_user = models.User(userID = user.userID, username = user.username)
+    prefs_json = json.dumps(user.prefs) if getattr(user, "prefs", None) else None
+    db_user = models.User(userID = user.userID, username = user.username, prefs=prefs_json)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -99,7 +102,10 @@ def load_model():
         return
     
     print(f"Loading GNN model...")
-    model = GNN(in_features=PLAYERS_CONSTANT, hidden=128, out_features=PLAYERS_CONSTANT)
+
+    in_features = PLAYERS_CONSTANT * (1 + NUM_TAGS)
+    out_features = PLAYERS_CONSTANT
+    model = GNN(in_features=in_features, hidden=128, out_features=out_features)
     model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
     model.eval()
     print("GNN model loaded and ready for predictions.")
