@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
+from typing import List
 
 class UserCreate(BaseModel):
     userID: str
@@ -30,29 +31,9 @@ class EventBase(BaseModel):
     to_time: datetime
 
 class EventCreate(EventBase):
-    pass
+    participants: List[str] = []
 
 class Event(EventBase):
     id: int
-    status: str
     participants: list[str]
     model_config = ConfigDict(from_attributes=True)
-
-class EventParticipantBase(BaseModel):
-    user_id: str
-    event_id: int
-    status: str = "pending"
-
-
-class EventParticipantCreate(EventParticipantBase):
-    pass
-
-
-class EventParticipant(EventParticipantBase):
-    id: int
-    model_config = ConfigDict(from_attributes=True)
-
-class ParticipantStatusUpdate(BaseModel):
-    user_id: str
-    status: str
-

@@ -4,7 +4,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,24 +16,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="200" height="109"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fVa-3Y-3bB">
-                        <rect key="frame" x="12.666666666666664" y="57.333333333333343" width="75" height="34.666666666666657"/>
-                        <color key="tintColor" systemColor="systemGreenColor"/>
-                        <state key="normal" title="Button"/>
-                        <buttonConfiguration key="configuration" style="tinted" title="Button"/>
-                        <connections>
-                            <action selector="didTapAcceptButton:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="qwA-9G-KwC"/>
-                        </connections>
-                    </button>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ovs-nA-0Bg">
-                        <rect key="frame" x="112.66666666666669" y="57.333333333333343" width="75" height="35"/>
-                        <color key="tintColor" systemColor="systemRedColor"/>
-                        <state key="normal" title="Button"/>
-                        <buttonConfiguration key="configuration" style="tinted" title="Button"/>
-                        <connections>
-                            <action selector="didTapRejectButton:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="R1U-Vn-vuA"/>
-                        </connections>
-                    </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9cb-V4-A0n">
                         <rect key="frame" x="8" y="8" width="29" height="14"/>
                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
@@ -42,41 +23,27 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="06v-gW-JTP">
-                        <rect key="frame" x="20" y="27" width="160" height="20.333333333333329"/>
+                        <rect key="frame" x="20" y="44.333333333333336" width="160" height="20.333333333333336"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="06v-gW-JTP" firstAttribute="top" secondItem="9cb-V4-A0n" secondAttribute="bottom" constant="5" id="6lu-wc-Vpt"/>
                     <constraint firstItem="9cb-V4-A0n" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="7s4-md-n0K"/>
-                    <constraint firstItem="fVa-3Y-3bB" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" constant="-50" id="DXK-GE-1z6"/>
                     <constraint firstItem="9cb-V4-A0n" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="OAq-Oe-btP"/>
-                    <constraint firstItem="ovs-nA-0Bg" firstAttribute="top" secondItem="06v-gW-JTP" secondAttribute="bottom" constant="10" id="byk-LJ-kuI"/>
+                    <constraint firstItem="06v-gW-JTP" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Rsh-Qw-Nxs"/>
                     <constraint firstItem="06v-gW-JTP" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="iov-co-QFd"/>
                     <constraint firstAttribute="trailing" secondItem="06v-gW-JTP" secondAttribute="trailing" constant="20" id="q4k-XE-8Im"/>
-                    <constraint firstItem="ovs-nA-0Bg" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" constant="50" id="qqr-ZA-U0w"/>
-                    <constraint firstItem="fVa-3Y-3bB" firstAttribute="top" secondItem="06v-gW-JTP" secondAttribute="bottom" constant="10" id="smM-1l-oeb"/>
                     <constraint firstItem="06v-gW-JTP" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="tUS-tc-Mja"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="acceptButton" destination="fVa-3Y-3bB" id="Fjk-18-XiO"/>
                 <outlet property="notiDate" destination="9cb-V4-A0n" id="9id-PJ-HUs"/>
                 <outlet property="notiMessage" destination="06v-gW-JTP" id="rCy-Ns-GqY"/>
-                <outlet property="rejectButton" destination="ovs-nA-0Bg" id="z7Z-R7-FTF"/>
             </connections>
             <point key="canvasLocation" x="65.648854961832058" y="15.845070422535212"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <systemColor name="systemGreenColor">
-            <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-    </resources>
 </document>

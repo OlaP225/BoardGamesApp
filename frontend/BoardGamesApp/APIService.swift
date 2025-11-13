@@ -31,7 +31,7 @@ struct EventNotification: Codable {
     let game_name: String
     let from_time: Date
     let to_time: Date
-    let status: String
+    let participants: [String]?
 }
 
 class APIService {
@@ -182,63 +182,62 @@ class APIService {
 
 extension APIService {
     func fetchUserNotifications(userID: String, completion: @escaping ([NotificationItem]) -> Void) {
-        guard let url = URL(string: "\(baseURL)/api/users/\(userID)/events") else {
-            completion([])
-            return
-        }
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data, error == nil else {
-                print("Error fetching notifications: \(error?.localizedDescription ?? "Unknown")")
-                completion([])
-                return
-            }
-            do {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .formatted(iso8601DateFormatter())
-                let events = try decoder.decode([EventNotification].self, from: data)
+         guard let url = URL(string: "\(baseURL)/api/users/\(userID)/events") else {
+             DispatchQueue.main.async { completion([]) }
+             return
+         }
 
-                let notifications = events.map { event -> NotificationItem in
-                    let formatter = DateFormatter()
-                    formatter.dateFormat = "d MMM, HH:mm"
-                    let dateText = formatter.string(from: event.from_time)
-                    return NotificationItem(
-                        id: String(event.id),
-                        date: event.from_time,
-                        message: "Nowe spotkanie '\(event.game_name)' w dniu \(dateText).",
-                        type: event.status == "pending" ? .action : .info
-                    )
-                }
+         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
+             if let error = error {
+                 print("Error fetching notifications: \(error.localizedDescription)")
+                 DispatchQueue.main.async { completion([]) }
+                 return
+             }
 
-                completion(notifications)
-            } catch {
-                print("Decode error notifications: \(error)")
-                completion([])
-            }
-        }
-        task.resume()
-    }
-    
-    func updateEventStatus(eventID: Int,userID: String, status: String, completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "\(baseURL)/api/events/\(eventID)/participants/status") else {
-            completion(false)
-            return
-        }
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let body = ["user_id": userID, "status": status]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+             guard let data = data else {
+                 DispatchQueue.main.async { completion([]) }
+                 return
+             }
 
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard error == nil, let http = response as? HTTPURLResponse else {
-                print("Network error: \(error?.localizedDescription ?? "Unknown")")
-                completion(false)
-                return
-            }
-            completion(http.statusCode == 200)
-        }
-        task.resume()
-    }
+             do {
+                 let decoder = JSONDecoder()
+                 decoder.dateDecodingStrategy = .formatted(iso8601DateFormatter())
+                 let events = try decoder.decode([EventNotification].self, from: data)
+
+                 let notifications = events.map { event -> NotificationItem in
+                     
+                     let formatter = DateFormatter()
+                     formatter.dateFormat = "d MMM, HH:mm"
+                     let dateText = formatter.string(from: event.from_time)
+                     let formatter2 = DateFormatter()
+                     formatter2.dateFormat = "HH:mm"
+                     let dateText2 = formatter2.string(from: event.to_time)
+                     
+                     let participantsText: String
+                     if let parts = event.participants, !parts.isEmpty {
+                         participantsText = " Uczestnicy: \(parts.joined(separator: ", "))."
+                     } else {
+                         participantsText = ""
+                     }
+
+                     let message = "Wylosowano nową grę w dniu \(dateText) - \(dateText2). \n Proponowane typy gier: \n Uczestnicy: 'Ola', 'Kasia', 'Tomek'. "
+                     return NotificationItem(
+                         id: String(event.id),
+                         date: Date(),
+                         message: message,
+                         type: .info
+                     )
+                 }
+
+                 DispatchQueue.main.async { completion(notifications) }
+             } catch {
+                 print("Decode error notifications: \(error)")
+                 DispatchQueue.main.async { completion([]) }
+             }
+         }
+         task.resume()
+     }
+ 
 }
 
 extension APIService {

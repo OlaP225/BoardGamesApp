@@ -77,7 +77,6 @@ def translate_schedule_to_events(schedule_per_player: np.ndarray, user_ids: List
             game_name="Wylosowana Gra",
             from_time=start_time,
             to_time=end_time,
-            status="pending",
             participants=participant_ids
         )
         final_events.append(ev)
@@ -85,66 +84,47 @@ def translate_schedule_to_events(schedule_per_player: np.ndarray, user_ids: List
     print(f"Generated {len(final_events)} events from the schedule.")
     return final_events
 
-def save_events_to_db(db: Session, events_to_create: List[schemas.Event]):
+def save_events_to_db(db: Session, events_to_create: List[schemas.Event]) -> None:
     """
     Saves the provided list of schemas.Event to the database.
     """
-    try:
-        old_pending = db.query(models.Event).filter(models.Event.status == "pending").all()
-        if old_pending:
-            for ev in old_pending:
-                db.delete(ev)
-            db.commit()
-            print(f"Deleted {len(old_pending)} old pending events.")
-    except Exception as e:
-        db.rollback()
-        print("Warning: not possible to delete old pending events:", e)
-
     created = 0
     for event_schema in events_to_create:
         try:
+            participant_user_ids: List[str] = getattr(event_schema, "participants", []) or []
+
+            existing = (
+                db.query(models.Event)
+                .filter(
+                    models.Event.game_name == event_schema.game_name,
+                    models.Event.from_time == event_schema.from_time,
+                    models.Event.to_time == event_schema.to_time
+                )
+                .first()
+            )
+
+            if existing:
+                if set(existing.participants or []) == set(participant_user_ids):
+                    print("Skipping duplicate event:", event_schema.game_name, event_schema.from_time)
+                    continue
             new_event = models.Event(
                 game_name=event_schema.game_name,
                 from_time=event_schema.from_time,
                 to_time=event_schema.to_time,
-                status=getattr(event_schema, "status", "pending")
+                participants=participant_user_ids
             )
             db.add(new_event)
             db.flush()
-
-            participant_user_ids = event_schema.participants or []
-            if participant_user_ids:
-                users = db.query(models.User).filter(models.User.userID.in_(participant_user_ids)).all()
-
-                if hasattr(new_event, "participants"):
-                    try:
-                        new_event.participants = users
-                    except Exception:
-                        try:
-                            for u in users:
-                                new_event.participants.append(u)
-                        except Exception:
-                            pass
-                elif hasattr(models, "EventParticipant"):
-                    for u in users:
-                        ep = models.EventParticipant(
-                            user_id=getattr(u, "userID", None) or getattr(u, "id", None),
-                            event_id=new_event.id,
-                            status="pending"
-                        )
-                        db.add(ep)
-                else:
-                    print("Warning: lack of participants relationship or EventParticipant model.")
             created += 1
 
         except Exception as e:
-            print("Creation event error:", e)
             db.rollback()
+            print("Creation event error:", e)
             continue
 
     try:
         db.commit()
-        print(f"Succesfully saved {created} new games.")
+        print(f"Successfully saved {created} new games.")
     except Exception as e:
         db.rollback()
         print("Error while saving events to database:", e)

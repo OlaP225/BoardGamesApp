@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from . import models, schemas
-from .schemas import ParticipantStatusUpdate
 from .database import SessionLocal, engine
 from .matchmaking import prepare_input_data, run_gnn_prediction
 import numpy as np
@@ -139,12 +138,7 @@ def run_matchmaking(db: Session = Depends(get_db)):
 
 @app.get("/api/users/{user_id}/events", response_model=list[schemas.Event])
 def get_user_events(user_id: str, db: Session = Depends(get_db)):
-    events = (
-        db.query(models.Event)
-        .join(models.EventParticipant, models.Event.id == models.EventParticipant.event_id)
-        .filter(models.EventParticipant.user_id == user_id)
-        .all()
-    )
+    events = db.query(models.Event).filter(models.Event.participants.contains([user_id])).all()
 
     result = []
     for e in events:
@@ -154,56 +148,11 @@ def get_user_events(user_id: str, db: Session = Depends(get_db)):
                 game_name=e.game_name,
                 from_time=e.from_time,
                 to_time=e.to_time,
-                status=e.status,
-                participants=[p.userID for p in e.participants],
+                participants=e.participants
             )
         )
     return result
 
-
-
-
-@app.post("/api/events/{event_id}/participants/status")
-def update_participant_status(event_id: int, update: ParticipantStatusUpdate, db: Session = Depends(get_db)):
-    participant = (
-        db.query(models.EventParticipant)
-        .filter(
-            models.EventParticipant.event_id == event_id,
-            models.EventParticipant.user_id == update.user_id
-        )
-        .first()
-    )
-
-    if not participant:
-        raise HTTPException(status_code=404, detail="Participant not found for this event")
-
-    if update.status not in ["accepted", "rejected"]:
-        raise HTTPException(status_code=400, detail="Invalid status")
-
-    participant.status = update.status
-    db.commit()
-    db.refresh(participant)
-
-    accepted_count = (
-        db.query(models.EventParticipant)
-        .filter(
-            models.EventParticipant.event_id == event_id,
-            models.EventParticipant.status == "accepted"
-        )
-        .count()
-    )
-    if accepted_count >= 2:
-        event = db.query(models.Event).filter(models.Event.id == event_id).first()
-        if event.status != "accepted":
-            event.status = "accepted"
-            db.commit()
-
-    return {"message": f"Status updated for user {update.user_id} on event {event_id} -> {update.status}"}
-
-@app.get("/api/debug/events_participants")
-def debug_links(db: Session = Depends(get_db)):
-    links = db.query(models.EventParticipant).all()
-    return [{"id": l.id, "user_id": l.user_id, "event_id": l.event_id, "status": l.status} for l in links]
 
 @app.patch("/api/users/{user_id}/preferences", response_model=schemas.User)
 def update_user_preferences(user_id: str, payload: dict = Body(...), db: Session = Depends(get_db)):
