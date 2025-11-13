@@ -90,15 +90,7 @@ extension DayTimeLineRowView: UICollectionViewDataSource, UICollectionViewDelega
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        // Chcemy, żeby wysokość była obliczana automatycznie,
-        // ale szerokość musi być zdefiniowana.
-        
-        // Ustawmy szerokość na jakąś rozsądną wartość, np. 240 punktów.
-        // Możesz tu poeksperymentować.
         let width: CGFloat = 200
-        
-        // Dla wysokości używamy specjalnej wartości, która mówi systemowi:
-        // "Oblicz wysokość automatycznie na podstawie zawartości i ograniczeń".
         let height: CGFloat = 80
         
         return CGSize(width: width, height: height)

@@ -4,6 +4,7 @@ from datetime import datetime
 class UserCreate(BaseModel):
     userID: str
     username: str
+    preferences: list[int] = [0,0,0,0,0]
 
 class User(UserCreate):
     model_config = ConfigDict(from_attributes=True)

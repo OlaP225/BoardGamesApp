@@ -8,6 +8,7 @@
 import UIKit
 
 class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
+    
     @IBOutlet var addAvailabilityContainer: UIView!
     @IBOutlet var addAvailabilityTitle: UILabel!
     @IBOutlet var dateLabel: UILabel!
@@ -18,6 +19,19 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
     @IBOutlet var addAvailabilityButton: UIButton!
     @IBOutlet var availabilitiesTable: UITableView!
     @IBOutlet var yourAvailabilitiesTitle: UILabel!
+    @IBOutlet var gamePreferencesLabel: UILabel!
+    @IBOutlet var gamePreferencesView: UIView!
+    @IBOutlet weak var gamePrefButton: UIButton!
+    
+    var selectedGamePrefs: [Int] = [0,0,0,0,0]
+    
+    @IBAction func didTapGamePrefButton(_ sender: UIButton) {
+        let vc = GamePrefSelectionViewController(style: .insetGrouped)
+        vc.delegate = self
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .pageSheet
+        present(nav, animated: true)
+    }
     
     var availabilities = [AvailabilitySlot]()
     
@@ -276,7 +290,6 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
         }
         
         let availabilityData = AvailabilityCreateData(from_time: finalFromDate, to_time: finalToDate)
-        // pokaż wskaźnik ładowania
         //showLoadingIndicator()
         
         APIService.shared.addAvailability(userID: userID, availabilityData: availabilityData) { [weak self] newSlotFromServer in
@@ -325,6 +338,11 @@ class AvailabilityViewController: BaseViewController, UITableViewDelegate, UITab
         addAvailabilityButton.tintColor = UIColor(named: "purple")
         addAvailabilityContainer.layer.borderWidth = 1
         addAvailabilityContainer.layer.borderColor = UIColor.systemGray.cgColor
+        
+        gamePreferencesView.layer.cornerRadius = 15
+        gamePreferencesView.layer.borderWidth = 1
+        gamePreferencesView.layer.borderColor = UIColor.systemGray.cgColor
+        gamePrefButton.tintColor = UIColor(named: "purple")
     }
     
     private func setupTableView() {
@@ -422,5 +440,45 @@ extension AvailabilityViewController: AvailabilityTableViewCellDelegate {
             
         })
         present(alert, animated: true)
+    }
+}
+
+extension AvailabilityViewController: GamePrefSelectionDelegate {
+    func gamePrefSelectionDidFinish(preferences: [Int]) {
+        guard preferences.count == 5 else {
+            return
+        }
+        selectedGamePrefs = preferences
+
+        let names = ["Strategiczne","Karciane","Imprezowe","Przygodowe","Kooperacyjne"]
+        if preferences.allSatisfy({ $0 == 1 }) {
+            gamePrefButton.setTitle("Wszystkie", for: .normal)
+        } else {
+            let chosen = names.enumerated().compactMap { idx, name in
+                return preferences[idx] == 1 ? name : nil
+            }
+            let title = chosen.isEmpty ? "Brak" : chosen.joined(separator: ", ")
+            gamePrefButton.setTitle(title, for: .normal)
+        }
+        
+        UserDefaults.standard.set(preferences, forKey: "userPreferences")
+
+
+        guard let userID = UserDefaults.standard.string(forKey: "userID") else {
+            print("No userID — cannot update preferences now")
+            return
+        }
+
+        APIService.shared.updateUserPreferences(userID: userID, preferences: preferences) { success in
+            DispatchQueue.main.async {
+                if success {
+                    print("Preferences updated on server")
+                } else {
+                    let ac = UIAlertController(title: "Błąd", message: "Nie udało się zapisać preferencji. Spróbuj ponownie.", preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(ac, animated: true)
+                }
+            }
+        }
     }
 }

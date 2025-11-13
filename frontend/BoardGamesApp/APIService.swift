@@ -11,6 +11,7 @@ func iso8601DateFormatter() -> DateFormatter {
 struct UserRegistrationData: Codable {
     let username: String
     let userID: String
+    var preferences: [Int]
 }
 
 struct AvailabilityCreateData: Codable {
@@ -235,6 +236,29 @@ extension APIService {
                 return
             }
             completion(http.statusCode == 200)
+        }
+        task.resume()
+    }
+}
+
+extension APIService {
+    func updateUserPreferences(userID: String, preferences: [Int], completion: @escaping (Bool) -> Void) {
+        guard let url = URL(string: "\(baseURL)/api/users/\(userID)/preferences") else {
+            completion(false); return
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let body: [String: Any] = ["preferences": preferences]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let err = error {
+                print("updateUserPreferences network error:", err.localizedDescription)
+                completion(false); return
+            }
+            guard let http = response as? HTTPURLResponse else { completion(false); return }
+            completion((200...299).contains(http.statusCode))
         }
         task.resume()
     }

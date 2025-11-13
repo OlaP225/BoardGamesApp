@@ -1,12 +1,13 @@
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from .database import Base
-from sqlalchemy import Integer, DateTime, ForeignKey
+from sqlalchemy import Integer, DateTime, ForeignKey, JSON
 
 class User(Base):
     __tablename__ = "users"
     userID = Column(String, primary_key = True, index = True)
     username = Column(String, index = True)
+    preferences = Column(JSON, default=[1,1,1,1,1])
     availabilities = relationship("Availability", back_populates="owner", cascade="all, delete-orphan")
     events = relationship("Event", secondary="events_participants", back_populates="participants")
 

@@ -26,7 +26,8 @@ class WelcomeViewController: BaseViewController {
         defaults.set(userID, forKey: "userID")
         defaults.set(username, forKey: "username")
         defaults.set(true, forKey: "userHasOnboarded")
-        let registrationData = UserRegistrationData(username: username, userID: userID)
+        defaults.set([1,1,1,1,1], forKey: "userPreferences")
+        let registrationData = UserRegistrationData(username: username, userID: userID, preferences: [1,1,1,1,1])
         APIService.shared.registerUser(userData: registrationData)
         
         switchToMainApp()

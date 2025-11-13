@@ -33,7 +33,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user_existing = db.query(models.User).filter(models.User.userID == user.userID).first()
     if db_user_existing:
         raise HTTPException(status_code=400, detail="User with this ID already exists!")
-    db_user = models.User(userID = user.userID, username = user.username)
+    db_user = models.User(userID = user.userID, username = user.username, preferences = user.preferences)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -205,3 +205,22 @@ def debug_links(db: Session = Depends(get_db)):
     links = db.query(models.EventParticipant).all()
     return [{"id": l.id, "user_id": l.user_id, "event_id": l.event_id, "status": l.status} for l in links]
 
+@app.patch("/api/users/{user_id}/preferences", response_model=schemas.User)
+def update_user_preferences(user_id: str, payload: dict = Body(...), db: Session = Depends(get_db)):
+    """
+    Expects body: { "preferences": [0,1,0,1,0] } (exactly 5 ints 0/1).
+    """
+    prefs = payload.get("preferences")
+    if not isinstance(prefs, list) or len(prefs) != 5 or any((p not in (0, 1)) for p in prefs):
+        raise HTTPException(status_code=400, detail="preferences must be a list of 5 integers (0 or 1)")
+
+    user = db.query(models.User).filter(models.User.userID == user_id).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    user.preferences = prefs
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    print(f"Updated preferences for {user_id} -> {prefs}")
+    return user

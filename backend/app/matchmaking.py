@@ -21,6 +21,13 @@ def prepare_input_data(db) -> Optional[Data]:
     days = DAYS_IN_SCHEDULE
     slots = SLOTS_PER_DAY
     num_slots = days * slots
+    
+    num_preferences = 5
+    preferences_matrix = np.zeros((num_players, num_preferences), dtype=np.int32)
+
+    for u_idx, user in enumerate(all_users):
+        if hasattr(user, "preferences") and user.preferences is not None:
+            preferences_matrix[u_idx, :] = np.array(user.preferences)   
 
     avail_matrix = np.zeros((num_players, days, slots), dtype=np.int32)
     userid_index_map = {user.userID: i for i, user in enumerate(all_users)}
@@ -87,6 +94,8 @@ def prepare_input_data(db) -> Optional[Data]:
     data.user_ids = [u.userID for u in all_users]
     data.original_num_players = num_players
     data.avail_matrix = avail_matrix
+    data.preferences_matrix = preferences_matrix
+
 
     if edge_index.numel() > 0:
         max_idx = int(edge_index.max().item())
@@ -135,14 +144,21 @@ def run_gnn_prediction(model: torch.nn.Module, graph_data: Data, min_players: in
         for idx in sorted_idx:
             if not available_mask[idx]:
                 continue
-            selected.append(int(idx))
+            
+            can_add = True
+            for already in selected:
+                if np.dot(graph_data.preferences_matrix[idx], graph_data.preferences_matrix[already]) == 0:
+                    can_add = False
+                    break
+            if can_add:
+                selected.append(int(idx))
             if len(selected) >= max_players:
                 break
 
         if len(selected) >= min_players:
             for p in selected:
-                final_flat[s, p] = 1
-
+                final_flat[s, p] = 1            
+            
     final_per_player = final_flat.T.reshape(players, days, slots).astype(int)
 
     print("GNN produced schedule (players x days x slots) with total assignments:", int(final_per_player.sum()))
