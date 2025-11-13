@@ -14,6 +14,13 @@ BoardGamesApp is a mobile application designed for board game enthusiasts to eas
 
 This project provides a comprehensive solution for coordinating board game meetups. It consists of an intuitive iOS mobile application, a FastAPI backend, and matchmaking algorithms. The core innovation lies in combining traditional optimization (CPLEX) for small-scale, precise matching with scalable Graph Neural Networks for efficient player grouping across larger communities, taking into account individual preferences and schedules.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4100af6b-3788-4510-8f9c-a4f5f3c33d3f" 
+       alt="BoardGamesApp Demo" 
+       width="320" />
+</p>
+
+
 # Architecture
 
 **iOS Mobile Application**
