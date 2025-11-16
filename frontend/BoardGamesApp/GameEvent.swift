@@ -8,6 +8,7 @@
 import Foundation
 
 struct GameEvent {
+    let id: Int
     let title: String
     let currentPlayersCount: Int
     let maxPlayersCount: Int

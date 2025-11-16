@@ -263,3 +263,91 @@ extension APIService {
     }
 }
 
+extension APIService {
+    func fetchUserEvents(userID: String, completion: @escaping ([GameEvent]) -> Void) {
+        guard let url = URL(string: "\(baseURL)/api/users/\(userID)/events") else {
+            DispatchQueue.main.async { completion([]) }
+            return
+        }
+
+        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
+            if let error = error {
+                print("Error fetching user events: \(error.localizedDescription)")
+                DispatchQueue.main.async { completion([]) }
+                return
+            }
+
+            guard let data = data else {
+                DispatchQueue.main.async { completion([]) }
+                return
+            }
+
+            do {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .formatted(iso8601DateFormatter())
+                let events = try decoder.decode([EventNotification].self, from: data)
+
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "HH:mm"
+
+                let mapped: [GameEvent] = events.map { ev in
+                    let start = ev.from_time
+                    let end = ev.to_time
+                    let timeString = "\(dateFormatter.string(from: start)) - \(dateFormatter.string(from: end))"
+                    let title = ev.game_name
+                    let location = "Proponowane miejsce"
+                    let playersCount = ev.participants?.count ?? 0
+                    let maxPlayers = 4
+                    return GameEvent(
+                        id: ev.id,
+                        title: title,
+                        currentPlayersCount: playersCount,
+                        maxPlayersCount: maxPlayers,
+                        time: timeString,
+                        location: location,
+                        date: Calendar.current.startOfDay(for: ev.from_time) == ev.from_time ? ev.from_time : ev.from_time,
+                        participantsIDs: ev.participants ?? []
+                    )
+                }
+
+                DispatchQueue.main.async { completion(mapped) }
+            } catch {
+                print("Decode error fetchUserEvents: \(error)")
+                DispatchQueue.main.async { completion([]) }
+            }
+        }
+        task.resume()
+    }
+}
+extension APIService {
+    func leaveEvent(eventID: Int, userID: String, completion: @escaping (Bool) -> Void) {
+        guard let url = URL(string: "\(baseURL)/api/events/\(eventID)/leave") else {
+            completion(false); return
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let body: [String: Any] = ["user_id": userID]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let err = error {
+                print("leaveEvent network error:", err.localizedDescription)
+                DispatchQueue.main.async { completion(false) }
+                return
+            }
+            guard let http = response as? HTTPURLResponse else {
+                DispatchQueue.main.async { completion(false) }
+                return
+            }
+            if (200...299).contains(http.statusCode) {
+                DispatchQueue.main.async { completion(true) }
+            } else {
+                print("leaveEvent server returned \(http.statusCode)")
+                DispatchQueue.main.async { completion(false) }
+            }
+        }
+        task.resume()
+    }
+}
+

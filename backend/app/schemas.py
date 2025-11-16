@@ -37,3 +37,6 @@ class Event(EventBase):
     id: int
     participants: list[str]
     model_config = ConfigDict(from_attributes=True)
+
+class LeaveEventRequest(BaseModel):
+    user_id: str

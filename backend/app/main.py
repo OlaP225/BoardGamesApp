@@ -12,6 +12,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from create_gnn_model import GNN
 from . import save_games
 from fastapi import Body
+from schemas import LeaveEventRequest
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -173,3 +174,31 @@ def update_user_preferences(user_id: str, payload: dict = Body(...), db: Session
     db.refresh(user)
     print(f"Updated preferences for {user_id} -> {prefs}")
     return user
+
+@app.post("/api/events/{event_id}/leave", response_model=schemas.Event)
+def leave_event(event_id: int, payload: LeaveEventRequest, db: Session = Depends(get_db)):
+    db_event = db.query(models.Event).filter(models.Event.id == event_id).first()
+    if db_event is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    participants = db_event.participants or []
+    if payload.user_id not in participants:
+        raise HTTPException(status_code=400, detail="User is not a participant of this event")
+
+    try:
+        participants.remove(payload.user_id)
+        db_event.participants = participants
+        db.add(db_event)
+        db.commit()
+        db.refresh(db_event)
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error updating event participants: {e}")
+
+    return schemas.Event(
+        id=db_event.id,
+        game_name=db_event.game_name,
+        from_time=db_event.from_time,
+        to_time=db_event.to_time,
+        participants=db_event.participants or []
+    )

@@ -19,20 +19,9 @@ class HomeViewController: BaseViewController{
     let scrollViewPastEvents = UIScrollView()
     let stackViewPastDays = UIStackView()
     
-    var upcomingEvents: [GameEvent] = [
-        GameEvent(title: "Monopoly", currentPlayersCount: 3, maxPlayersCount: 4, time: "10:00 - 12:00", location: "Krzyki - pokój graczy", date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 2))!, participantsIDs: []),
-        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Szczepin - klub mieszkańca", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 12))!, participantsIDs: []),
-        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Graczowo", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 12))!, participantsIDs: []),
-        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Osiedle Psie Pole", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 12))!, participantsIDs: []),
-        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Leśnica - osiedle ABC", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 13))!, participantsIDs: []),
-        GameEvent(title: "Catan", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Develia osiedle tarnogaj", date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 13))!, participantsIDs: [])
-        ]
+    var upcomingEvents: [GameEvent] = []
     
-    var pastEvents: [GameEvent] = [
-        GameEvent(title: "Endgame", currentPlayersCount: 5, maxPlayersCount: 6, time: "10:00 - 12:00", location: "Osiedle Szczepin", date: Calendar.current.date(from: DateComponents(year: 2025, month: 3, day: 2))!, participantsIDs: []),
-        GameEvent(title: "NeedForSpeed", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Oporów - klub mieszkańca", date: Calendar.current.date(from: DateComponents(year: 2025, month: 3, day: 10))!, participantsIDs: []),
-        GameEvent(title: "CitySkylines", currentPlayersCount: 2, maxPlayersCount: 4, time: "12:00 - 14:00", location: "Pwr sala gier", date: Calendar.current.date(from: DateComponents(year: 2025, month: 2, day: 15))!, participantsIDs: [])
-    ]
+    var pastEvents: [GameEvent] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,9 +43,9 @@ class HomeViewController: BaseViewController{
 
 
         setupProfileImageView()
-
-        setUpcomingEvents()
-        setUpPastEvents()
+        setupScrollViewAndStackView()
+        setUpPastScrollViewAndStackView()
+        loadEventsFromServer()
 
     }
     private func setupProfileImageView() {
@@ -79,6 +68,36 @@ class HomeViewController: BaseViewController{
         ])
     
     }
+    private func loadEventsFromServer() {
+        guard let userID = UserDefaults.standard.string(forKey: "userID") else {
+            print("No userID in UserDefaults")
+            return
+        }
+        
+        APIService.shared.fetchUserEvents(userID: userID) { [weak self] events in
+            guard let self = self else { return }
+            let now = Date()
+            self.upcomingEvents = events.filter { $0.date >= now }.sorted { $0.date < $1.date }
+            self.pastEvents = events.filter { $0.date < now }.sorted { $0.date > $1.date }
+            DispatchQueue.main.async {
+                self.reloadEventViews()
+            }
+        }
+    }
+    
+    private func reloadEventViews() {
+        clearStackView(daysStackView)
+        clearStackView(stackViewPastDays)
+        setUpcomingEvents()
+        setUpPastEvents()
+    }
+    
+    private func clearStackView(_ sv: UIStackView) {
+        for view in sv.arrangedSubviews {
+            sv.removeArrangedSubview(view)
+            view.removeFromSuperview()
+        }
+    }
     
     
     func groupAndSort(events: [GameEvent]) -> (sortedDays: [Date], groupedEvents: [Date: [GameEvent]]){
@@ -92,20 +111,20 @@ class HomeViewController: BaseViewController{
     
     func setUpcomingEvents()  {
         let upcomingData = groupAndSort(events: upcomingEvents)
-        setupScrollViewAndStackView()
         displayTimeLine(for: upcomingData.sortedDays, with: upcomingData.groupedEvents, to: daysStackView, state: .active)
     }
     
     func setUpPastEvents() {
         let pastData = groupAndSort(events: pastEvents)
-        setUpPastScrollViewAndStackView()
         displayTimeLine(for: pastData.sortedDays, with: pastData.groupedEvents, to: stackViewPastDays, state: .past)
         
     }
     
     func setupScrollViewAndStackView() {
-        view.addSubview(scrollView)
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        if scrollView.superview == nil {
+            view.addSubview(scrollView)
+            scrollView.translatesAutoresizingMaskIntoConstraints = false
+        }
         
         daysStackView.axis = .vertical
         daysStackView.spacing = 24
@@ -130,8 +149,10 @@ class HomeViewController: BaseViewController{
     }
     
     func setUpPastScrollViewAndStackView() {
-        view.addSubview(scrollViewPastEvents)
-        scrollViewPastEvents.translatesAutoresizingMaskIntoConstraints = false
+        if scrollViewPastEvents.superview == nil {
+            view.addSubview(scrollViewPastEvents)
+            scrollViewPastEvents.translatesAutoresizingMaskIntoConstraints = false
+        }
         
         stackViewPastDays.axis = .vertical
         stackViewPastDays.spacing = 24
