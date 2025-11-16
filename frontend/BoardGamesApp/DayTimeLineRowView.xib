@@ -23,13 +23,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C2N-Md-yP8">
-                    <rect key="frame" x="0.0" y="59" width="393" height="759"/>
+                    <rect key="frame" x="0.0" y="59" width="393" height="100"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Fm-PS-PQa" userLabel="Stack View - Left Side">
-                            <rect key="frame" x="0.0" y="0.0" width="80" height="759"/>
+                            <rect key="frame" x="0.0" y="0.0" width="80" height="100"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="byX-4Q-Ur4">
-                                    <rect key="frame" x="0.0" y="0.0" width="80" height="759"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="80" height="100"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rU2-9s-P56">
                                             <rect key="frame" x="16" y="32" width="48" height="18.333333333333329"/>
@@ -61,7 +61,7 @@
                             </constraints>
                         </stackView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sdo-AF-OgM" userLabel="View - Middle Line">
-                            <rect key="frame" x="80" y="0.0" width="5" height="759"/>
+                            <rect key="frame" x="80" y="0.0" width="5" height="100"/>
                             <color key="backgroundColor" red="0.41960784313725491" green="0.0039215686274509803" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="100" id="5zD-6c-3B3"/>
@@ -69,7 +69,7 @@
                             </constraints>
                         </view>
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="l9j-wA-IW5" userLabel="Collection View - Right Side">
-                            <rect key="frame" x="85" y="0.0" width="308" height="759"/>
+                            <rect key="frame" x="85" y="0.0" width="308" height="100"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="100" id="08z-ss-IDg"/>

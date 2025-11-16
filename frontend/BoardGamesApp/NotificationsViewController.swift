@@ -70,17 +70,23 @@ class NotificationsViewController: BaseViewController {
             guard let self = self else { return }
             DispatchQueue.main.async {
                 print("[NotificationsVC] fetched \(fetched.count) from server")
-                var mergedMap = Dictionary(uniqueKeysWithValues: self.notifications.map { ($0.id, $0) })
+                
+                var mergedMap: [String: NotificationItem] = [:]
+                for n in self.notifications {
+                    mergedMap[n.id] = n
+                }
                 for n in fetched {
                     mergedMap[n.id] = n
                 }
                 let merged = Array(mergedMap.values).sorted { $0.date > $1.date }
+
                 self.notifications = merged
                 self.notificationsTableView.reloadData()
                 print("[NotificationsVC] merged notifications count=\(self.notifications.count)")
             }
         }
     }
+
 
 }
 

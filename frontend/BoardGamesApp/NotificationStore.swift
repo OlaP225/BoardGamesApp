@@ -43,8 +43,13 @@ final class NotificationStore {
 
     func add(_ item: NotificationItem) {
         var current = loadAll()
+        if current.contains(where: { $0.id == item.id }) {
+            print("[NotificationStore] add ignored duplicate id=\(item.id)")
+            return
+        }
         current.insert(item, at: 0)
         saveAll(current)
         print("[NotificationStore] saved item id=\(item.id) total=\(current.count)")
     }
 }
+

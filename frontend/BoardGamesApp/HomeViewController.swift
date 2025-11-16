@@ -19,6 +19,11 @@ class HomeViewController: BaseViewController{
     let scrollViewPastEvents = UIScrollView()
     let stackViewPastDays = UIStackView()
     
+    private let emptyUpcomingView = UIView()
+    private let emptyUpcomingLabel = UILabel()
+    private let emptyPastView = UIView()
+    private let emptyPastLabel = UILabel()
+    
     var upcomingEvents: [GameEvent] = []
     
     var pastEvents: [GameEvent] = []
@@ -29,7 +34,7 @@ class HomeViewController: BaseViewController{
         let defaults = UserDefaults.standard
         if let username = defaults.string(forKey: "username") {
             greeting.text = "Cześć, \(username)!"
-            greeting.sizeToFit()
+         //   greeting.sizeToFit()
             greeting.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         } else {
             greeting.text = "Cześć!"
@@ -90,11 +95,15 @@ class HomeViewController: BaseViewController{
         }
     }
     
-    private func reloadEventViews() {
+    func reloadEventViews() {
         clearStackView(daysStackView)
         clearStackView(stackViewPastDays)
+        
         setUpcomingEvents()
         setUpPastEvents()
+        
+        updateUpcomingPlaceholderVisibility()
+        updatePastPlaceholderVisibility()
     }
     
     private func clearStackView(_ sv: UIStackView) {
@@ -252,6 +261,101 @@ class HomeViewController: BaseViewController{
             }
         }
     }
+    
+    private func setupEmptyUpcomingView() {
+        guard emptyUpcomingView.superview == nil else { return }
+
+        emptyUpcomingView.translatesAutoresizingMaskIntoConstraints = false
+        emptyUpcomingView.backgroundColor = UIColor(named: "ActiveCardBackground")
+        emptyUpcomingView.layer.cornerRadius = 12
+        emptyUpcomingView.layer.shadowColor = UIColor.black.cgColor
+        emptyUpcomingView.layer.shadowOpacity = 0.05
+        emptyUpcomingView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        emptyUpcomingView.layer.shadowRadius = 6
+
+        emptyUpcomingLabel.translatesAutoresizingMaskIntoConstraints = false
+        emptyUpcomingLabel.text = "Brak nadchodzących spotkań.\n Zaplanuj swoje dostępności na nadchodzące dni, dodaj je w panelu dostępności i poczekaj na przyporządkowanie gier :)."
+        emptyUpcomingLabel.numberOfLines = 0
+        emptyUpcomingLabel.textAlignment = .center
+        emptyUpcomingLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        emptyUpcomingLabel.textColor = .darkGray
+
+        emptyUpcomingView.addSubview(emptyUpcomingLabel)
+
+        view.addSubview(emptyUpcomingView)
+
+        NSLayoutConstraint.activate([
+            emptyUpcomingView.topAnchor.constraint(equalTo: upcomingTitle.bottomAnchor, constant: 16),
+            emptyUpcomingView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            emptyUpcomingView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            emptyUpcomingView.bottomAnchor.constraint(equalTo: pastTitle.topAnchor, constant: -16),
+
+            emptyUpcomingLabel.topAnchor.constraint(equalTo: emptyUpcomingView.topAnchor, constant: 70),
+            emptyUpcomingLabel.leadingAnchor.constraint(equalTo: emptyUpcomingView.leadingAnchor, constant: 16),
+            emptyUpcomingLabel.trailingAnchor.constraint(equalTo: emptyUpcomingView.trailingAnchor, constant: -16)
+        ])
+    }
+    private func setupEmptyPastView() {
+        guard emptyPastView.superview == nil else { return }
+
+        emptyPastView.translatesAutoresizingMaskIntoConstraints = false
+        emptyPastView.backgroundColor = UIColor(named: "ActiveCardBackground")
+        emptyPastView.layer.cornerRadius = 12
+        emptyPastView.layer.shadowColor = UIColor.black.cgColor
+        emptyPastView.layer.shadowOpacity = 0.05
+        emptyPastView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        emptyPastView.layer.shadowRadius = 6
+
+        emptyPastLabel.translatesAutoresizingMaskIntoConstraints = false
+        emptyPastLabel.text =
+           "Brak odbytych spotkań.\n"
+        emptyPastLabel.numberOfLines = 0
+        emptyPastLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        emptyPastLabel.textColor = .darkGray
+        emptyPastLabel.textAlignment = .center
+
+        emptyPastView.addSubview(emptyPastLabel)
+        view.addSubview(emptyPastView)
+
+        NSLayoutConstraint.activate([
+            emptyPastView.topAnchor.constraint(equalTo: pastTitle.bottomAnchor, constant: 16),
+            emptyPastView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            emptyPastView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            emptyPastView.heightAnchor.constraint(equalToConstant: 220),
+
+            emptyPastLabel.topAnchor.constraint(equalTo: emptyPastView.topAnchor, constant: 95),
+            emptyPastLabel.leadingAnchor.constraint(equalTo: emptyPastView.leadingAnchor, constant: 16),
+            emptyPastLabel.trailingAnchor.constraint(equalTo: emptyPastView.trailingAnchor, constant: -16),
+        ])
+    }
+
+    
+    
+    
+    
+    private func updateUpcomingPlaceholderVisibility() {
+        setupEmptyUpcomingView()
+
+        if upcomingEvents.isEmpty {
+            emptyUpcomingView.isHidden = false
+            scrollView.isHidden = true
+        } else {
+            emptyUpcomingView.isHidden = true
+            scrollView.isHidden = false
+        }
+    }
+    private func updatePastPlaceholderVisibility() {
+        setupEmptyPastView()
+
+        if pastEvents.isEmpty {
+            emptyPastView.isHidden = false
+            scrollViewPastEvents.isHidden = true
+        } else {
+            emptyPastView.isHidden = true
+            scrollViewPastEvents.isHidden = false
+        }
+    }
+
 
 
 }
