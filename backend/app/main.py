@@ -11,8 +11,8 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from create_gnn_model import GNN
 from . import save_games
+from .schemas import LeaveEventRequest
 from fastapi import Body
-from schemas import LeaveEventRequest
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -177,22 +177,57 @@ def update_user_preferences(user_id: str, payload: dict = Body(...), db: Session
 
 @app.post("/api/events/{event_id}/leave", response_model=schemas.Event)
 def leave_event(event_id: int, payload: LeaveEventRequest, db: Session = Depends(get_db)):
+    print(f"[leave_event] request for event_id={event_id} payload={payload}")
     db_event = db.query(models.Event).filter(models.Event.id == event_id).first()
     if db_event is None:
+        print(f"[leave_event] event {event_id} not found")
         raise HTTPException(status_code=404, detail="Event not found")
 
-    participants = db_event.participants or []
-    if payload.user_id not in participants:
-        raise HTTPException(status_code=400, detail="User is not a participant of this event")
-
     try:
-        participants.remove(payload.user_id)
-        db_event.participants = participants
+        participants_raw = db_event.participants or []
+        participants: list[str] = []
+
+        if isinstance(participants_raw, list):
+            participants = [str(p) for p in participants_raw]
+        elif isinstance(participants_raw, str):
+            try:
+                parsed = ast.literal_eval(participants_raw)
+                if isinstance(parsed, list):
+                    participants = [str(p) for p in parsed]
+                else:
+                    participants = [str(parsed)]
+            except Exception:
+                cleaned = participants_raw.strip("[] ")
+                if cleaned:
+                    participants = [p.strip(" '\"") for p in cleaned.split(",") if p.strip()]
+                else:
+                    participants = []
+        else:
+            participants = [str(participants_raw)]
+
+        print(f"[leave_event] participants BEFORE: {participants}")
+
+        user_to_remove = payload.user_id
+        participants = [p for p in participants if p != user_to_remove and p.strip("'\"") != user_to_remove]
+        seen = set()
+        normalized = []
+        for p in participants:
+            if p not in seen:
+                seen.add(p)
+                normalized.append(p)
+
+        db_event.participants = normalized
+
         db.add(db_event)
         db.commit()
         db.refresh(db_event)
+        print(f"[leave_event] participants AFTER: {db_event.participants}")
+
+    except HTTPException:
+        raise
     except Exception as e:
         db.rollback()
+        print(f"[leave_event] unexpected error: {e}")
         raise HTTPException(status_code=500, detail=f"Error updating event participants: {e}")
 
     return schemas.Event(

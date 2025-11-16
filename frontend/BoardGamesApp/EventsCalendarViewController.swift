@@ -10,12 +10,7 @@ import UIKit
 class EventsCalendarViewController: BaseViewController {
     @IBOutlet var calendarContainerView: UIView!
     
-    let allEvents : [GameEvent] = [
-        GameEvent(title: "Monopoly", currentPlayersCount: 3, maxPlayersCount: 4, time: "10:00 - 12:00", location: "Osiedle Leśnica", date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 2))!, participantsIDs: []),
-        GameEvent(title: "Uno", currentPlayersCount: 2, maxPlayersCount: 2, time: "10:00 - 12:00", location: "Osiedle Klecina", date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 2))!, participantsIDs: []),
-        GameEvent(title: "Planeta Marsa", currentPlayersCount: 3, maxPlayersCount: 4, time: "10:00 - 12:00", location: "Klub mieszkańca - oporów", date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 2))!, participantsIDs: []),
-        GameEvent(title: "Monopoly", currentPlayersCount: 3, maxPlayersCount: 4, time: "10:00 - 12:00", location: "Legnicka centrum", date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 5))!, participantsIDs: []),
-        GameEvent(title: "Poker", currentPlayersCount: 3, maxPlayersCount: 4, time: "10:00 - 12:00", location: "Pwr sala gier", date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 5))!, participantsIDs: [])]
+    let allEvents : [GameEvent] = []
     
     let calendarView = UICalendarView()
     lazy var selection = UICalendarSelectionSingleDate(delegate: self)

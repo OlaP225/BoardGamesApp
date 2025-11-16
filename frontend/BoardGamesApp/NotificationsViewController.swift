@@ -18,9 +18,34 @@ class NotificationsViewController: BaseViewController {
         super.viewDidLoad()
         setupUI()
         setupTableView()
+
+        let local = NotificationStore.shared.loadAll()
+        self.notifications = local
         fetchNotifications()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(handleUserDidLeaveEvent(_:)), name: .userDidLeaveEvent, object: nil)
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .userDidLeaveEvent, object: nil)
+    }
+    
+    @objc private func handleUserDidLeaveEvent(_ notification: Notification) {
+        if let noti = notification.object as? NotificationItem {
+            print("[NotificationsVC] received userDidLeaveEvent id=\(noti.id) message=\(noti.message)")
+            DispatchQueue.main.async {
+                if !self.notifications.contains(where: { $0.id == noti.id }) {
+                    self.notifications.insert(noti, at: 0)
+                    NotificationStore.shared.add(noti)
+                    self.notificationsTableView.reloadData()
+                } else {
+                    print("[NotificationsVC] duplicate notification ignored id=\(noti.id)")
+                }
+            }
+            return
+        }
+        print("[NotificationsVC] handleUserDidLeaveEvent: object is not NotificationItem")
+    }
     private func setupUI() {
         titleLabel.text = "Twoje powiadomienia"
         notificationsTableView.backgroundColor = UIColor(named: "NotiTableBackground")
@@ -42,22 +67,20 @@ class NotificationsViewController: BaseViewController {
     private func fetchNotifications() {
         guard let userID = UserDefaults.standard.string(forKey: "userID") else { return }
         APIService.shared.fetchUserNotifications(userID: userID) { [weak self] fetched in
+            guard let self = self else { return }
             DispatchQueue.main.async {
-                self?.notifications = fetched
-                self?.notificationsTableView.reloadData()
+                print("[NotificationsVC] fetched \(fetched.count) from server")
+                var mergedMap = Dictionary(uniqueKeysWithValues: self.notifications.map { ($0.id, $0) })
+                for n in fetched {
+                    mergedMap[n.id] = n
+                }
+                let merged = Array(mergedMap.values).sorted { $0.date > $1.date }
+                self.notifications = merged
+                self.notificationsTableView.reloadData()
+                print("[NotificationsVC] merged notifications count=\(self.notifications.count)")
             }
         }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 

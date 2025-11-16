@@ -15,7 +15,7 @@ class DayTimeLineRowView: UIView {
     @IBOutlet var collectionView: UICollectionView!
     
     var cardDisplayState: CardState = .active
-    
+    var onRequestLeaveEvent: ((Int) -> Void)?
     
     var eventsForThisDay = [GameEvent]() {
         didSet {
@@ -81,14 +81,31 @@ extension DayTimeLineRowView: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return eventsForThisDay.count
     }
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GameCardCell", for: indexPath) as? GameCardCollectionViewCell else {
             return UICollectionViewCell()
         }
         let event = eventsForThisDay[indexPath.item]
-        cell.gameCardView.configure(with: event, state: self.cardDisplayState, isUserJoined: true)
+
+        let currentUserID = UserDefaults.standard.string(forKey: "userID") ?? ""
+        let isUserJoined = event.participantsIDs.contains(currentUserID)
+
+        cell.gameCardView.configure(with: event, state: self.cardDisplayState, isUserJoined: isUserJoined)
+
+        cell.onLeaveJoinButtonTapped = { [weak self] in
+            guard let self = self else { return }
+            if isUserJoined {
+                self.onRequestLeaveEvent?(event.id)
+            } else {
+                self.onRequestLeaveEvent?(event.id)
+            }
+        }
+
         return cell
     }
+    
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width: CGFloat = 200
         let height: CGFloat = 80

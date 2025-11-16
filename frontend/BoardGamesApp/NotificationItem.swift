@@ -18,3 +18,7 @@ struct NotificationItem: Codable, Identifiable, Hashable {
     let message: String
     let type: NotificationType
 }
+
+extension Notification.Name {
+    static let userDidLeaveEvent = Notification.Name("userDidLeaveEvent")
+}

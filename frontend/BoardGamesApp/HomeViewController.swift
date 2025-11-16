@@ -48,6 +48,11 @@ class HomeViewController: BaseViewController{
         loadEventsFromServer()
 
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadEventsFromServer()
+    }
     private func setupProfileImageView() {
         profileImageView.image = UIImage(named: "profile3")
         profileImageContainerView.layer.cornerRadius = 20
@@ -174,15 +179,80 @@ class HomeViewController: BaseViewController{
         
     }
     
-    func displayTimeLine(for sortedDays: [Date], with groupedEvents: [Date: [GameEvent]],to stackView: UIStackView, state: CardState) {
+    func displayTimeLine(for sortedDays: [Date], with groupedEvents: [Date: [GameEvent]], to stackView: UIStackView, state: CardState) {
         for day in sortedDays {
-            guard let eventsForDay = groupedEvents[day] else {continue}
+            guard let eventsForDay = groupedEvents[day] else { continue }
             
             let dayRow = DayTimeLineRowView()
             dayRow.configure(day, and: eventsForDay, cardState: state)
+            dayRow.onRequestLeaveEvent = { [weak self] eventID in
+                self?.handleLeave(eventID: eventID)
+            }
+            
             stackView.addArrangedSubview(dayRow)
         }
     }
+    func handleLeave(eventID: Int) {
+        guard let userID = UserDefaults.standard.string(forKey: "userID") else { return }
+        let event: GameEvent? = {
+            if let e = self.upcomingEvents.first(where: { $0.id == eventID }) { return e }
+            if let e = self.pastEvents.first(where: { $0.id == eventID }) { return e }
+            return nil
+        }()
+        guard let foundEvent = event else {
+            confirmAndLeave(eventID: eventID, userID: userID, eventToCreateNotification: nil)
+            return
+        }
+
+        let title = "Potwierdź"
+        let message = "Na pewno chcesz opuścić spotkanie „\(foundEvent.title)”?"
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Anuluj", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Opuść", style: .destructive, handler: { [weak self] _ in
+            self?.confirmAndLeave(eventID: eventID, userID: userID, eventToCreateNotification: foundEvent)
+        }))
+
+        DispatchQueue.main.async {
+            self.present(alert, animated: true)
+        }
+    }
+    private func confirmAndLeave(eventID: Int, userID: String, eventToCreateNotification: GameEvent?) {
+        APIService.shared.leaveEvent(eventID: eventID, userID: userID) { [weak self] success in
+            guard let self = self else { return }
+            if success {
+                self.upcomingEvents.removeAll { $0.id == eventID }
+                self.pastEvents.removeAll { $0.id == eventID }
+
+                if let ev = eventToCreateNotification {
+                    let dateNow = Date()
+                    let idString = "leave-\(ev.id)-\(Int(dateNow.timeIntervalSince1970))"
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "d MMM, HH:mm"
+                    let message = "Opuszczono spotkanie „\(ev.title)” zaplanowane na \(dateFormatter.string(from: ev.date))."
+
+                    let noti = NotificationItem(id: idString, date: Date(), message: message, type: .info)
+
+                    DispatchQueue.main.async {
+                        NotificationStore.shared.add(noti)
+                        NotificationCenter.default.post(name: .userDidLeaveEvent, object: noti)
+                        print("[HomeVC] posted .userDidLeaveEvent id=\(noti.id) message=\(noti.message)")
+                    }
+                }
+
+                DispatchQueue.main.async {
+                    self.reloadEventViews()
+                }
+                
+            } else {
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(title: "Błąd", message: "Nie udało się opuścić wydarzenia. Spróbuj ponownie.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(alert, animated: true)
+                }
+            }
+        }
+    }
+
 
 }
 
