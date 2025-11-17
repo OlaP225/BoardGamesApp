@@ -40,3 +40,15 @@ class Event(EventBase):
 
 class LeaveEventRequest(BaseModel):
     user_id: str
+
+
+class EventNotificationOut(BaseModel):
+    id: int
+    game_name: str
+    from_time: datetime
+    to_time: datetime
+    participants: list[str]
+    participants_usernames: list[str]
+    suggested_game_types: list[str]
+
+    model_config = ConfigDict(from_attributes=True)

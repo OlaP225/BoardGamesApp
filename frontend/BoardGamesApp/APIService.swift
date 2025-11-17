@@ -32,6 +32,8 @@ struct EventNotification: Codable {
     let from_time: Date
     let to_time: Date
     let participants: [String]?
+    let participants_usernames: [String]?
+    let suggested_game_types: [String]?
 }
 
 class APIService {
@@ -205,22 +207,33 @@ extension APIService {
                  let events = try decoder.decode([EventNotification].self, from: data)
 
                  let notifications = events.map { event -> NotificationItem in
-                     
                      let formatter = DateFormatter()
                      formatter.dateFormat = "d MMM, HH:mm"
                      let dateText = formatter.string(from: event.from_time)
                      let formatter2 = DateFormatter()
                      formatter2.dateFormat = "HH:mm"
                      let dateText2 = formatter2.string(from: event.to_time)
-                     
+
+                     // participants usernames (fall back to ids if usernames not provided)
                      let participantsText: String
-                     if let parts = event.participants, !parts.isEmpty {
-                         participantsText = " Uczestnicy: \(parts.joined(separator: ", "))."
+                     if let names = event.participants_usernames, !names.isEmpty {
+                         participantsText = "Uczestnicy: \(names.joined(separator: ", "))."
+                     } else if let ids = event.participants, !ids.isEmpty {
+                         participantsText = "Uczestnicy: \(ids.joined(separator: ", "))."
                      } else {
-                         participantsText = ""
+                         participantsText = "Uczestnicy: brak."
                      }
 
-                     let message = "Wylosowano nową grę w dniu \(dateText) - \(dateText2). \n Proponowane typy gier: \n Uczestnicy: 'Ola', 'Kasia', 'Tomek'. "
+                     // suggested game types
+                     let typesText: String
+                     if let types = event.suggested_game_types, !types.isEmpty {
+                         typesText = "Proponowane typy gier: \(types.joined(separator: ", "))."
+                     } else {
+                         typesText = "Brak proponowanych typów gier."
+                     }
+
+                     let message = "Wylosowano nową grę w dniu \(dateText) - \(dateText2).\n\(typesText)\n\(participantsText)"
+
                      return NotificationItem(
                          id: String(event.id),
                          date: Date(),
@@ -295,7 +308,7 @@ extension APIService {
                     let end = ev.to_time
                     let timeString = "\(dateFormatter.string(from: start)) - \(dateFormatter.string(from: end))"
                     let title = ev.game_name
-                    let location = "Proponowane miejsce"
+                    let location = "Klub osiedlowy ABC"
                     let playersCount = ev.participants?.count ?? 0
                     let maxPlayers = 4
                     return GameEvent(

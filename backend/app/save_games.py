@@ -74,7 +74,7 @@ def translate_schedule_to_events(schedule_per_player: np.ndarray, user_ids: List
 
         ev = schemas.Event(
             id=0,
-            game_name="Wylosowana Gra",
+            game_name="Gra grupowa",
             from_time=start_time,
             to_time=end_time,
             participants=participant_ids

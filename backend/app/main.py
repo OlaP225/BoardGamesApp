@@ -13,6 +13,9 @@ from create_gnn_model import GNN
 from . import save_games
 from .schemas import LeaveEventRequest
 from fastapi import Body
+
+GAME_TYPE_NAMES = ["Strategiczne","Karciane","Imprezowe","Przygodowe","Kooperacyjne"]
+
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -137,22 +140,81 @@ def run_matchmaking(db: Session = Depends(get_db)):
     print("GNN prediction finished \n")
     return {"status": "success", "message": "Matchmaking completed and events saved."}
 
-@app.get("/api/users/{user_id}/events", response_model=list[schemas.Event])
+@app.get("/api/users/{user_id}/events", response_model=list[schemas.EventNotificationOut])
 def get_user_events(user_id: str, db: Session = Depends(get_db)):
     events = db.query(models.Event).filter(models.Event.participants.contains([user_id])).all()
 
-    result = []
+    result: list[schemas.EventNotificationOut] = []
+
     for e in events:
+        participant_ids_raw = e.participants or []
+        if isinstance(participant_ids_raw, list):
+            participant_ids = [str(x) for x in participant_ids_raw]
+        else:
+            participant_ids = [str(participant_ids_raw)]
+
+        users = db.query(models.User).filter(models.User.userID.in_(participant_ids)).all()
+        user_map = {u.userID: u for u in users}
+
+        usernames: list[str] = []
+        all_prefs: list[list[int]] = []
+
+        for pid in participant_ids:
+            u = user_map.get(pid)
+            if u:
+                usernames.append(u.username)
+                raw_prefs = u.preferences
+
+                prefs_list: list[int] = [0,0,0,0,0]
+                try:
+                    if isinstance(raw_prefs, list):
+                        prefs_list = [int(x) if (str(x).isdigit() or isinstance(x, int)) else 0 for x in raw_prefs]
+                    elif isinstance(raw_prefs, str):
+                        import ast
+                        parsed = ast.literal_eval(raw_prefs)
+                        if isinstance(parsed, list):
+                            prefs_list = [int(x) if (str(x).isdigit() or isinstance(x, int)) else 0 for x in parsed]
+                        else:
+                            prefs_list = [0,0,0,0,0]
+                    else:
+                        prefs_list = [0,0,0,0,0]
+                except Exception:
+                    prefs_list = [0,0,0,0,0]
+
+                if len(prefs_list) < 5:
+                    prefs_list = prefs_list + [0] * (5 - len(prefs_list))
+                elif len(prefs_list) > 5:
+                    prefs_list = prefs_list[:5]
+
+                all_prefs.append(prefs_list)
+            else:
+                usernames.append(pid)
+                all_prefs.append([0,0,0,0,0])
+
+        suggested: list[str] = []
+        if all_prefs:
+            intersection = all_prefs[0].copy()
+            for prefs in all_prefs[1:]:
+                intersection = [ (a & b) for a, b in zip(intersection, prefs) ]
+            try:
+                suggested = [GAME_TYPE_NAMES[i] for i, v in enumerate(intersection) if v == 1]
+            except Exception:
+                suggested = []
+
         result.append(
-            schemas.Event(
+            schemas.EventNotificationOut(
                 id=e.id,
                 game_name=e.game_name,
                 from_time=e.from_time,
                 to_time=e.to_time,
-                participants=e.participants
+                participants=participant_ids,
+                participants_usernames=usernames,
+                suggested_game_types=suggested
             )
         )
+
     return result
+
 
 
 @app.patch("/api/users/{user_id}/preferences", response_model=schemas.User)
