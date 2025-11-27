@@ -115,7 +115,7 @@ def prepare_input_data(db, requesting_user_id: str) -> Optional[Data]:
     print("Prepared GNN Data (with preference filtering).")
     return data
 
-def run_gnn_prediction(model: torch.nn.Module, graph_data: Data, min_players: int = 2, max_players: int = 4):
+def run_gnn_prediction(model: torch.nn.Module, graph_data: Data, prob_threshold: float = 0.1):
     model.eval()
     with torch.no_grad():
         logits = model(graph_data)
@@ -126,34 +126,33 @@ def run_gnn_prediction(model: torch.nn.Module, graph_data: Data, min_players: in
     slots = SLOTS_PER_DAY
 
     probs = torch.sigmoid(logits).cpu().numpy()
+
+    final_flat = np.zeros((num_slots, players), dtype=np.int32)
     avail_matrix = graph_data.avail_matrix
-    flat_avail = avail_matrix.reshape(players, -1).T
 
-    final_flat = np.zeros_like(flat_avail, dtype=np.int32)
-
-    for s in range(min(num_slots, flat_avail.shape[0])):
+    for s in range(num_slots):
         slot_probs = probs[s, :players]
-        available_mask = flat_avail[s] == 1
+        day_idx = s // slots
+        slot_idx = s % slots
 
-        if not available_mask.any():
-            continue
+        print(f"Slot {s} player probabilities: {slot_probs.tolist()}")
 
-        sorted_idx = np.argsort(-slot_probs)
-        print("Slot", s, "sorted player indices by prob:", sorted_idx.tolist(), flush=True)
-        available_sorted = [i for i in sorted_idx if available_mask[i]]
+        for i, p in enumerate(slot_probs):
+            if p > prob_threshold and avail_matrix[i, day_idx, slot_idx] == 1:
+                final_flat[s, i] = 1
 
-        if len(available_sorted) < min_players:
-            continue
+        selected_idx = [i for i, val in enumerate(final_flat[s]) if val == 1]
+        if selected_idx.count:
+            print(f"Slot {s} selected players (prob > {prob_threshold} & available): {selected_idx}")
 
-        i = 0
-        while i < len(available_sorted):
-            group = available_sorted[i : i + max_players]
-            if len(group) >= min_players:
-                for p in group:
-                    final_flat[s, p] = 1
-            i += max_players
-
-    final_per_player = final_flat.T.reshape(players, days, slots).astype(int)
+    final_per_player = np.zeros((players, days, slots), dtype=int)
+    for player_idx in range(players):
+        for s in range(num_slots):
+            day_idx = s // slots
+            slot_idx = s % slots
+            final_per_player[player_idx, day_idx, slot_idx] = final_flat[s, player_idx]
 
     print("GNN produced schedule with total assignments:", int(final_per_player.sum()))
     return final_per_player
+
+
