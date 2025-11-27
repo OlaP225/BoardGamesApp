@@ -27,6 +27,8 @@ class Event(Base):
     from_time = Column(DateTime, index = True)
     to_time = Column(DateTime)
     participants = Column(JSONB, nullable=False)
+    excluded_participants = Column(JSON, default=list)
+
 
 
 

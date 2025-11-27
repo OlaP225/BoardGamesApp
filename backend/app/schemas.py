@@ -37,6 +37,7 @@ class Event(EventBase):
     id: int
     participants: list[str]
     model_config = ConfigDict(from_attributes=True)
+    excluded_participants: list[str] = []
 
 class LeaveEventRequest(BaseModel):
     user_id: str

@@ -85,36 +85,66 @@ def translate_schedule_to_events(schedule_per_player: np.ndarray, user_ids: List
     return final_events
 
 def save_events_to_db(db: Session, events_to_create: List[schemas.Event]) -> None:
-    """
-    Saves the provided list of schemas.Event to the database.
-    """
     created = 0
+    updated = 0
+
     for event_schema in events_to_create:
         try:
-            participant_user_ids: List[str] = getattr(event_schema, "participants", []) or []
+            new_participants_set = set(event_schema.participants or [])
 
-            existing = (
+            existing_events = (
                 db.query(models.Event)
                 .filter(
                     models.Event.game_name == event_schema.game_name,
                     models.Event.from_time == event_schema.from_time,
-                    models.Event.to_time == event_schema.to_time
+                    models.Event.to_time == event_schema.to_time,
                 )
-                .first()
+                .all()
             )
 
-            if existing:
-                if set(existing.participants or []) == set(participant_user_ids):
+            handled = False
+
+            for ev in existing_events:
+                existing_set = set(ev.participants or [])
+                excluded_set = set(ev.excluded_participants or [])
+
+                if any(p in excluded_set for p in new_participants_set):
+                    print(f"Skipping event {ev.id}: contains excluded participants.")
+                    handled = True
+                    break
+
+                if existing_set == new_participants_set:
                     print("Skipping duplicate event:", event_schema.game_name, event_schema.from_time)
-                    continue
+                    handled = True
+                    break
+
+                if new_participants_set.issubset(existing_set):
+                    print("Skipping event because participants subset already exists.")
+                    handled = True
+                    break
+
+                if new_participants_set.issuperset(existing_set):
+                    print(f"Updating event {ev.id} by adding new participants:", event_schema.participants)
+
+                    updated_participants = new_participants_set - excluded_set
+
+                    ev.participants = list(updated_participants)
+                    db.add(ev)
+                    updated += 1
+                    handled = True
+                    break
+
+            if handled:
+                continue
+
             new_event = models.Event(
                 game_name=event_schema.game_name,
                 from_time=event_schema.from_time,
                 to_time=event_schema.to_time,
-                participants=participant_user_ids
+                participants=list(new_participants_set),
+                excluded_participants=[], 
             )
             db.add(new_event)
-            db.flush()
             created += 1
 
         except Exception as e:
@@ -124,7 +154,8 @@ def save_events_to_db(db: Session, events_to_create: List[schemas.Event]) -> Non
 
     try:
         db.commit()
-        print(f"Successfully saved {created} new games.")
+        print(f"Saved: {created} new events, {updated} updated.")
     except Exception as e:
         db.rollback()
-        print("Error while saving events to database:", e)
+        print("Error while saving events:", e)
+

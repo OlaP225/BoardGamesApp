@@ -12,7 +12,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from create_gnn_model import GNN
 from . import save_games
 from .schemas import LeaveEventRequest
-from fastapi import Body
+from fastapi import Body, BackgroundTasks
 
 GAME_TYPE_NAMES = ["Strategiczne","Karciane","Imprezowe","Przygodowe","Kooperacyjne"]
 
@@ -56,7 +56,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return db_user
 
 @app.post("/api/users/{user_id}/availabilities", response_model=schemas.Availability)
-def create_availability_for_user(user_id: str, availability: schemas.AvailabilityCreate, db: Session = Depends(get_db)):
+def create_availability_for_user(user_id: str, availability: schemas.AvailabilityCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.userID == user_id).first()
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
@@ -69,6 +69,13 @@ def create_availability_for_user(user_id: str, availability: schemas.Availabilit
     db.commit()
     db.refresh(db_availability)
     print(f"Availability saved for user {user_id}: {db_availability.from_time} - {db_availability.to_time}")
+
+    if global_gnn_model is not None:
+        background_tasks.add_task(matchmaking_task, user_id)
+        print("Matchmaking queued into background task.")
+    else:
+        print("GNN model not loaded, cannot run matchmaking.")
+    
     return db_availability
 
 @app.delete("/api/availabilities/{availability_id}", status_code=204)
@@ -92,6 +99,27 @@ def read_availabilities_for_user(user_id: str, db: Session = Depends(get_db)):
 
 
 global_gnn_model = None
+
+def matchmaking_task(requesting_user_id: str):
+    db = SessionLocal()
+    try:
+        print("Background matchmaking started...")
+        input_data = prepare_input_data(db, requesting_user_id)
+        if input_data is None:
+            print("No availabilities to process.")
+            return
+
+        result_matrix = run_gnn_prediction(global_gnn_model, input_data)
+        translated_events = save_games.translate_schedule_to_events(
+            schedule_per_player=result_matrix,
+            user_ids=input_data.user_ids
+        )
+        save_games.save_events_to_db(db, translated_events)
+        print("Background matchmaking completed.")
+    finally:
+        db.close()
+
+
 
 @app.on_event("startup")
 def load_model():
