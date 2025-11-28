@@ -307,6 +307,26 @@ def leave_event(event_id: int, payload: LeaveEventRequest, db: Session = Depends
                 normalized.append(p)
 
         db_event.participants = normalized
+        
+        excluded_raw = db_event.excluded_participants or []
+
+        if isinstance(excluded_raw, str):
+            try:
+                excluded_raw = ast.literal_eval(excluded_raw)
+            except Exception:
+                excluded_raw = []
+
+        excluded = [str(x) for x in excluded_raw]
+
+        if user_to_remove not in excluded:
+            excluded.append(user_to_remove)
+
+        db_event.excluded_participants = excluded
+
+        from sqlalchemy.orm.attributes import flag_modified
+        flag_modified(db_event, "excluded_participants")
+
+
 
         db.add(db_event)
         db.commit()

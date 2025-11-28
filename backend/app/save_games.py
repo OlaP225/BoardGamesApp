@@ -52,18 +52,17 @@ def translate_schedule_to_events(schedule_per_player: np.ndarray, user_ids: List
 
     def slot_index_to_datetime(slot_index: int):
         """
-        Converts a slot index to a UTC datetime object.
+        Correct conversion slot -> datetime.
+        days = slot_index // SLOTS_PER_DAY
+        slot_in_day = slot_index % SLOTS_PER_DAY
         """
+
         day_offset = slot_index // SLOTS_PER_DAY
         slot_in_day = slot_index % SLOTS_PER_DAY
 
-        if slot_in_day == 0 and slot_index > 0:
-            day_offset -= 1
-            slot_in_day = SLOTS_PER_DAY
-
         hour = MIN_HOUR + slot_in_day
-        event_date = start_of_today + timedelta(days=day_offset)
-        return event_date.replace(hour=hour, minute=0, second=0, microsecond=0)
+
+        return start_of_today + timedelta(days=day_offset, hours=hour)
 
     for event_data in events_indices:
         participant_indices = event_data["participant_indices"]
@@ -91,6 +90,26 @@ def save_events_to_db(db: Session, events_to_create: List[schemas.Event]) -> Non
     for event_schema in events_to_create:
         try:
             new_participants_set = set(event_schema.participants or [])
+            if len(new_participants_set) < MIN_PLAYERS:
+                print("Skipping temporary event: less than MIN_PLAYERS.")
+                continue
+
+            from_t = event_schema.from_time
+            to_t = event_schema.to_time
+
+            conflicting_events = (
+                db.query(models.Event)
+                    .filter(models.Event.from_time < to_t,
+                            models.Event.to_time > from_t)
+                    .all()
+            )
+
+            busy_players = set()
+            for ev in conflicting_events:
+                busy_players.update(ev.participants or [])
+
+            def has_conflict():
+                return bool(new_participants_set & busy_players)
 
             existing_events = (
                 db.query(models.Event)
@@ -108,12 +127,12 @@ def save_events_to_db(db: Session, events_to_create: List[schemas.Event]) -> Non
                 existing_set = set(ev.participants or [])
                 excluded_set = set(ev.excluded_participants or [])
 
-                if any(p in excluded_set for p in new_participants_set):
+                if new_participants_set & excluded_set:
                     print(f"Skipping event {ev.id}: contains excluded participants.")
                     handled = True
                     break
 
-                if existing_set == new_participants_set:
+                if new_participants_set == existing_set:
                     print("Skipping duplicate event:", event_schema.game_name, event_schema.from_time)
                     handled = True
                     break
@@ -124,7 +143,7 @@ def save_events_to_db(db: Session, events_to_create: List[schemas.Event]) -> Non
                     break
 
                 if new_participants_set.issuperset(existing_set):
-                    print(f"Updating event {ev.id} by adding new participants:", event_schema.participants)
+                    print(f"Updating event {ev.id} by adding participants:", event_schema.participants)
 
                     updated_participants = new_participants_set - excluded_set
 
@@ -137,12 +156,16 @@ def save_events_to_db(db: Session, events_to_create: List[schemas.Event]) -> Non
             if handled:
                 continue
 
+            if has_conflict():
+                print("Cannot create a new event – players already assigned in this slot.")
+                continue
+
             new_event = models.Event(
                 game_name=event_schema.game_name,
                 from_time=event_schema.from_time,
                 to_time=event_schema.to_time,
                 participants=list(new_participants_set),
-                excluded_participants=[], 
+                excluded_participants=[],
             )
             db.add(new_event)
             created += 1
@@ -158,4 +181,3 @@ def save_events_to_db(db: Session, events_to_create: List[schemas.Event]) -> Non
     except Exception as e:
         db.rollback()
         print("Error while saving events:", e)
-
