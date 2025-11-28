@@ -51,12 +51,6 @@ def translate_schedule_to_events(schedule_per_player: np.ndarray, user_ids: List
     start_of_today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
 
     def slot_index_to_datetime(slot_index: int):
-        """
-        Correct conversion slot -> datetime.
-        days = slot_index // SLOTS_PER_DAY
-        slot_in_day = slot_index % SLOTS_PER_DAY
-        """
-
         day_offset = slot_index // SLOTS_PER_DAY
         slot_in_day = slot_index % SLOTS_PER_DAY
 
@@ -73,7 +67,7 @@ def translate_schedule_to_events(schedule_per_player: np.ndarray, user_ids: List
 
         ev = schemas.Event(
             id=0,
-            game_name="Gra grupowa",
+            game_name=f"Gra grupowa",
             from_time=start_time,
             to_time=end_time,
             participants=participant_ids
@@ -91,7 +85,7 @@ def save_events_to_db(db: Session, events_to_create: List[schemas.Event]) -> Non
         try:
             new_participants_set = set(event_schema.participants or [])
             if len(new_participants_set) < MIN_PLAYERS:
-                print("Skipping temporary event: less than MIN_PLAYERS.")
+                print("Skipping event: less than MIN_PLAYERS.")
                 continue
 
             from_t = event_schema.from_time
@@ -127,27 +121,30 @@ def save_events_to_db(db: Session, events_to_create: List[schemas.Event]) -> Non
                 existing_set = set(ev.participants or [])
                 excluded_set = set(ev.excluded_participants or [])
 
-                if new_participants_set & excluded_set:
-                    print(f"Skipping event {ev.id}: contains excluded participants.")
+                new_set = set(event_schema.participants or [])
+                blocked = new_set & excluded_set
+                if blocked:
+                    print(f"Event {ev.id}: removing excluded participants: {blocked}")
+                    new_set -= blocked
+
+                if not new_set:
+                    print(f"Event {ev.id}: new_set is empty after excluded filtering — skipping")
                     handled = True
                     break
 
-                if new_participants_set == existing_set:
+                if new_set == existing_set:
                     print("Skipping duplicate event:", event_schema.game_name, event_schema.from_time)
                     handled = True
                     break
 
-                if new_participants_set.issubset(existing_set):
+                if new_set.issubset(existing_set):
                     print("Skipping event because participants subset already exists.")
                     handled = True
                     break
 
-                if new_participants_set.issuperset(existing_set):
-                    print(f"Updating event {ev.id} by adding participants:", event_schema.participants)
-
-                    updated_participants = new_participants_set - excluded_set
-
-                    ev.participants = list(updated_participants)
+                if new_set.issuperset(existing_set):
+                    print(f"Updating event {ev.id} by adding participants:", list(new_set))
+                    ev.participants = list(new_set)
                     db.add(ev)
                     updated += 1
                     handled = True
