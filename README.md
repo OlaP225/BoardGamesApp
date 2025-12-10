@@ -72,7 +72,6 @@ Stores all persistent data: user profiles, game preferences, availability slots,
 
 Oto dwie wersje pliku `README.md` – angielska i polska. Obie są sformatowane w stylu akademickim/technicznym, odpowiednim do dołączenia do pracy inżynierskiej (np. w pliku `README.pdf` lub `README.md` w głównym katalogu archiwum).
 
----
 
 ## ENG
 
@@ -80,7 +79,7 @@ Oto dwie wersje pliku `README.md` – angielska i polska. Obie są sformatowane 
 
 This document outlines the technical requirements and step-by-step instructions for deploying the app created as part of an Engineering Thesis.
 
-## 1. System Requirements (Prerequisites)
+## 1. System Requirements
 
 Due to the native iOS client implementation, specific hardware and software environments are required.
 
@@ -92,7 +91,6 @@ Due to the native iOS client implementation, specific hardware and software envi
 *   **Docker Desktop:** Required to containerize and run the Backend and Database services.
 *   **Python 3.9.6+:** 
 
----
 
 ## 2. Installation Steps
 
@@ -126,11 +124,10 @@ The backend logic and database are managed via Docker Compose to ensure environm
     *   Select a Simulator (e.g., iPhone 16) or a connected physical device from the scheme menu.
     *   Press **Run** (`Cmd + R`) to compile and launch the application.
 
----
 
 ## PL
 
-# Instrukcja Uruchomienia – Praca Inżynierska
+# Instrukcja Uruchomienia
 
 Niniejszy dokument zawiera specyfikację wymagań oraz instrukcję wdrożenia aplikacji do harmonogramowania gier planszowych. Projekt został zrealizowany w ramach pracy inżynierskiej.
 
@@ -146,7 +143,6 @@ Ze względu na implementację natywnego klienta mobilnego na system iOS, do uruc
 *   **Docker Desktop:** Wymagany do uruchomienia serwera backendowego oraz bazy danych w kontenerach.
 *   **Python 3.9.6+:** 
 
----
 
 ## 2. Instrukcja instalacji
 
