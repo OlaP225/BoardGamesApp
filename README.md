@@ -94,11 +94,11 @@ Due to the native iOS client implementation, specific hardware and software envi
 ### Step 1: Source Code Extraction
 The source code is provided as a compressed archive (`.zip`) as part of the thesis submission.
 
-1.  Locate the `praca_inynierska_aplikacja.zip` file.
+1.  Locate the `praca_inzynierska_aplikacja_aleksandra_plichta.zip` file.
 2.  Extract the contents to a local directory on your machine.
 3.  Open a terminal and navigate to the extracted folder:
     ```bash
-    cd /path/to/extracted/praca_inynierska_aplikacja
+    cd /path/to/extracted/praca_inzynierska_aplikacja_aleksandra_plichta
     ```
 
 ### Step 2: Backend Deployment (Docker)
@@ -146,11 +146,11 @@ Ze względu na implementację natywnego klienta mobilnego na system iOS, do uruc
 ### Krok 1: Rozpakowanie kodu źródłowego
 Kod źródłowy został dostarczony w formie archiwum `.zip` jako załącznik do pracy dyplomowej.
 
-1.  Zlokalizuj plik `praca_inynierska_aplikacja.zip`.
+1.  Zlokalizuj plik `praca_inzynierska_aplikacja_aleksandra_plichta.zip`.
 2.  Rozpakuj archiwum w wybranym katalogu na dysku.
 3.  Uruchom terminal i przejdź do katalogu projektu:
     ```bash
-    cd /sciezka/do/katalogu/praca_inynierska_aplikacja
+    cd /sciezka/do/katalogu/praca_inzynierska_aplikacja_aleksandra_plichta
     ```
 
 ### Krok 2: Uruchomienie Backend'u (Docker)
