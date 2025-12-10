@@ -214,7 +214,6 @@ extension APIService {
                      formatter2.dateFormat = "HH:mm"
                      let dateText2 = formatter2.string(from: event.to_time)
 
-                     // participants usernames (fall back to ids if usernames not provided)
                      let participantsText: String
                      if let names = event.participants_usernames, !names.isEmpty {
                          participantsText = "Uczestnicy: \(names.joined(separator: ", "))."
@@ -224,7 +223,6 @@ extension APIService {
                          participantsText = "Uczestnicy: brak."
                      }
 
-                     // suggested game types
                      let typesText: String
                      if let types = event.suggested_game_types, !types.isEmpty {
                          typesText = "Proponowane typy gier: \(types.joined(separator: ", "))."

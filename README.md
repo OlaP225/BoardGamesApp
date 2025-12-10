@@ -86,7 +86,7 @@ Due to the native iOS client implementation, specific hardware and software envi
 ### Software
 *   **Xcode:** Version 14.0 or newer (required for the iOS Client).
 *   **Docker Desktop:** Required to containerize and run the Backend and Database services.
-*   **Python 3.9.6+:** 
+*   **Python 3.9+:** 
 
 
 ## 2. Installation Steps
@@ -138,7 +138,7 @@ Ze względu na implementację natywnego klienta mobilnego na system iOS, do uruc
 ### Oprogramowanie
 *   **Xcode:** Wersja 14.0 lub nowsza
 *   **Docker Desktop:** Wymagany do uruchomienia serwera backendowego oraz bazy danych w kontenerach.
-*   **Python 3.9.6+:** 
+*   **Python 3.9+:** 
 
 
 ## 2. Instrukcja instalacji
