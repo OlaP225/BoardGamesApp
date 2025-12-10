@@ -70,9 +70,6 @@ Stores all persistent data: user profiles, game preferences, availability slots,
 * IBM ILOG CPLEX
 * Docker / Docker Compose
 
-Oto dwie wersje pliku `README.md` – angielska i polska. Obie są sformatowane w stylu akademickim/technicznym, odpowiednim do dołączenia do pracy inżynierskiej (np. w pliku `README.pdf` lub `README.md` w głównym katalogu archiwum).
-
-
 ## ENG
 
 # Installation & Deployment Guide
