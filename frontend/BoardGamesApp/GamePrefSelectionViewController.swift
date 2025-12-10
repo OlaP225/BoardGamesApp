@@ -27,7 +27,7 @@ class GamePrefSelectionViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Wybierz typy gier"
+        title = "Wszystkie"
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Gotowe", style: .done, target: self, action: #selector(doneTapped))
     }

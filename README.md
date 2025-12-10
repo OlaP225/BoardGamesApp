@@ -70,28 +70,114 @@ Stores all persistent data: user profiles, game preferences, availability slots,
 * IBM ILOG CPLEX
 * Docker / Docker Compose
 
-# Getting Started
+Oto dwie wersje pliku `README.md` – angielska i polska. Obie są sformatowane w stylu akademickim/technicznym, odpowiednim do dołączenia do pracy inżynierskiej (np. w pliku `README.pdf` lub `README.md` w głównym katalogu archiwum).
 
-Prerequisites: Docker, Xcode (recommended 14+), Python 3.10+ for backend tooling.
+---
 
-1. Clone the repository:
-   `git clone [YOUR_REPO_LINK]`
+## ENG
 
-2. Backend (Docker-compose):
+# Installation & Deployment Guide
 
-   * Navigate to the project directory: `cd BoardGamesApp`
-   * Launch backend & DB: `docker-compose up --build`
-   * The backend will be available at `http://127.0.0.1:8000/` by default.
+This document outlines the technical requirements and step-by-step instructions for deploying the app created as part of an Engineering Thesis.
 
-3. iOS client:
+## 1. System Requirements (Prerequisites)
 
-   * Open `BoardGamesApp.xcodeproj` in Xcode.
-   * Update `APIService.baseURL` if needed (default `http://127.0.0.1:8000`).
-   * Select a simulator or device and run the app.
+Due to the native iOS client implementation, specific hardware and software environments are required.
 
-4. Matchmaking & ML (optional):
+### Hardware
+*   **macOS Device:** A computer running macOS is **mandatory** to build and run the iOS client.
 
-   * Preprocess data to generate `.npz` training files (scripts included).
-   * Train the GNN training script to produce `gnn_model.pth` or load a provided pretrained model.
-   * CPLEX can be run to generate additional ground-truth schedules (offline).
+### Software
+*   **Xcode:** Version 14.0 or newer (required for the iOS Client).
+*   **Docker Desktop:** Required to containerize and run the Backend and Database services.
+*   **Python 3.9.6+:** 
+
+---
+
+## 2. Installation Steps
+
+### Step 1: Source Code Extraction
+The source code is provided as a compressed archive (`.zip`) as part of the thesis submission.
+
+1.  Locate the `praca_inynierska_aplikacja.zip` file.
+2.  Extract the contents to a local directory on your machine.
+3.  Open a terminal and navigate to the extracted folder:
+    ```bash
+    cd /path/to/extracted/praca_inynierska_aplikacja
+    ```
+
+### Step 2: Backend Deployment (Docker)
+The backend logic and database are managed via Docker Compose to ensure environment consistency.
+
+1.  From the project root directory, build and start the containers:
+    ```bash
+    docker-compose up --build
+    ```
+2.  Wait for the build process to finish. The backend service will be available by default at:
+    *   **URL:** `http://127.0.0.1:8000/`
+
+### Step 3: iOS Client Setup
+1.  Launch **Xcode**.
+2.  Open the project file `BoardGamesApp.xcodeproj` located in the source directory.
+3.  **Network Configuration:**
+    *   By default, the app connects to `http://127.0.0.1:8000`.
+        ```
+4.  **Execution:**
+    *   Select a Simulator (e.g., iPhone 16) or a connected physical device from the scheme menu.
+    *   Press **Run** (`Cmd + R`) to compile and launch the application.
+
+---
+
+## PL
+
+# Instrukcja Uruchomienia – Praca Inżynierska
+
+Niniejszy dokument zawiera specyfikację wymagań oraz instrukcję wdrożenia aplikacji do harmonogramowania gier planszowych. Projekt został zrealizowany w ramach pracy inżynierskiej.
+
+## 1. Wymagania systemowe
+
+Ze względu na implementację natywnego klienta mobilnego na system iOS, do uruchomienia pełnego środowiska wymagany jest specyficzny sprzęt i oprogramowanie.
+
+### Sprzęt
+*   **Komputer z systemem macOS:** Do kompilacji i uruchomienia klienta iOS wymagane jest urządzenie z systemem macOS.
+
+### Oprogramowanie
+*   **Xcode:** Wersja 14.0 lub nowsza
+*   **Docker Desktop:** Wymagany do uruchomienia serwera backendowego oraz bazy danych w kontenerach.
+*   **Python 3.9.6+:** 
+
+---
+
+## 2. Instrukcja instalacji
+
+### Krok 1: Rozpakowanie kodu źródłowego
+Kod źródłowy został dostarczony w formie archiwum `.zip` jako załącznik do pracy dyplomowej.
+
+1.  Zlokalizuj plik `praca_inynierska_aplikacja.zip`.
+2.  Rozpakuj archiwum w wybranym katalogu na dysku.
+3.  Uruchom terminal i przejdź do katalogu projektu:
+    ```bash
+    cd /sciezka/do/katalogu/praca_inynierska_aplikacja
+    ```
+
+### Krok 2: Uruchomienie Backend'u (Docker)
+Serwer aplikacji oraz baza danych są zarządzane przez Docker Compose, co zapewnia spójność środowiska uruchomieniowego.
+
+1.  Będąc w głównym katalogu projektu, wykonaj polecenie:
+    ```bash
+    docker-compose up --build
+    ```
+2.  Proces budowania może potrwać kilka minut. Po jego zakończeniu backend będzie dostępny pod adresem:
+    *   **URL:** `http://127.0.0.1:8000/`
+
+### Krok 3: Klient iOS
+1.  Uruchom środowisko **Xcode**.
+2.  Wybierz opcję otwarcia projektu i wskaż plik `BoardGamesApp.xcodeproj` znajdujący się w rozpakowanym katalogu.
+3.  **Konfiguracja połączenia:**
+    *   Domyślnie aplikacja łączy się z adresem `http://127.0.0.1:8000` (localhost).
+        ```
+4.  **Uruchomienie:**
+    *   Wybierz symulator (np. iPhone 16) z górnego menu.
+    *   Naciśnij przycisk **Run** (`Cmd + R`), aby skompilować i uruchomić aplikację.
+
 

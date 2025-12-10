@@ -51,7 +51,18 @@ class HomeViewController: BaseViewController{
         setupScrollViewAndStackView()
         setUpPastScrollViewAndStackView()
         loadEventsFromServer()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateNotificationsBadge), name: .newNotificationAdded, object: nil)
 
+
+    }
+    @objc private func updateNotificationsBadge() {
+        guard let tabItems = tabBarController?.tabBar.items else { return }
+        let notificationsTabIndex = 2
+        if tabItems.indices.contains(notificationsTabIndex) {
+            let unreadCount = NotificationStore.shared.loadAll().count
+            tabItems[notificationsTabIndex].badgeValue = unreadCount > 0 ? "\(unreadCount)" : nil
+            tabItems[notificationsTabIndex].badgeColor = .systemRed
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -244,6 +255,7 @@ class HomeViewController: BaseViewController{
                     DispatchQueue.main.async {
                         NotificationStore.shared.add(noti)
                         NotificationCenter.default.post(name: .userDidLeaveEvent, object: noti)
+                        NotificationCenter.default.post(name: .newNotificationAdded, object: nil)
                         print("[HomeVC] posted .userDidLeaveEvent id=\(noti.id) message=\(noti.message)")
                     }
                 }
@@ -358,5 +370,8 @@ class HomeViewController: BaseViewController{
 
 
 
+}
+extension Notification.Name {
+    static let newNotificationAdded = Notification.Name("newNotificationAdded")
 }
 

@@ -84,6 +84,7 @@ extension DayDetailsViewController: UITableViewDelegate, UITableViewDataSource{
                             DispatchQueue.main.async {
                                 NotificationStore.shared.add(noti)
                                 NotificationCenter.default.post(name: .userDidLeaveEvent, object: noti)
+                                NotificationCenter.default.post(name: .newNotificationAdded, object: nil)
                                 print("[DayDetailsVC] posted .userDidLeaveEvent id=\(noti.id) message=\(noti.message)")
                             }
 

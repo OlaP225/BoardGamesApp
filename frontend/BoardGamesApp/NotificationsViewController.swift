@@ -25,6 +25,16 @@ class NotificationsViewController: BaseViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(handleUserDidLeaveEvent(_:)), name: .userDidLeaveEvent, object: nil)
     }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        if let tabItems = tabBarController?.tabBar.items {
+            let notificationsTabIndex = 2
+            if tabItems.indices.contains(notificationsTabIndex) {
+                tabItems[notificationsTabIndex].badgeValue = nil
+            }
+        }
+    }
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: .userDidLeaveEvent, object: nil)
@@ -37,6 +47,7 @@ class NotificationsViewController: BaseViewController {
                 if !self.notifications.contains(where: { $0.id == noti.id }) {
                     self.notifications.insert(noti, at: 0)
                     NotificationStore.shared.add(noti)
+                    NotificationCenter.default.post(name: .newNotificationAdded, object: nil)
                     self.notificationsTableView.reloadData()
                 } else {
                     print("[NotificationsVC] duplicate notification ignored id=\(noti.id)")
@@ -83,6 +94,11 @@ class NotificationsViewController: BaseViewController {
                 self.notifications = merged
                 self.notificationsTableView.reloadData()
                 print("[NotificationsVC] merged notifications count=\(self.notifications.count)")
+                if let tabItems = self.tabBarController?.tabBar.items {
+                    if tabItems.indices.contains(2) {
+                        tabItems[2].badgeValue = merged.isEmpty ? nil : "●"
+                    }
+                }
             }
         }
     }
